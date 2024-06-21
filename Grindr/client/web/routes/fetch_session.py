@@ -20,12 +20,33 @@ class FetchSessionRouteResponse(BaseModel):
 SessionData = FetchSessionRouteResponse
 
 
-class FetchSessionRoute(
+class FetchSessionNewRoute(
     ClientRoute[
         "POST",
         URLTemplate(GRINDR_V4, "/sessions"),
         None,
         FetchSessionRoutePayload,
+        FetchSessionRouteResponse
+    ]
+):
+    """
+    Retrieve a session from the API
+
+    """
+
+
+class FetchSessionRefreshRoutePayload(BodyParams):
+    email: str
+    token: str
+    authToken: str
+
+
+class FetchSessionRefreshRoute(
+    ClientRoute[
+        "POST",
+        URLTemplate(GRINDR_V4, "/sessions"),
+        None,
+        FetchSessionRefreshRoutePayload,
         FetchSessionRouteResponse
     ]
 ):

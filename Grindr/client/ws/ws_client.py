@@ -172,3 +172,7 @@ class GrindrWSClient:
         """
 
         return self._ws and self._ws.open
+
+    @property
+    def ws(self) -> WebSocketClientProtocol:
+        return self._ws

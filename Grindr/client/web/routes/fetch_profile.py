@@ -24,7 +24,7 @@ class DetailedProfile(Profile):
     lookingFor: Optional[List[int]] = None
     vaccines: Optional[List[int]] = None
     bodyType: Optional[int] = None
-    sexualPosition: Optional[str] = None
+    sexualPosition: Optional[Any] = None
     hivStatus: Optional[str] = None
     lastTestedDate: Optional[str] = None
     height: Optional[float] = None
@@ -58,12 +58,12 @@ class DetailedProfile(Profile):
     verifiedInstagramId: Optional[str] = None
 
 
-class FetchTapsRouteResponse(BaseModel):
+class FetchProfileRouteResponse(BaseModel):
     profiles: List[DetailedProfile]
 
 
 class FetchProfileRouteParams(BodyParams):
-    profileId: str
+    profileId: int
 
 
 class FetchProfileRoute(
@@ -72,7 +72,7 @@ class FetchProfileRoute(
         URLTemplate(GRINDR_V4, "/profiles/{profileId}"),
         FetchProfileRouteParams,
         None,
-        FetchTapsRouteResponse
+        FetchProfileRouteResponse
     ]
 ):
     """

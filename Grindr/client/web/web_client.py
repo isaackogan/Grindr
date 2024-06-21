@@ -3,10 +3,14 @@ from .routes.fetch_conversation import FetchConversationRoute
 from .routes.fetch_inbox import FetchInboxRoute
 from .routes.fetch_profile import FetchProfileRoute
 from .routes.fetch_profiles import FetchProfilesRoute
-from .routes.fetch_session import FetchSessionRoute
+from .routes.fetch_session import FetchSessionNewRoute, FetchSessionRefreshRoute
 from .routes.fetch_taps import FetchTapsRoute
+from .routes.set_active import SetActiveRoute
 from .routes.set_block_user import SetBlockUserRoute
 from .routes.set_location import SetLocationRoute
+from .routes.set_message_read import SetMessageReadRoute
+from .routes.set_send_album import SetSendAlbumRoute
+from .routes.set_typing import SetTypingRoute
 from .web_base import GrindrHTTPClient
 
 
@@ -26,7 +30,9 @@ class GrindrWebClient(GrindrHTTPClient):
 
         super().__init__(**kwargs)
 
-        self.fetch_session: FetchSessionRoute = FetchSessionRoute(self)
+        self.fetch_session_new: FetchSessionNewRoute = FetchSessionNewRoute(self)
+        self.fetch_session_refresh: FetchSessionRefreshRoute = FetchSessionRefreshRoute(self)
+
         self.fetch_inbox: FetchInboxRoute = FetchInboxRoute(self)
         self.fetch_taps: FetchTapsRoute = FetchTapsRoute(self)
         self.fetch_conversation: FetchConversationRoute = FetchConversationRoute(self)
@@ -36,3 +42,7 @@ class GrindrWebClient(GrindrHTTPClient):
 
         self.set_block_user: SetBlockUserRoute = SetBlockUserRoute(self)
         self.set_location: SetLocationRoute = SetLocationRoute(self)
+        self.set_message_read: SetMessageReadRoute = SetMessageReadRoute(self)
+        self.set_typing: SetTypingRoute = SetTypingRoute(self)
+        self.set_active: SetActiveRoute = SetActiveRoute(self)
+        self.set_send_album: SetSendAlbumRoute = SetSendAlbumRoute(self)

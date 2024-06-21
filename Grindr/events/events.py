@@ -47,6 +47,7 @@ class UnknownEvent(Event):
     """
 
     data: dict
+    payload: Optional[dict] = None
 
 
 class ConnectEvent(Event):
@@ -69,7 +70,7 @@ class ImageMedia(BaseModel):
     expiresAt: int
 
 
-MediaType = Literal["Text", "Image", "ProfilePhotoReply"]
+MediaType = Literal["Text", "Image", "ProfilePhotoReply", "Album", "AlbumContentReply"]
 MediaBody = Union[TextMedia, ImageMedia, dict]
 
 

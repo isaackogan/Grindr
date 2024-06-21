@@ -1,3 +1,4 @@
+import enum
 from typing import Optional, List
 
 from pydantic import BaseModel, Field
@@ -18,6 +19,18 @@ class FetchCascadeRouteParams(QueryParams):
     favorites: bool = False
 
 
+class Ethnicity(int, enum.Enum):
+    ASIAN = 1
+    BLACK = 2
+    LATINO = 3
+    MIDDLE_EASTERN = 4
+    MIXED = 5
+    NATIVE_AMERICAN = 6
+    WHITE = 7
+    _UNKNOWN = 8
+    SOUTH_ASIAN = 9
+
+
 class CascadeProfileData(BaseModel):
     type: Optional[str] = Field(None, alias='@type')
     profileId: Optional[int] = None
@@ -36,7 +49,7 @@ class CascadeProfileData(BaseModel):
     genders: Optional[List[int]] = None
     pronouns: Optional[List[int]] = None
     relationshipStatus: Optional[int] = None
-    ethnicity: Optional[int] = None
+    ethnicity: Optional[Ethnicity] = None
     bodyType: Optional[int] = None
     acceptsNsfwPics: Optional[int] = None
     hivStatus: Optional[int] = None

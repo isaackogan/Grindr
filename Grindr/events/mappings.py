@@ -13,7 +13,7 @@ def get_event(data: WebsocketResponse) -> Event:
 
     # If no mapping found
     if mapping is None:
-        return UnknownEvent(data=data.payload)
+        return UnknownEvent(data=data.model_dump(), payload=data.payload)
 
     # If mapping found
     return mapping(**(data.payload or {}))
