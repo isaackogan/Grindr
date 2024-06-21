@@ -1,0 +1,5 @@
+pyee
+httpx
+websockets_proxy>=0.1.0
+httpx
+pygeohash

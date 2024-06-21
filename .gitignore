@@ -1,0 +1,6 @@
+main.py
+3333.py
+*.sh
+.venv
+
+.idea
