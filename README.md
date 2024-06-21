@@ -2,10 +2,15 @@ Grindr
 ==================
 A silly little library to connect to Grindr's mobile services.
 
-![Downloads](https://pepy.tech/badge/grindr)
 ![Stars](https://img.shields.io/github/stars/isaackogan/Grindr?style=flat&color=0274b5)
 ![Forks](https://img.shields.io/github/forks/isaackogan/Grindr?style=flat&color=0274b5)
 ![Issues](https://img.shields.io/github/issues/isaackogan/Grindr)
+
+## If You Work at Grindr
+
+- Send me a message `info@isaackogan.com` for any questions/concerns.
+- If you are hiring, send an e-mail. Let's chat :)!
+
 
 ## Table of Contents
 
