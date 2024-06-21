@@ -7,7 +7,7 @@ manifest: dict = {
     "name": "Grindr",
     "license": "MIT",
     "author": "Isaac Kogan",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "email": "info@isaackogan.com"
 }
 
@@ -31,8 +31,8 @@ if __name__ == '__main__':
             "pyee>=9.0.4",
             "httpx>=0.25.0",
             "websockets_proxy>=0.1.0",
-            "pygeohash>=1.2.0"
-
+            "pygeohash>=1.2.0",
+            "pydantic"
         ],
         classifiers=[
             "Development Status :: 4 - Beta",
