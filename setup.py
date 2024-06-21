@@ -28,9 +28,9 @@ if __name__ == '__main__':
         long_description_content_type="text/markdown",
         keywords=["Grindr", "Grindr API", "python3", "api", "unofficial"],
         install_requires=[
-            "pyee>=9.0.4"
-            "httpx>=0.25.0"
-            "websockets_proxy>=0.1.0"
+            "pyee>=9.0.4",
+            "httpx>=0.25.0",
+            "websockets_proxy>=0.1.0",
             "pygeohash>=1.2.0"
 
         ],

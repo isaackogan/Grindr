@@ -2,5 +2,7 @@ main.py
 block_unwanted.py
 *.sh
 .venv
-
+.env
 .idea
+dist
+Grindr.egg-info

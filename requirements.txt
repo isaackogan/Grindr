@@ -1,5 +1,4 @@
-pyee
-httpx
-websockets_proxy>=0.1.0
-httpx
-pygeohash
+# Development-required packages
+build
+python-dotenv
+twine
