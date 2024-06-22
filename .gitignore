@@ -1,5 +1,3 @@
-main.py
-block_unwanted.py
 *.sh
 .venv
 .env

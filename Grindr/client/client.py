@@ -13,7 +13,7 @@ from pyee.base import Handler
 
 from Grindr.client.errors import AuthenticationDetailsMissingError, AlreadyConnectedError
 from Grindr.client.logger import GrindrLogHandler, LogLevel
-from Grindr.client.web.routes.fetch_session import SessionData, FetchSessionRoutePayload, FetchSessionRefreshRoutePayload
+from Grindr.client.web.routes.fetch_session import SessionData, FetchSessionRoutePayload, FetchSessionRefreshRoutePayload, FetchSessionRouteResponse
 from Grindr.client.web.web_client import GrindrWebClient
 from Grindr.client.web.web_settings import GRINDR_WS
 from Grindr.client.ws.ws_client import GrindrWSClient
@@ -88,12 +88,9 @@ class GrindrClient(AsyncIOEventEmitter):
             raise AuthenticationDetailsMissingError("Authentication details must be sent! Either username/password, or session_token.")
 
         # Generate the session
-        self._session = await self._web.fetch_session_new(
-            params=None,
-            body=FetchSessionRoutePayload(
-                email=email,
-                password=password
-            )
+        self._session = await self.login(
+            email=email,
+            password=password
         )
 
         # Update the headers
@@ -107,7 +104,18 @@ class GrindrClient(AsyncIOEventEmitter):
         self._event_loop_task = self._asyncio_loop.create_task(self._ws_loop())
         return self._event_loop_task
 
-    async def refresh_session_loop(self) -> None:
+    async def login(self, email: str, password: str) -> SessionData:
+        session: FetchSessionRouteResponse = await self._web.fetch_session_new(
+            body=FetchSessionRoutePayload(
+                email=email,
+                password=password
+            )
+        )
+
+        self._web.set_session(session.sessionId)
+        return session
+
+    async def _refresh_session_loop(self) -> None:
 
         while self.connected:
             await asyncio.sleep(self.REFRESH_SESSION_INTERVAL)
@@ -184,7 +192,7 @@ class GrindrClient(AsyncIOEventEmitter):
             # Keep session continually updated
             if first_event:
                 first_event = False
-                self._session_loop_task = self._asyncio_loop.create_task(self.refresh_session_loop())
+                self._session_loop_task = self._asyncio_loop.create_task(self._refresh_session_loop())
 
             try:
                 ev: Event = get_event(message)

@@ -5,6 +5,10 @@ class AlreadyConnectedError(RuntimeError):
     """
 
 
+class LoginFailedResponse(RuntimeError):
+    pass
+
+
 class CloudflareWAFResponse(RuntimeError):
     pass
 

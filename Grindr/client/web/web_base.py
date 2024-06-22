@@ -3,13 +3,14 @@ import random
 import textwrap
 import traceback
 import uuid
+from json import JSONDecodeError
 from typing import Optional, Any, Dict, Literal, TypeVar, Generic, ForwardRef, Type
 
 import httpx
 from httpx import AsyncClient, Proxy, URL
 from pydantic import BaseModel, ValidationError
 
-from Grindr.client.errors import CloudflareWAFResponse
+from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse
 from Grindr.client.logger import GrindrLogHandler
 from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS
 
@@ -229,7 +230,15 @@ class ClientRoute(
         )
 
         if response.status_code == 403:
-            raise CloudflareWAFResponse("Blocked by the Grindr Cloudflare WAF!")
+            try:
+                data = response.json()
+                if data.get('code') == 4:
+                    raise LoginFailedResponse("Invalid account credentials (wrong user/pass).")
+                else:
+                    raise LoginFailedResponse("Failed login attempt. Something went wrong: " + str(data))
+
+            except JSONDecodeError:
+                raise CloudflareWAFResponse("Blocked by the Grindr Cloudflare WAF!")
 
         if response.status_code != 200:
             self._logger.debug("Request Failed: " + str(response.status_code) + response.content.decode())
