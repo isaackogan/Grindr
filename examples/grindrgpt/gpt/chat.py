@@ -1,14 +1,13 @@
 import asyncio
 import random
-import random
 import textwrap
 from typing import List, Optional, Tuple
 
+import openai
 from httpx import Response
 from openai import AsyncOpenAI
 from openai.types import ImagesResponse
 from openai.types.chat import ChatCompletion
-from sqlalchemy.exc import InvalidRequestError
 
 from Grindr.client.web.routes.set_media_upload import SetMediaUploadRouteBody, SetMediaUploadRouteResponse
 from Grindr.client.web.routes.set_send_album import SetSendAlbumRouteParams, SetSendAlbumRoute
@@ -200,7 +199,7 @@ class GChat:
 
         response, exception = await self._llm_text_response(chat=chat)
 
-        if exception == InvalidRequestError and "content filter" in str(exception):
+        if exception == openai.BadRequestError and "content filter" in str(exception):
             chat[-1] = {"role": "user", "content": "<NSFW Image>"}
 
         chat.append({"role": "assistant", "content": response})
@@ -259,7 +258,7 @@ class GChat:
             return text_gen.choices[0].message.content, None
 
         # Handle content filtered
-        except InvalidRequestError as e:
+        except openai.BadRequestError as e:
 
             if "content filter" not in str(e):
                 raise e
