@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Optional, Literal, Union, List
+import enum
+from typing import Any, Optional, Union, List
 
 from pydantic import BaseModel
 
@@ -70,8 +71,29 @@ class ImageMedia(BaseModel):
     expiresAt: int
 
 
-MediaType = Literal["Text", "Image", "ProfilePhotoReply", "Album", "AlbumContentReply"]
-MediaBody = Union[TextMedia, ImageMedia, dict]
+class MediaType(str, enum.Enum):
+    TEXT = "Text"
+    IMAGE = "Image"
+    PROFILE_PHOTO_REPLY = "ProfilePhotoReply"
+    ALBUM = "Album"
+    ALBUM_CONTENT_REPLY = "AlbumContentReply"
+
+
+class ProfilePhotoReplyMedia(BaseModel):
+    imageHash: str
+    photoContentReply: str
+
+
+class AlbumContentReplyMedia(BaseModel):
+    albumId: Optional[int] = None
+    ownerProfileId: Optional[int] = None
+    albumContentId: Optional[int] = None
+    albumContentReply: Optional[str] = None
+    previewUrl: Optional[str] = None
+    expiresAt: Optional[int] = None
+
+
+MediaBody = Union[TextMedia, ImageMedia, ProfilePhotoReplyMedia, AlbumContentReplyMedia, dict]
 
 
 class MessageEventReplyPreview(BaseModel):
@@ -95,7 +117,7 @@ class MessageEvent(Event):
     reactions: Optional[List[Any]] = None
     type: Optional[MediaType] = None
     body: Optional[MediaBody] = None
-    replyToMessage: Optional[Any] = None
+    replyToMessage: Optional["MessageEvent"] = None
     dynamic: Optional[bool] = None
     chat1Type: Optional[str] = None
     replyPreview: Optional[MessageEventReplyPreview] = None

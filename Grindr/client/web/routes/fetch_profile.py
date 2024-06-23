@@ -11,7 +11,7 @@ class Media(BaseModel):
     mediaHash: Optional[str] = None
     type: Optional[int] = None
     state: Optional[int] = None
-    reason: Optional[str] = None
+    reason: Optional[Any] = None
 
 
 class DetailedProfile(Profile):
@@ -19,14 +19,14 @@ class DetailedProfile(Profile):
     age: Optional[int] = None
     showAge: Optional[bool] = None
     ethnicity: Optional[int] = None
-    relationshipStatus: Optional[str] = None
+    relationshipStatus: Optional[int] = None
     grindrTribes: Optional[List[int]] = None
     lookingFor: Optional[List[int]] = None
     vaccines: Optional[List[int]] = None
     bodyType: Optional[int] = None
     sexualPosition: Optional[Any] = None
-    hivStatus: Optional[str] = None
-    lastTestedDate: Optional[str] = None
+    hivStatus: Optional[int] = None
+    lastTestedDate: Optional[int] = None
     height: Optional[float] = None
     weight: Optional[float] = None
     socialNetworks: Optional[Any] = None
@@ -34,7 +34,7 @@ class DetailedProfile(Profile):
     approximateDistance: Optional[bool] = None
     seen: Optional[int] = None
     medias: Optional[List[Media]] = None
-    identity: Optional[str] = None
+    identity: Optional[Any] = None
     lastChatTimestamp: Optional[int] = None
     isNew: Optional[bool] = None
     lastViewed: Optional[int] = None

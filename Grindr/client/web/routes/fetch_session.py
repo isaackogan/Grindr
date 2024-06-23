@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from Grindr.client.web.web_base import ClientRoute, BodyParams, URLTemplate
-from Grindr.client.web.web_settings import GRINDR_V4
+from Grindr.client.web.web_settings import GRINDR_V4, GRINDR_V3
 
 
 class FetchSessionRoutePayload(BodyParams):
@@ -23,7 +23,7 @@ SessionData = FetchSessionRouteResponse
 class FetchSessionNewRoute(
     ClientRoute[
         "POST",
-        URLTemplate(GRINDR_V4, "/sessions"),
+        URLTemplate(GRINDR_V3, "/sessions"),
         None,
         FetchSessionRoutePayload,
         FetchSessionRouteResponse

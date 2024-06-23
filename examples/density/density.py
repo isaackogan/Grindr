@@ -76,12 +76,12 @@ async def get_density(
 
 async def run_client():
     # Target to check
-    lat, lon = 43.664334, -79.380432
+    lat, lon = 43.702736, -79.444672
 
     # Log into Grindr
     await client.login(email=os.environ['G_EMAIL'], password=os.environ['G_PASSWORD'])
 
-    density, measure_distance, measured_profiles = await get_density(lat, lon, kms=6371)
+    density, measure_distance, measured_profiles = await get_density(lat, lon, kms=50)
     print(f"Measured a user density of {density:.2f} users per square kilometer over {measure_distance:.2f} km with a total of {measured_profiles} users.")
 
 

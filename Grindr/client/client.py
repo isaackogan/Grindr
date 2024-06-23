@@ -233,8 +233,8 @@ class GrindrClient(AsyncIOEventEmitter):
 
     async def send(self, profile_id: int, text: str) -> None:
         await self._ws.ws.send(
-            WSMessage.from_defaults(
-                token=self._session.sessionId,
+            WSMessage.text_from_defaults(
+                token=self._web.session_token,
                 profile_id=profile_id,
                 text=text
             ).model_dump_json()

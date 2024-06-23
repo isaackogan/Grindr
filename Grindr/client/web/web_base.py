@@ -35,6 +35,12 @@ class GrindrHTTPClient:
             httpx_kwargs=httpx_kwargs or dict()
         )
 
+        self._session_token: Optional[str] = None
+
+    @property
+    def http_client(self) -> AsyncClient:
+        return self._httpx
+
     def _create_httpx_client(
             self,
             proxy: Optional[Proxy],
@@ -100,8 +106,13 @@ class GrindrHTTPClient:
 
         """
 
+        self._session_token = session_token
         self.headers['Authorization'] = f'Grindr3 {session_token}'
         self.headers['L-Device-Info'] = self.generate_device_info()
+
+    @property
+    def session_token(self) -> str:
+        return self._session_token
 
     @classmethod
     def generate_device_info(cls):
@@ -222,7 +233,6 @@ class ClientRoute(
         if body is not None:
             kwargs['json'] = kwargs.get('json', body.model_dump())
 
-        # Get response
         response: httpx.Response = await self._web.request(
             method=self.method,
             url=self.url % (params.model_dump() if params else {}),

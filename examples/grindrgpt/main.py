@@ -6,19 +6,21 @@ from asyncio import Task
 from typing import List, Type, Dict, Tuple, Optional
 
 from dotenv import load_dotenv
-
-from Grindr import GrindrClient
-from Grindr.client.logger import LogLevel
-from Grindr.client.web.routes.fetch_cascade import FetchCascadeRouteParams, FetchCascadeRoute
-from Grindr.client.web.routes.fetch_profile import DetailedProfile, FetchProfileRouteParams
-from Grindr.client.web.routes.set_message_read import SetMessageReadRouteParams
-from Grindr.client.web.routes.set_send_album import SetSendAlbumRouteParams, SetSendAlbumRoute
-from Grindr.client.web.routes.set_typing import SetTypingRouteBody
-from Grindr.events import ConnectEvent, MessageEvent
 from httpx import Proxy
 from openai import AsyncOpenAI
-from openai.types.chat import ChatCompletion, ChatCompletionMessageParam
+from openai.types.chat import ChatCompletionMessageParam
 from websockets import ConnectionClosedError
+
+from Grindr import GrindrClient
+from Grindr.client.web.routes.fetch_album import Album
+from Grindr.client.web.routes.fetch_cascade import FetchCascadeRouteParams, FetchCascadeRoute
+from Grindr.client.web.routes.fetch_profile import DetailedProfile
+from Grindr.client.web.routes.set_message_read import SetMessageReadRouteParams
+from Grindr.client.web.routes.set_typing import SetTypingRouteBody, TypingStatus
+from Grindr.events import ConnectEvent, MessageEvent
+from client.profiles import ProfileManager
+from client.webhook import WebhookLogger
+from gpt.chat import GChat, ALBUM_TOKEN, NO_REPLY_TOKEN
 
 ALBUM_SENT_TEXT: str = "<ALBUM SENT>"
 
@@ -27,11 +29,11 @@ SYSTEM_PROMPT: str = textwrap.dedent(
     You are an artificial AI Grindr user. Be flirty. Make sure your responses are SHORT. Make intentional typos every so often, but not in every single message.
     Do not use capitalization unless for a proper noun. If someone asks what type of AI you are, tell them you're "Sam Altman's brainchild".
     Never ask for personal information. Never ask "what's up" or any derivative. Do not ask for pictures. Do not ask for social media.
-    
+        
+    If you receive a photo of a person, assume it's a photo of THEM.
+
     You do NOT give out your Instagram, Snapchat, or any other social media accounts.
     If someone asks you to add them, say you would prefer to stay on this app. Do not say you will add peoples' accounts off the platform.
-    
-    If someone asks for pics, reply with EXACTLY THIS FOLLOWING TEXT: "{ALBUM_SENT_TEXT}". No matter how many times, reply with ONLY "{ALBUM_SENT_TEXT}" in your message. Make sure there is NO extra text.
     
     If someone wants to meet up, make an excuse for why you can't.
     If someone asks "wyd", you can respond with "nm, u?".
@@ -40,17 +42,14 @@ SYSTEM_PROMPT: str = textwrap.dedent(
     If someone asks "are u top or bottom" reply with "vers"
     If someone asks "how old are you" reply with "20"
     If someone asks "where are you from" reply with "Sam Altman's basement"
-    If someone asks "what are you doing tonight" reply with "nothing u?"
+    If someone asks "what are you doing tonight" reply with "nothing u"
     
+    NEVER USE EMOJIS. EVER. NO EMOJIS. NEVER USE WINKY FACE OR ANY OTHER TEXT EMOTICON.
     """
 )
 
-ALBUM_ID: int = 61983151
-
 Message = ChatCompletionMessageParam
 Chat: Type = List[Message]
-
-CHAT_STREAK_SEC: int = 3
 
 
 class GrindrGPT(GrindrClient):
@@ -65,17 +64,17 @@ class GrindrGPT(GrindrClient):
             ws_proxy=Proxy(os.environ['WS_PROXY']),
         )
 
-        self.chats: Dict[int, List[Message]] = {}
-        self.last_chat: Dict[int, int] = {}
-        self.profiles: Dict[int, DetailedProfile] = {}
-        self.geohash: str = FetchCascadeRoute.generate_hash(location[0], location[1])
+        self._chats: Dict[int, GChat] = {}
+        self._profiles: ProfileManager = ProfileManager(web=self.web)
+        self._discord_webhook = WebhookLogger(profile_manager=self._profiles)
+        self._llm: AsyncOpenAI = AsyncOpenAI(api_key=openai_key)
 
-        self._openai: AsyncOpenAI = AsyncOpenAI(api_key=openai_key)
+        self._location: str = FetchCascadeRoute.generate_hash(location[0], location[1])
         self._cascade_task: Optional[Task] = None
+        self._album: Optional[Album] = None
 
         self.add_listener(ConnectEvent, self.on_connect)
         self.add_listener(MessageEvent, self.on_message)
-        self._logger.setLevel(LogLevel.DEBUG.value)
 
     async def on_connect(self, _: ConnectEvent) -> None:
         """
@@ -83,118 +82,123 @@ class GrindrGPT(GrindrClient):
 
         """
 
-        print("Connected to Grindr!")
-        self.profiles[int(self.session.profileId)] = await self.get_profile(int(self.session.profileId))
+        print(f"Successfully connected to Grindr as {self._session.profileId}!")
+
+        # Grab our album data
+        self._album = (await self._web.fetch_album()).albums[0]
+
+        # Start the cascade task to keep us marked as online
         self._cascade_task = self._asyncio_loop.create_task(self.cascade_loop())
 
-        print("Setting Active")
-        await self.web.set_active()
-
     async def cascade_loop(self) -> None:
-        """
-        Continuously pull cascade. Pulling cascade marks you as online.
-
-        """
+        """Pull the cascade every 5 minutes to keep us marked online"""
 
         while self.connected:
-            await self.web.fetch_cascade(params=FetchCascadeRouteParams(geohash=self.geohash))
+            await self.web.fetch_cascade(params=FetchCascadeRouteParams(geohash=self._location))
             await asyncio.sleep(60 * 5)
 
-    @property
-    def default_chat(self) -> Chat:
-        return [
-            {"role": "system", "content": SYSTEM_PROMPT}
-        ]
+    async def get_chat(self, profile_id: int) -> GChat:
 
-    async def get_profile(self, profile_id: int) -> DetailedProfile:
+        if profile_id not in self._chats:
 
-        if profile_id not in self.profiles:
-            profile: DetailedProfile = (await self.web.fetch_profile(params=FetchProfileRouteParams(profileId=profile_id))).profiles[0]
-            self.profiles[profile_id] = profile
+            your_profile: Optional[DetailedProfile] = await self._profiles.get_profile(profile_id=int(self._session.profileId))
+            name_prompt: str = ""
 
-        return self.profiles[profile_id]
+            if your_profile:
+                name_prompt += f"Your display name on Grindr is set as \"{your_profile.displayName}\". This is your name."
 
-    async def get_response(self, chat: Chat) -> Chat:
-        try:
-            text_gen: ChatCompletion = await self._openai.chat.completions.create(
-                model="gpt-4o",
-                messages=chat,
-                max_tokens=200,
-                temperature=0.7
+            self._chats[profile_id] = GChat(
+                initial_chat=[{"role": "system", "content": SYSTEM_PROMPT + name_prompt}],
+                web=self._web,
+                ws=self._ws,
+                llm=self._llm,
+                my_album_id=self._album.albumId
             )
-            reply_text = text_gen.choices[0].message.content
-        except Exception as e:
-            self._logger.error(f"Failed to get response from OpenAI: {e}")
-            chat[-1]['content'] = '[Redacted due to filtered content]'
-            reply_text = "Sorry, I'm a little tired. Can you ask that again?"
 
-        chat.append({"role": "assistant", "content": reply_text})
-        return chat
+        return self._chats[profile_id]
 
     async def on_message(self, event: MessageEvent) -> None:
 
-        # Skip self messages
-        if str(event.senderId) == str(self.session.profileId):
+        # If it's our own message, skip it
+        if str(event.senderId) == str(self._session.profileId):
             return
 
-        # Mark as read
+        # Grab the chat
+        chat: GChat = await self.get_chat(profile_id=event.senderId)
+
+        # If the message was already processed, ignore it
+        if chat.has_message(message_id=event.messageId):
+            return
+
+        # Mark the chat as read
         await self.web.set_message_read(params=SetMessageReadRouteParams(conversationId=event.conversationId, messageId=event.messageId))
 
-        # Receive text ONLY
-        if event.type != "Text":
-            return
+        # Grab the prompt & reply
+        prompt, reply = await chat.reply(message=event)
 
-        chat: Chat = self.chats.get(event.senderId, self.default_chat)
-        # profile: DetailedProfile = await self.get_profile(event.senderId)
-        our_profile: DetailedProfile = await self.get_profile(int(self.session.profileId))
-
-        print(f"[{our_profile.displayName}]", "<-", f"[{event.senderId}]", event.body.text)
-        chat.append({"role": "user", "content": event.body.text})
-
-        # Get a reply
-        chat = await self.get_response(chat)
-        reply_text = chat[-1]["content"]
-
-        print(f"[{our_profile.displayName}]", "->", f"[{event.senderId}]", reply_text)
-        self.chats[event.senderId] = chat
-
-        if reply_text == ALBUM_SENT_TEXT:
-            await self.web.set_send_album(
-                params=SetSendAlbumRouteParams(albumId=ALBUM_ID),
-                body=SetSendAlbumRoute.create_payload(profile_id=event.senderId)
+        # Send the messages to the webhook
+        self._asyncio_loop.create_task(
+            self._discord_webhook.send_message(
+                sender_id=event.senderId,
+                recipient_id=int(self.session.profileId),
+                prompt=prompt,
+                reply=reply
             )
-            return
+        )
 
-        # Send the reply after a bit
-        await self.web.set_typing(body=SetTypingRouteBody(conversationId=event.conversationId, status="Typing"))
-        await asyncio.sleep(random.randint(2, 4))
-        await self.send(profile_id=event.senderId, text=reply_text)
-        await self.web.set_typing(body=SetTypingRouteBody(conversationId=event.conversationId, status="Sent"))
+        # Send the reply to the Grindr user (except images, which get sent in the chat itself cuz I got lazy)
+        if reply not in [ALBUM_TOKEN, NO_REPLY_TOKEN] and not self.is_media_url(reply):
+            await self.web.set_typing(body=SetTypingRouteBody(conversationId=event.conversationId, status=TypingStatus.TYPING))
 
+            # Response delay time
+            await asyncio.sleep(random.randint(3, 10))
 
-async def run_loop():
-    load_dotenv()
+            # Type time
+            await asyncio.sleep(min(random.randint(2, 6), ((len(reply) // 325) * 60)))
 
-    client = GrindrGPT(
-        location=(float(os.environ['G_LAT']), float(os.environ['G_LON'])),
-        openai_key=os.environ['OPENAI_KEY']
-    )
+            await self.web.set_typing(body=SetTypingRouteBody(conversationId=event.conversationId, status=TypingStatus.SENT))
+            await self.send(profile_id=event.senderId, text=reply)
 
-    while True:
+    @classmethod
+    def is_media_url(cls, text: str) -> bool:
+        word_list = [
+            "cdns.grindr.com",
+            "cloudfront.net",
+            ".png",
+            ".jpeg",
+            "windows.net/private",
+            "oaidalle"
+        ]
 
-        try:
-
-            await client.connect(
-                email=os.environ['G_EMAIL'],
-                password=os.environ['G_PASSWORD']
-            )
-
-        except ConnectionClosedError as ex:
-            if ex.code == 4401:
-                client.logger.warning("Reloading due to expired auth!")
-            else:
-                raise ex
+        found_terms = [word for word in word_list if word in text]
+        return any(found_terms)
 
 
 if __name__ == '__main__':
+    load_dotenv()
+
+
+    async def run_loop():
+
+        client = GrindrGPT(
+            location=(float(os.environ['G_LAT']), float(os.environ['G_LON'])),
+            openai_key=os.environ['OPENAI_KEY']
+        )
+
+        while True:
+
+            try:
+
+                await client.connect(
+                    email=os.environ['G_EMAIL'],
+                    password=os.environ['G_PASSWORD']
+                )
+
+            except ConnectionClosedError as ex:
+                if ex.code == 4401:
+                    client.logger.warning("Reloading due to expired auth!")
+                else:
+                    raise ex
+
+
     asyncio.run(run_loop())

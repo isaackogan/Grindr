@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import BaseModel
 
@@ -9,14 +9,18 @@ class WSMessagePayloadTarget(BaseModel):
     targetId: int
 
 
-class WSMessagePayloadBody(BaseModel):
+class WSTextPayloadBody(BaseModel):
     text: str
+
+
+class WSImagePayloadBody(BaseModel):
+    mediaId: int
 
 
 class WSMessagePayload(BaseModel):
     type: str = "Text"
     target: WSMessagePayloadTarget
-    body: WSMessagePayloadBody
+    body: Union[WSTextPayloadBody, WSImagePayloadBody]
     ref: str
 
 
@@ -27,7 +31,7 @@ class WSMessage(BaseModel):
     type: str = "chat.v1.message.send"
 
     @classmethod
-    def from_defaults(
+    def text_from_defaults(
             cls,
             token: str,
             profile_id: int,
@@ -39,7 +43,27 @@ class WSMessage(BaseModel):
             ref=ref,
             payload=WSMessagePayload(
                 target=WSMessagePayloadTarget(targetId=profile_id),
-                body=WSMessagePayloadBody(text=text),
+                body=WSTextPayloadBody(text=text),
+                ref=ref
+            ),
+            token=token
+        )
+
+    @classmethod
+    def image_from_defaults(
+            cls,
+            token: str,
+            profile_id: int,
+            media_id: int
+    ):
+        ref = str(uuid.uuid4())
+
+        return cls(
+            ref=ref,
+            payload=WSMessagePayload(
+                type="Image",
+                target=WSMessagePayloadTarget(targetId=profile_id),
+                body=WSImagePayloadBody(mediaId=media_id),
                 ref=ref
             ),
             token=token
