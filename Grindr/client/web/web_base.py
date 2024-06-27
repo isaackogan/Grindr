@@ -56,6 +56,7 @@ class GrindrHTTPClient:
 
         self.headers = {**httpx_kwargs.pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
         self.params: Dict[str, Any] = {**httpx_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
+        self.headers['L-Device-Info'] = self.generate_device_info()
 
         return AsyncClient(proxies=proxy, **httpx_kwargs)
 
@@ -108,7 +109,6 @@ class GrindrHTTPClient:
 
         self._session_token = session_token
         self.headers['Authorization'] = f'Grindr3 {session_token}'
-        self.headers['L-Device-Info'] = self.generate_device_info()
 
     @property
     def session_token(self) -> str:
