@@ -11,11 +11,11 @@ from Grindr.client.web.web_settings import GRINDR_V1
 class FetchCascadeRouteParams(QueryParams):
     geohash: str
     pageNumber: int = 1
-    onlineOnly: bool = False
+    onlineOnly: bool = True
     photoOnly: bool = False
     faceOnly: bool = False
     notRecentlyChatted: bool = False
-    fresh: bool = False
+    fresh: bool = True
     favorites: bool = False
 
 
@@ -75,6 +75,7 @@ class CascadeProfile(BaseModel):
 
 class FetchCascadeRouteResponse(BaseModel):
     items: List[CascadeProfile]
+    nextPage: Optional[int] = None
 
 
 class FetchCascadeRoute(

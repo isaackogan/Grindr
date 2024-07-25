@@ -43,13 +43,15 @@ class WebhookLogger:
             print(f"[{recipient_name}]", "->", f"[{sender_name}]", reply)
 
         await self._webhook.send(
+            content=reply,
+            avatar_url=recipient_image,
+            username=recipient_name + f" - Chat #{chat_id}"
+        )
+
+        await self._webhook.send(
             content=prompt,
             avatar_url=sender_image,
             username=sender_name + f" - Chat #{chat_id}"
         )
 
-        await self._webhook.send(
-            content=reply,
-            avatar_url=recipient_image,
-            username=recipient_name + f" - Chat #{chat_id}"
-        )
+
