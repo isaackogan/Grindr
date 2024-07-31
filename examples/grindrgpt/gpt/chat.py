@@ -4,7 +4,7 @@ import textwrap
 from typing import List, Optional, Tuple
 
 import openai
-from httpx import Response
+from curl_cffi.requests import Response
 from openai import AsyncOpenAI
 from openai.types import ImagesResponse
 from openai.types.chat import ChatCompletion
@@ -136,7 +136,7 @@ class GChat:
             )
 
             image_response: Response = await self._web.http_client.get(url=llm_response.data[0].url, headers={"Accept": "image/png"})
-            image_data: bytes = image_response.read()
+            image_data: bytes = image_response.content
 
             media_upload_response: SetMediaUploadRouteResponse = await self._web.set_media_upload(
                 body=SetMediaUploadRouteBody(image_bytes=image_data)

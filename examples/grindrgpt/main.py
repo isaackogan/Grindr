@@ -6,10 +6,8 @@ from asyncio import Task
 from typing import List, Type, Dict, Tuple, Optional
 
 from dotenv import load_dotenv
-from httpx import Proxy
 from openai import AsyncOpenAI
 from openai.types.chat import ChatCompletionMessageParam
-from websockets import ConnectionClosedError
 
 from Grindr import GrindrClient
 from Grindr.client.web.routes.fetch_album import Album
@@ -17,6 +15,7 @@ from Grindr.client.web.routes.fetch_cascade import FetchCascadeRouteParams, Fetc
 from Grindr.client.web.routes.fetch_profile import DetailedProfile
 from Grindr.client.web.routes.set_message_read import SetMessageReadRouteParams
 from Grindr.client.web.routes.set_typing import SetTypingRouteBody, TypingStatus
+from Grindr.client.ws.AsyncWS.client import WebsocketClosedError
 from Grindr.events import ConnectEvent, MessageEvent
 from client.profiles import ProfileManager
 from client.webhook import WebhookLogger
@@ -59,8 +58,8 @@ class GrindrGPT(GrindrClient):
             location: Tuple[float, float]
     ):
         super().__init__(
-            web_proxy=Proxy(os.environ['WS_PROXY']),
-            ws_proxy=Proxy(os.environ['WS_PROXY']),
+            web_proxy=os.environ['WS_PROXY'],
+            ws_proxy=os.environ['WS_PROXY']
         )
 
         self._chats: Dict[int, GChat] = {}
@@ -194,8 +193,8 @@ if __name__ == '__main__':
                     password=os.environ['G_PASSWORD']
                 )
 
-            except ConnectionClosedError as ex:
-                if ex.code == 4401:
+            except WebsocketClosedError as ex:
+                if ex.args[0] == 4401:
                     client.logger.warning("Reloading due to expired auth!")
                 else:
                     raise ex

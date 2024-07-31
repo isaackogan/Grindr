@@ -2,11 +2,11 @@ import json
 import traceback
 from typing import Optional, Any
 
-import httpx
+import curl_cffi.requests
 from pydantic import BaseModel, ValidationError
 
-from Grindr.client.web.web_base import ClientRoute, URLTemplate, QueryParams, Params, Body, Response
-from Grindr.client.web.web_settings import GRINDR_V3, GRINDR_V4
+from Grindr.client.web.web_base import ClientRoute, URLTemplate
+from Grindr.client.web.web_settings import GRINDR_V4
 
 
 class SetMediaUploadRouteResponse(BaseModel):
@@ -39,7 +39,7 @@ class SetMediaUploadRoute(
             **kwargs: Any
     ) -> Optional[SetMediaUploadRouteResponse]:
 
-        response: httpx.Response = await self._web.request(
+        response: curl_cffi.requests.Response = await self._web.request(
             method="POST",
             url=self.url % {},
             extra_headers={"Content-Type": "image/jpeg"},

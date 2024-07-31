@@ -11,7 +11,10 @@ from Grindr.client.logger import GrindrLogHandler
 
 
 class WebsocketClosedError(Exception):
-    pass
+
+    def __init__(self, code: int, *args):
+        super().__init__(code, *args)
+        self.code = code
 
 
 class AsyncWebSocket(curl_cffi.requests.WebSocket):
