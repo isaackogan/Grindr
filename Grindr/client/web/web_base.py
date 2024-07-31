@@ -6,8 +6,8 @@ import uuid
 from json import JSONDecodeError
 from typing import Optional, Any, Dict, Literal, TypeVar, Generic, ForwardRef, Type
 
-import httpx
-from httpx import AsyncClient, Proxy, URL
+import curl_cffi.requests
+from curl_cffi.requests import AsyncSession
 from pydantic import BaseModel, ValidationError
 
 from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse
@@ -19,46 +19,38 @@ class GrindrHTTPClient:
 
     def __init__(
             self,
-            proxy: Optional[Proxy] = None,
-            httpx_kwargs: Optional[dict] = None
+            proxy: Optional[str] = None,
+            session_kwargs: Optional[dict] = None
     ):
         """
         Create an HTTP client for interacting with the various APIs
 
         :param proxy: An optional proxy for the HTTP client
-        :param httpx_kwargs: Additional httpx k
+        :param session_kwargs: Additional kwargs
 
         """
 
-        self._httpx: AsyncClient = self._create_httpx_client(
+        self._session: AsyncSession = self._create_libcurl_client(
             proxy=proxy,
-            httpx_kwargs=httpx_kwargs or dict()
+            session_kwargs=session_kwargs or dict()
         )
 
         self._session_token: Optional[str] = None
 
     @property
-    def http_client(self) -> AsyncClient:
-        return self._httpx
+    def http_client(self) -> AsyncSession:
+        return self._session
 
-    def _create_httpx_client(
+    def _create_libcurl_client(
             self,
-            proxy: Optional[Proxy],
-            httpx_kwargs: Dict[str, Any]
-    ) -> AsyncClient:
-        """
-        Initialize a new `httpx.AsyncClient`, called internally on object creation
-
-        :param proxy: An optional HTTP proxy to initialize the client with
-        :return: An instance of the `httpx.AsyncClient`
-
-        """
-
-        self.headers = {**httpx_kwargs.pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
-        self.params: Dict[str, Any] = {**httpx_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
+            proxy: Optional[str],
+            session_kwargs: Dict[str, Any]
+    ) -> AsyncSession:
+        self.headers = {**session_kwargs.pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
+        self.params: Dict[str, Any] = {**session_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
         self.headers['L-Device-Info'] = self.generate_device_info()
 
-        return AsyncClient(proxies=proxy, **httpx_kwargs)
+        return AsyncSession(proxy=proxy, **session_kwargs)
 
     async def request(
             self,
@@ -66,21 +58,18 @@ class GrindrHTTPClient:
             url: str,
             extra_params: dict = None,
             extra_headers: dict = None,
-            client: Optional[httpx.AsyncClient] = None,
+            client: Optional[AsyncSession] = None,
             base_params: bool = True,
             base_headers: bool = True,
             **kwargs
-    ) -> httpx.Response:
+    ) -> curl_cffi.requests.Response:
         headers: dict = {
             **(self.headers if base_headers else {}),
             **(extra_headers or {}),
         }
 
-        if kwargs.get('json') is not None:
-            headers['Content-Length'] = str(len(json.dumps(kwargs['json']).encode('utf-8')))
-
         # Make the request
-        return await (client or self._httpx).request(
+        return await (client or self._session).request(
             method=method,
             url=url,
             params={**(self.params if base_params else {}), **(extra_params or {})},
@@ -96,7 +85,7 @@ class GrindrHTTPClient:
 
         """
 
-        await self._httpx.aclose()
+        await self._session.close()
 
     def set_session(self, session_token: str) -> None:
         """
@@ -116,6 +105,11 @@ class GrindrHTTPClient:
 
     @classmethod
     def generate_device_info(cls):
+        """iOS device info generator"""
+        return f"{str(uuid.uuid4()).upper()};appStore;2;2107621376;1334x750"
+
+    @classmethod
+    def _android_deprecated_generate_device_info(cls):
         identifier = uuid.uuid4()
         hex_identifier = identifier.hex
         random_integer = random.randint(1000000000, 9999999999)
@@ -149,7 +143,7 @@ class URLTemplate:
             .replace(" ", "")
         )
 
-    def __mod__(self, data: dict) -> URL:
+    def __mod__(self, data: dict) -> str:
         """
         Overload modulus operator to allow formatting
         :param data: The data to format the URL with
@@ -157,9 +151,10 @@ class URLTemplate:
 
         """
 
-        return httpx.URL(
-            self._url.format(**data)
-        )
+        # Take the params and add them and return a string
+        d = self._url.format(**data)
+        print(d)
+        return d
 
 
 # Define a TypeVar that can be any subclass of BaseModel
@@ -233,7 +228,7 @@ class ClientRoute(
         if body is not None:
             kwargs['json'] = kwargs.get('json', body.model_dump())
 
-        response: httpx.Response = await self._web.request(
+        response: curl_cffi.requests.Response = await self._web.request(
             method=self.method,
             url=self.url % (params.model_dump() if params else {}),
             **kwargs

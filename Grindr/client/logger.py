@@ -33,11 +33,11 @@ class LogLevel(enum.Enum):
 
 class GrindrLogHandler(logging.StreamHandler):
     """
-    A custom logger handler for TikTokLive
+    A custom logger handler for Grindr
 
     """
 
-    LOGGER_NAME: str = "TikTokLive"
+    LOGGER_NAME: str = "Grindr"
     LOGGER: Optional[logging.Logger] = None
     TIME_FORMAT: str = "%H:%M:%S"
 

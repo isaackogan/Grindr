@@ -142,7 +142,7 @@ class GChat:
                 body=SetMediaUploadRouteBody(image_bytes=image_data)
             )
 
-            await self._ws.ws.send(
+            await self._ws.ws.asend(
                 WSMessage.image_from_defaults(
                     token=self._web.session_token,
                     profile_id=message.senderId,

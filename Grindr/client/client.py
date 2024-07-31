@@ -6,7 +6,6 @@ from asyncio import AbstractEventLoop, Task, CancelledError
 from logging import Logger
 from typing import Optional, Union, Callable, Type
 
-from httpx import Proxy
 from pydantic import ValidationError
 from pyee import AsyncIOEventEmitter
 from pyee.base import Handler
@@ -25,7 +24,7 @@ from Grindr.events.mappings import get_event
 
 class GrindrClient(AsyncIOEventEmitter):
     """
-    A client to connect to & read from TikTok LIVE streams
+    A client to connect to & read from Grindr
 
     """
 
@@ -33,8 +32,8 @@ class GrindrClient(AsyncIOEventEmitter):
 
     def __init__(
             self,
-            web_proxy: Optional[Proxy] = None,
-            ws_proxy: Optional[Proxy] = None,
+            web_proxy: Optional[str] = None,
+            ws_proxy: Optional[str] = None,
             web_kwargs: dict = None,
             ws_kwargs: dict = None
     ):
@@ -56,7 +55,7 @@ class GrindrClient(AsyncIOEventEmitter):
         )
 
         self._web: GrindrWebClient = GrindrWebClient(
-            httpx_kwargs=web_kwargs or dict(),
+            session_kwargs=web_kwargs or dict(),
             proxy=web_proxy
         )
 
@@ -134,7 +133,7 @@ class GrindrClient(AsyncIOEventEmitter):
 
     async def connect(self, **kwargs) -> Task:
         """
-        Start a future-blocking connection to TikTokLive
+        Start a future-blocking connection to Grindr
 
         :param kwargs: Kwargs to pass to start
         :return: The task, once it's finished
@@ -152,7 +151,7 @@ class GrindrClient(AsyncIOEventEmitter):
 
     def run(self, **kwargs) -> Task:
         """
-        Start a thread-blocking connection to TikTokLive
+        Start a thread-blocking connection to Grindr
 
         :param kwargs: Kwargs to pass to start
         :return: The task, once it's finished
@@ -187,7 +186,7 @@ class GrindrClient(AsyncIOEventEmitter):
         # Emit events while connected
         first_event: bool = False
 
-        async for message in self._ws.connect(uri=GRINDR_WS, headers={**self._web.headers, **DEFAULT_WS_HEADERS}):
+        async for message in self._ws.connect(uri=GRINDR_WS, headers={**self._web.headers, **DEFAULT_WS_HEADERS, "Sec-Websocket-Key": "8y/TkqcKQ6snPVQTsvpvWg=="}):
 
             # Keep session continually updated
             if first_event:
@@ -232,12 +231,22 @@ class GrindrClient(AsyncIOEventEmitter):
         return super().add_listener(event=event.get_event_type(), f=f)
 
     async def send(self, profile_id: int, text: str) -> None:
-        await self._ws.ws.send(
+        await self._ws.ws.asend(
             WSMessage.text_from_defaults(
                 token=self._web.session_token,
                 profile_id=profile_id,
                 text=text
-            ).model_dump_json()
+            )
+        )
+
+    async def send_gif(self, profile_id: int, image_url: str, image_id: str) -> None:
+        await self._ws.ws.asend(
+            WSMessage.gif_from_defaults(
+                token=self._web.session_token,
+                profile_id=profile_id,
+                image_id=image_id,
+                image_url=image_url
+            )
         )
 
     def has_listener(self, event: Type[Event]) -> bool:
@@ -256,7 +265,7 @@ class GrindrClient(AsyncIOEventEmitter):
         """
         The HTTP client that this client uses for requests
 
-        :return: A copy of the TikTokWebClient
+        :return: A copy of the GrindrWebClient
 
         """
 
@@ -279,7 +288,7 @@ class GrindrClient(AsyncIOEventEmitter):
     @property
     def connected(self) -> bool:
         """
-        Whether the WebSocket client is currently connected to TikTok
+        Whether the WebSocket client is currently connected to Grindr
 
         :return: Connection status
 
@@ -290,7 +299,7 @@ class GrindrClient(AsyncIOEventEmitter):
     @property
     def logger(self) -> logging.Logger:
         """
-        The internal logger used by TikTokLive
+        The internal logger used by Grindr
 
         :return: An instance of a `logging.Logger`
 

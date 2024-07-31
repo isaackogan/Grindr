@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
 * **Isaac Kogan** - *Creator, Primary Maintainer, and Reverse-Engineering* - [isaackogan](https://github.com/isaackogan)
 
-See also the full list of [contributors](https://github.com/isaackogan/TikTokLive/contributors) who have participated in
+See also the full list of [contributors](https://github.com/isaackogan/Grindr/contributors) who have participated in
 this project.
 
 ## License

@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 class Event(BaseModel):
     """
-    Base event emitted from the TikTokLiveClient
+    Base event emitted from the Grindr client
 
     """
 
@@ -77,6 +77,7 @@ class MediaType(str, enum.Enum):
     PROFILE_PHOTO_REPLY = "ProfilePhotoReply"
     ALBUM = "Album"
     ALBUM_CONTENT_REPLY = "AlbumContentReply"
+    GIPHY = "Giphy"
 
 
 class ProfilePhotoReplyMedia(BaseModel):

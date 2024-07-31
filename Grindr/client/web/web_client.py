@@ -11,6 +11,7 @@ from .routes.set_block_user import SetBlockUserRoute
 from .routes.set_location import SetLocationRoute
 from .routes.set_media_upload import SetMediaUploadRoute
 from .routes.set_message_read import SetMessageReadRoute
+from .routes.set_profile_details import SetProfileDetailsRoute
 from .routes.set_send_album import SetSendAlbumRoute
 from .routes.set_send_reaction import SetSendReactionRoute
 from .routes.set_typing import SetTypingRoute
@@ -25,7 +26,7 @@ class GrindrWebClient(GrindrHTTPClient):
 
     def __init__(self, **kwargs):
         """
-        Create a web client with registered TikTok routes
+        Create a web client with registered Grindr routes
 
         :param kwargs: Arguments to pass to the super-class
 
@@ -52,3 +53,4 @@ class GrindrWebClient(GrindrHTTPClient):
         self.set_send_album: SetSendAlbumRoute = SetSendAlbumRoute(self)
         self.set_send_reaction: SetSendReactionRoute = SetSendReactionRoute(self)
         self.set_media_upload: SetMediaUploadRoute = SetMediaUploadRoute(self)
+        self.set_profile_details: SetProfileDetailsRoute = SetProfileDetailsRoute(self)

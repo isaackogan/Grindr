@@ -16,13 +16,14 @@ DEFAULT_REQUEST_PARAMS: Dict[str, Union[int, bool, str]] = {}
 DEFAULT_REQUEST_HEADERS: Dict[str, str] = {
     "requireRealDeviceInfo": "true",
     "L-Time-Zone": "America/Toronto",
-    "L-Device-Info": "dd0703f136406de3;GLOBAL;2;3109244928;2891x1440;d6fcd76c-a0e4-4a99-97a9-29b109bc1042",
+    "L-Grindr-Roles": "[]",
+    "L-Device-Info": "",
     "Accept": "application/json",
-    "User-Agent": "grindr3/24.8.0.122427;122427;Free;Android 13;sdk_gphone64_arm64;Google",
+    "User-Agent": "Grindr3/24.8.0.55320.047817240.99 (55320.047817240.99; iPhone8,1; iOS 15.8.2)",
     "L-Locale": "en_US",
     "Accept-language": "en-US",
     "Content-Type": "application/json; charset=UTF-8",
     "Host": "grindr.mobi",
     "Connection": "Keep-Alive",
-    "Accept-Encoding": "gzip"
+    "Accept-Encoding": "gzip",
 }

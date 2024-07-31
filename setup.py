@@ -30,7 +30,7 @@ if __name__ == '__main__':
         install_requires=[
             "pyee>=9.0.4",
             "httpx>=0.25.0",
-            "websockets_proxy>=0.1.0",
+            "curl-cffi>=0.2.1",
             "pygeohash>=1.2.0",
             "pydantic"
         ],
