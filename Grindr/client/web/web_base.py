@@ -1,4 +1,5 @@
 import json
+import logging
 import random
 import textwrap
 import traceback
@@ -153,7 +154,6 @@ class URLTemplate:
 
         # Take the params and add them and return a string
         d = self._url.format(**data)
-        print(d)
         return d
 
 
@@ -175,7 +175,7 @@ class ClientRoute(
     ]
 ):
 
-    def __init__(self, web: GrindrHTTPClient):
+    def __init__(self, web: GrindrHTTPClient) -> object:
         self._logger = GrindrLogHandler.get_logger()
         self._web: GrindrHTTPClient = web
 
@@ -238,6 +238,7 @@ class ClientRoute(
             try:
                 data = response.json()
                 if data.get('code') == 4:
+                    logging.error("Failed login attempt. Invalid account credentials (wrong user/pass)." + str(data))
                     raise LoginFailedResponse("Invalid account credentials (wrong user/pass).")
                 else:
                     raise LoginFailedResponse("Failed login attempt. Something went wrong: " + str(data))

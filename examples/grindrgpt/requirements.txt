@@ -1,5 +1,0 @@
-openai
-grindr
-python-dotenv
-discord.py
-

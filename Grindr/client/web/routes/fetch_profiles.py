@@ -6,7 +6,7 @@ from Grindr.client.web.web_base import ClientRoute, URLTemplate, BodyParams
 from Grindr.client.web.web_settings import GRINDR_V3
 
 
-class Profile(BaseModel):
+class ProfileData(BaseModel):
     profileId: Optional[int] = None
     displayName: Optional[str] = None
     profileImageMediaHash: Optional[str] = None
@@ -22,7 +22,7 @@ class Profile(BaseModel):
 
 
 class FetchProfilesRouteResponse(BaseModel):
-    profiles: list[Profile]
+    profiles: list[ProfileData]
 
 
 class FetchProfilesRouteBody(BodyParams):

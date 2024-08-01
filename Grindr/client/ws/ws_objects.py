@@ -1,9 +1,10 @@
 import uuid
-from typing import Union
+from abc import ABC, abstractmethod
+from typing import Union, Type
 
 from pydantic import BaseModel
 
-from Grindr.events import MediaType
+from Grindr.models.message import SendMessageType, MessageType
 
 
 class WSMessagePayloadTarget(BaseModel):
@@ -11,15 +12,31 @@ class WSMessagePayloadTarget(BaseModel):
     targetId: int
 
 
-class WSTextPayloadBody(BaseModel):
+class WSMessagePayloadBody(ABC):
+
+    @classmethod
+    @abstractmethod
+    def from_defaults(cls, **kwargs) -> "WSMessagePayloadBody":
+        raise NotImplementedError
+
+
+class WSTextPayloadBody(BaseModel, WSMessagePayloadBody):
     text: str
 
+    @classmethod
+    def from_defaults(cls, text: str) -> "WSTextPayloadBody":
+        return cls(text=text)
 
-class WSImagePayloadBody(BaseModel):
+
+class WSImagePayloadBody(BaseModel, WSMessagePayloadBody):
     mediaId: int
 
+    @classmethod
+    def from_defaults(cls, media_id: str) -> "WSImagePayloadBody":
+        return cls(media_id=media_id)
 
-class WSGifPayloadBody(BaseModel):
+
+class WSGifPayloadBody(BaseModel, WSMessagePayloadBody):
     stillPath: str
     urlPath: str
     id: str
@@ -28,12 +45,49 @@ class WSGifPayloadBody(BaseModel):
     width: int
     height: int
 
+    @classmethod
+    def from_defaults(
+            cls,
+            image_url: str,
+            image_id: str,
+            width: int = 1080,
+            height: int = 1920
+    ) -> "WSGifPayloadBody":
+        return cls(
+            stillPath=image_url,
+            urlPath=image_url,
+            id=image_id,
+            previewPath=image_url,
+            imageHash=f"giphy/{image_id}",
+            width=width,
+            height=height
+        )
+
+
+SendPayloadBody: Type = Union[WSTextPayloadBody, WSImagePayloadBody, WSGifPayloadBody]
+
 
 class WSMessagePayload(BaseModel):
-    type: str = "Text"
+    type: SendMessageType
     target: WSMessagePayloadTarget
-    body: Union[WSTextPayloadBody, WSImagePayloadBody, WSGifPayloadBody]
+    body: SendPayloadBody
     ref: str
+
+    @classmethod
+    def from_defaults(
+            cls,
+            target_id: int,
+            message_type: SendMessageType,
+            message_body: SendPayloadBody
+    ) -> "WSMessagePayload":
+        ref: str = str(uuid.uuid4())
+
+        return cls(
+            type=message_type,
+            target=WSMessagePayloadTarget(targetId=target_id),
+            body=message_body,
+            ref=ref
+        )
 
 
 class WSMessage(BaseModel):
@@ -43,69 +97,12 @@ class WSMessage(BaseModel):
     type: str = "chat.v1.message.send"
 
     @classmethod
-    def text_from_defaults(
+    def from_defaults(
             cls,
-            token: str,
-            profile_id: int,
-            text: str
+            payload: WSMessagePayload
     ) -> "WSMessage":
-        ref = str(uuid.uuid4())
-
         return cls(
-            ref=ref,
-            payload=WSMessagePayload(
-                target=WSMessagePayloadTarget(targetId=profile_id),
-                body=WSTextPayloadBody(text=text),
-                ref=ref
-            ),
-            token=token
-        )
-
-    @classmethod
-    def image_from_defaults(
-            cls,
-            token: str,
-            profile_id: int,
-            media_id: int
-    ):
-        ref = str(uuid.uuid4())
-
-        return cls(
-            ref=ref,
-            payload=WSMessagePayload(
-                type=MediaType.IMAGE.value,
-                target=WSMessagePayloadTarget(targetId=profile_id),
-                body=WSImagePayloadBody(mediaId=media_id),
-                ref=ref
-            ),
-            token=token
-        )
-
-    @classmethod
-    def gif_from_defaults(
-            cls,
-            token: str,
-            profile_id: int,
-            image_url: str,
-            image_id: str
-    ):
-        ref = str(uuid.uuid4())
-
-        return cls(
-            ref=ref,
-            payload=WSMessagePayload(
-                type=MediaType.GIPHY.value,
-                target=WSMessagePayloadTarget(targetId=profile_id),
-                body=WSGifPayloadBody(
-                    stillPath=image_url,
-                    urlPath=image_url,
-                    id=image_id,
-                    previewPath=image_url,
-                    imageHash=f"giphy/{image_id}",
-                    width=30,
-                    height=60
-                ),
-                ref=ref
-            ),
-            token=token
+            payload=payload,
+            ref=payload.ref,
+            token=payload.ref
         )

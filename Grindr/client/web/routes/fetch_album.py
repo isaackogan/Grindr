@@ -2,8 +2,8 @@ from typing import Optional, List, Any
 
 from pydantic import BaseModel
 
-from Grindr.client.web.web_base import ClientRoute, BodyParams, URLTemplate
-from Grindr.client.web.web_settings import GRINDR_V4, GRINDR_V3, GRINDR_V1
+from Grindr.client.web.web_base import ClientRoute, URLTemplate
+from Grindr.client.web.web_settings import GRINDR_V1
 
 
 class AlbumContent(BaseModel):
@@ -25,7 +25,7 @@ class Album(BaseModel):
     version: Optional[int] = None
     createdAt: Optional[str] = None
     updatedAt: Optional[str] = None
-    content: Optional[List[AlbumContent]] = None
+    content: Optional[AlbumContent] = None
     isShareable: Optional[bool] = None
 
 
@@ -33,7 +33,7 @@ class FetchAlbumsRouteResponse(BaseModel):
     albums: Optional[List[Album]] = None
 
 
-class FetchAlbumRoute(
+class FetchAlbumsRoute(
     ClientRoute[
         "GET",
         URLTemplate(GRINDR_V1, "/albums"),

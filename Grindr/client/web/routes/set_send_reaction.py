@@ -1,10 +1,5 @@
-import uuid
-from typing import List
-
-from pydantic import BaseModel, Field
-
-from Grindr.client.web.web_base import ClientRoute, URLTemplate, QueryParams, BodyParams
-from Grindr.client.web.web_settings import GRINDR_V1, GRINDR_V4
+from Grindr.client.web.web_base import ClientRoute, URLTemplate, BodyParams
+from Grindr.client.web.web_settings import GRINDR_V4
 
 
 class SetSendReactionRouteBody(BodyParams):

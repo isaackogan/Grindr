@@ -1,28 +1,33 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 import os
 import traceback
 from asyncio import AbstractEventLoop, Task, CancelledError
 from logging import Logger
-from typing import Optional, Union, Callable, Type
+from typing import Optional
 
 from pydantic import ValidationError
-from pyee import AsyncIOEventEmitter
-from pyee.base import Handler
 
+from Grindr.client.emitter import GrindrEmitter
 from Grindr.client.errors import AuthenticationDetailsMissingError, AlreadyConnectedError
 from Grindr.client.logger import GrindrLogHandler, LogLevel
+from Grindr.client.web.routes.fetch_profile import DetailedProfileData
 from Grindr.client.web.routes.fetch_session import SessionData, FetchSessionRoutePayload, FetchSessionRefreshRoutePayload, FetchSessionRouteResponse
 from Grindr.client.web.web_client import GrindrWebClient
 from Grindr.client.web.web_settings import GRINDR_WS
 from Grindr.client.ws.ws_client import GrindrWSClient
-from Grindr.client.ws.ws_objects import WSMessage
 from Grindr.client.ws.ws_settings import DEFAULT_WS_HEADERS
 from Grindr.events import Event, DisconnectEvent
 from Grindr.events.mappings import get_event
+from Grindr.models.context import Context
+from Grindr.models.conversation import Conversation
+from Grindr.models.inbox import Inbox
+from Grindr.models.profile import Profile
 
 
-class GrindrClient(AsyncIOEventEmitter):
+class GrindrClient(GrindrEmitter):
     """
     A client to connect to & read from Grindr
 
@@ -65,6 +70,7 @@ class GrindrClient(AsyncIOEventEmitter):
 
         # Properties
         self._session: Optional[SessionData] = None
+        self._context: Optional[Context] = None
         self._event_loop_task: Optional[Task] = None
         self._session_loop_task: Optional[Task] = None
 
@@ -90,6 +96,13 @@ class GrindrClient(AsyncIOEventEmitter):
         self._session = await self.login(
             email=email,
             password=password
+        )
+
+        self._context = Context(
+            profile_id=self._session.profileId,
+            _web=self.web,
+            _ws=self.ws,
+            _emitter=self
         )
 
         # Update the headers
@@ -204,62 +217,6 @@ class GrindrClient(AsyncIOEventEmitter):
         self.emit(ev.event_type, ev)
         self._session_loop_task.cancel()
 
-    def on(self, event: Type[Event], f: Optional[Callable] = None) -> Union[Handler, Callable[[Handler], Handler]]:
-        """
-        Decorator that can be used to register a Python function as an event listener
-
-        :param event: The event to listen to
-        :param f: The function to handle the event
-        :return: The wrapped function as a generated `pyee.Handler` object
-
-        """
-
-        return super(GrindrClient, self).on(event.get_event_type(), f)
-
-    def add_listener(self, event: Type[Event], f: Callable) -> Handler:
-        """
-        Method that can be used to register a Python function as an event listener
-
-        :param event: The event to listen to
-        :param f: The function to handle the event
-        :return: The generated `pyee.Handler` object
-
-        """
-        if isinstance(event, str):
-            return super().add_listener(event=event, f=f)
-
-        return super().add_listener(event=event.get_event_type(), f=f)
-
-    async def send(self, profile_id: int, text: str) -> None:
-        await self._ws.ws.asend(
-            WSMessage.text_from_defaults(
-                token=self._web.session_token,
-                profile_id=profile_id,
-                text=text
-            )
-        )
-
-    async def send_gif(self, profile_id: int, image_url: str, image_id: str) -> None:
-        await self._ws.ws.asend(
-            WSMessage.gif_from_defaults(
-                token=self._web.session_token,
-                profile_id=profile_id,
-                image_id=image_id,
-                image_url=image_url
-            )
-        )
-
-    def has_listener(self, event: Type[Event]) -> bool:
-        """
-        Check whether the client is listening to a given event
-
-        :param event: The event to check listening for
-        :return: Whether it is being listened to
-
-        """
-
-        return event.__name__ in self._events
-
     @property
     def web(self) -> GrindrWebClient:
         """
@@ -270,6 +227,17 @@ class GrindrClient(AsyncIOEventEmitter):
         """
 
         return self._web
+
+    @property
+    def ws(self) -> GrindrWSClient:
+        """
+        The HTTP client that this client uses for requests
+
+        :return: A copy of the GrindrWSClient
+
+        """
+
+        return self._ws
 
     @property
     def _asyncio_loop(self) -> AbstractEventLoop:
@@ -310,3 +278,29 @@ class GrindrClient(AsyncIOEventEmitter):
     @property
     def session(self) -> SessionData:
         return self._session
+
+    async def retrieve_profile(self, profile_id: int) -> Profile:
+        conversation: Conversation = self.get_conversation(profile_id=profile_id)
+        profile: Profile = await conversation.retrieve_profile()
+        return profile
+
+    async def retrieve_conversation(self, profile_id: int) -> Conversation:
+        conversation: Conversation = self.get_conversation(profile_id=profile_id)
+        return await conversation.retrieve_all()
+
+    def get_conversation(self, profile_id: Optional[int]):
+
+        return Conversation.from_defaults(
+            target_id=profile_id,
+            context=self._context
+        )
+
+    async def get_inbox(self) -> Inbox:
+
+        return Inbox.from_defaults(
+            context=self._context
+        )
+
+    async def retrieve_inbox(self) -> Inbox:
+        inbox: Inbox = await self.get_inbox()
+        return await inbox.retrieve_all()

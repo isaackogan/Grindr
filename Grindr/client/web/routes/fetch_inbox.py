@@ -32,7 +32,7 @@ class Preview(BaseModel):
     photoContentReply: Optional[str] = None
 
 
-class InboxConversation(BaseModel):
+class InboxConversationData(BaseModel):
     conversationId: Optional[str] = None
     name: Optional[str] = None
     participants: Optional[List[Participant]] = None
@@ -49,7 +49,8 @@ class InboxConversation(BaseModel):
 
 
 class FetchInboxRouteResponse(BaseModel):
-    entries: Optional[List[InboxConversation]] = []
+    entries: Optional[List[InboxConversationData]] = []
+    nextPage: Optional[int] = None
 
 
 class FetchInboxRouteParams(QueryParams):

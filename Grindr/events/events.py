@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-import enum
-from typing import Any, Optional, Union, List
+from typing import Any, Optional
 
 from pydantic import BaseModel
+
+from Grindr.client.web.routes.fetch_messages import Message
+from Grindr.models.message import MessageType
 
 
 class Event(BaseModel):
@@ -58,48 +60,9 @@ class ConnectEvent(Event):
     """
 
 
-class TextMedia(BaseModel):
-    text: str
-
-
-class ImageMedia(BaseModel):
-    mediaId: int
-    url: str
-    imageHash: str
-    width: int
-    height: int
-    expiresAt: int
-
-
-class MediaType(str, enum.Enum):
-    TEXT = "Text"
-    IMAGE = "Image"
-    PROFILE_PHOTO_REPLY = "ProfilePhotoReply"
-    ALBUM = "Album"
-    ALBUM_CONTENT_REPLY = "AlbumContentReply"
-    GIPHY = "Giphy"
-
-
-class ProfilePhotoReplyMedia(BaseModel):
-    imageHash: str
-    photoContentReply: str
-
-
-class AlbumContentReplyMedia(BaseModel):
-    albumId: Optional[int] = None
-    ownerProfileId: Optional[int] = None
-    albumContentId: Optional[int] = None
-    albumContentReply: Optional[str] = None
-    previewUrl: Optional[str] = None
-    expiresAt: Optional[int] = None
-
-
-MediaBody = Union[TextMedia, ImageMedia, ProfilePhotoReplyMedia, AlbumContentReplyMedia, dict]
-
-
 class MessageEventReplyPreview(BaseModel):
     senderId: int
-    type: Optional[MediaType] = None
+    type: Optional[MessageType] = None
     chat1Type: Optional[str] = None
     previewMessageId: str
     text: Optional[str]
@@ -109,19 +72,8 @@ class MessageEventReplyPreview(BaseModel):
     duration: Optional[Any]
 
 
-class MessageEvent(Event):
-    messageId: Optional[str] = None
-    conversationId: Optional[str] = None
-    senderId: Optional[int] = None
-    timestamp: Optional[int] = None
-    unsent: Optional[bool] = None
-    reactions: Optional[List[Any]] = None
-    type: Optional[MediaType] = None
-    body: Optional[MediaBody] = None
-    replyToMessage: Optional["MessageEvent"] = None
-    dynamic: Optional[bool] = None
-    chat1Type: Optional[str] = None
-    replyPreview: Optional[MessageEventReplyPreview] = None
+class MessageEvent(Message, Event):
+    pass
 
 
 class TapEvent(Event):
