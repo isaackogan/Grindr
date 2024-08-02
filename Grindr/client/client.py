@@ -4,16 +4,17 @@ import asyncio
 import logging
 import os
 import traceback
+import uuid
 from asyncio import AbstractEventLoop, Task, CancelledError
 from logging import Logger
-from typing import Optional
+from typing import Optional, Dict
 
 from pydantic import ValidationError
 
 from Grindr.client.emitter import GrindrEmitter
 from Grindr.client.errors import AuthenticationDetailsMissingError, AlreadyConnectedError
+from Grindr.client.extension import Extension
 from Grindr.client.logger import GrindrLogHandler, LogLevel
-from Grindr.client.web.routes.fetch_profile import DetailedProfileData
 from Grindr.client.web.routes.fetch_session import SessionData, FetchSessionRoutePayload, FetchSessionRefreshRoutePayload, FetchSessionRouteResponse
 from Grindr.client.web.web_client import GrindrWebClient
 from Grindr.client.web.web_settings import GRINDR_WS
@@ -73,6 +74,7 @@ class GrindrClient(GrindrEmitter):
         self._context: Optional[Context] = None
         self._event_loop_task: Optional[Task] = None
         self._session_loop_task: Optional[Task] = None
+        self._extensions: Dict[str, Extension] = dict()
 
     async def start(
             self,
@@ -304,3 +306,34 @@ class GrindrClient(GrindrEmitter):
     async def retrieve_inbox(self) -> Inbox:
         inbox: Inbox = await self.get_inbox()
         return await inbox.retrieve_all()
+
+    async def load_extension(self, extension: Extension) -> str:
+        """
+        Load an extension
+
+        :param extension: The extension to load
+        :return: None
+
+        """
+
+        extension_id: str = str(uuid.uuid4())
+        self._extensions[extension_id] = extension
+        await extension.load(client=self, instance_id=extension_id)
+        return extension_id
+
+    async def unload_extension(self, extension: Extension):
+        """
+        Unload an extension
+
+        :param extension: The extension to unload
+        :return: None
+
+        """
+
+        instance = self._extensions.get(extension.instance_id)
+
+        if instance is None:
+            return
+
+        await instance.unload()
+        del self._extensions[extension.instance_id]
