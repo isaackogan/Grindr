@@ -23,7 +23,7 @@ class AgeBlock(Extension):
     async def on_message(self, event: MessageEvent) -> None:
         """Block users who are too old or too young when they message."""
 
-        if self.client.session.profileId == event.author.id:
+        if self.client.session.profileId == event.senderId:
             return
 
         # Get the profile

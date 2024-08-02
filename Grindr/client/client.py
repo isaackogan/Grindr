@@ -370,3 +370,7 @@ class GrindrClient(GrindrEmitter):
 
         for extension in self._extensions.values():
             await self.unload_extension(extension)
+
+    @property
+    def profile_id(self) -> int:
+        return int(self._session.profileId)
