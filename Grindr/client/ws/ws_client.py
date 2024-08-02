@@ -2,6 +2,8 @@ import asyncio
 import json
 from typing import Optional, AsyncIterator, Dict
 
+from curl_cffi.requests import AsyncSession
+
 from Grindr.client.logger import GrindrLogHandler
 from Grindr.client.ws.AsyncWS.client import AsyncWebSocket
 from Grindr.events import WebsocketResponse
@@ -28,6 +30,9 @@ class GrindrWSClient:
         self._ws: Optional[AsyncWebSocket] = None
         self._ws_proxy: Optional[str] = proxy
         self._logger = GrindrLogHandler.get_logger()
+
+        if self._ws_proxy:
+            self._ws_kwargs["proxy"] = self._ws_proxy
 
     async def disconnect(self) -> None:
         """
@@ -73,7 +78,6 @@ class GrindrWSClient:
             url: str,
             headers: Dict[str, str]
     ) -> AsyncIterator[WebsocketResponse]:
-
         # Run connection loop
         async with AsyncWS.connect(
                 url=self._ws_kwargs.pop("url", url),
