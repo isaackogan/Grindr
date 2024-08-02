@@ -7,7 +7,7 @@ manifest: dict = {
     "name": "Grindr",
     "license": "MIT",
     "author": "Isaac Kogan",
-    "version": "0.0.9",
+    "version": "0.1.0",
     "email": "info@isaackogan.com"
 }
 

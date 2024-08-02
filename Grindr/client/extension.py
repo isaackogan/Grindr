@@ -1,10 +1,14 @@
+import typing
 from abc import ABC
 from typing import Awaitable, Type, Optional
 
 from pydantic import BaseModel, PrivateAttr
 
-from Grindr import GrindrClient
+from Grindr.client.emitter import GrindrEmitter
 from Grindr.events import Event
+
+if typing.TYPE_CHECKING:
+    from Grindr import GrindrClient
 
 
 class Extension(BaseModel, ABC):
@@ -14,8 +18,8 @@ class Extension(BaseModel, ABC):
     """
 
     _listeners: dict[Type[Event], str] = PrivateAttr(default_factory=dict)
-    _client: Optional[GrindrClient] = PrivateAttr(default_factory=None)
-    _instance_id: Optional[str] = PrivateAttr(default_factory=None)
+    _client: Optional[GrindrEmitter] = PrivateAttr(default=None)
+    _instance_id: Optional[str] = PrivateAttr(default=None)
 
     def _add_decorated_listeners(self) -> None:
         """Add listeners to the client"""
@@ -43,7 +47,7 @@ class Extension(BaseModel, ABC):
         for event, attr in self._listeners.items():
             self._client.remove_listener(event, getattr(self, attr))
 
-    async def load(self, instance_id: str, client: GrindrClient) -> None:
+    async def load(self, instance_id: str, client: "GrindrClient") -> None:
         """Load the extension"""
 
         await self.on_load()
@@ -60,9 +64,10 @@ class Extension(BaseModel, ABC):
         self._client = None
 
     @property
-    def client(self) -> GrindrClient:
+    def client(self) -> "GrindrClient":
         """Get the client instance"""
 
+        # noinspection PyTypeChecker
         return self._client
 
     async def on_load(self) -> Awaitable[None]:

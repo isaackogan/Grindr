@@ -7,7 +7,7 @@ import traceback
 import uuid
 from asyncio import AbstractEventLoop, Task, CancelledError
 from logging import Logger
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 from pydantic import ValidationError
 
@@ -20,7 +20,7 @@ from Grindr.client.web.web_client import GrindrWebClient
 from Grindr.client.web.web_settings import GRINDR_WS
 from Grindr.client.ws.ws_client import GrindrWSClient
 from Grindr.client.ws.ws_settings import DEFAULT_WS_HEADERS
-from Grindr.events import Event, DisconnectEvent
+from Grindr.events import Event, DisconnectEvent, ConnectEvent
 from Grindr.events.mappings import get_event
 from Grindr.models.context import Context
 from Grindr.models.conversation import Conversation
@@ -41,7 +41,8 @@ class GrindrClient(GrindrEmitter):
             web_proxy: Optional[str] = None,
             ws_proxy: Optional[str] = None,
             web_kwargs: dict = None,
-            ws_kwargs: dict = None
+            ws_kwargs: dict = None,
+            extensions: Optional[List[Extension]] = None
     ):
         """
         Instantiate the GrindrClient object
@@ -75,6 +76,8 @@ class GrindrClient(GrindrEmitter):
         self._event_loop_task: Optional[Task] = None
         self._session_loop_task: Optional[Task] = None
         self._extensions: Dict[str, Extension] = dict()
+
+        self.add_extensions(*extensions or [])
 
     async def start(
             self,
@@ -185,6 +188,7 @@ class GrindrClient(GrindrEmitter):
 
         # Wait gracefully for things to finish
         await self._ws.disconnect()
+        await self._unload_extensions()
         await self._event_loop_task
 
         # Reset state vars
@@ -199,14 +203,14 @@ class GrindrClient(GrindrEmitter):
         """
 
         # Emit events while connected
-        first_event: bool = False
+        first_event: bool = True
 
         async for message in self._ws.connect(uri=GRINDR_WS, headers={**self._web.headers, **DEFAULT_WS_HEADERS, "Sec-Websocket-Key": "8y/TkqcKQ6snPVQTsvpvWg=="}):
 
             # Keep session continually updated
             if first_event:
                 first_event = False
-                self._session_loop_task = self._asyncio_loop.create_task(self._refresh_session_loop())
+                await self._on_connect()
 
             try:
                 ev: Event = get_event(message)
@@ -215,8 +219,24 @@ class GrindrClient(GrindrEmitter):
                 self._logger.error("Failed to parse event due to validation error!\n" + traceback.format_exc())
 
         # After for loop finishes, disconnected
+        await self._on_disconnect()
+
+    async def _on_connect(self):
+        """Handle the client connect"""
+
+        await self._load_extensions()
+
+        ev = ConnectEvent()
+        self.emit(ev.event_type, ev)
+
+        self._session_loop_task = self._asyncio_loop.create_task(self._refresh_session_loop())
+
+    async def _on_disconnect(self):
+        """Handle the client disconnect"""
+
         ev = DisconnectEvent()
         self.emit(ev.event_type, ev)
+
         self._session_loop_task.cancel()
 
     @property
@@ -291,14 +311,12 @@ class GrindrClient(GrindrEmitter):
         return await conversation.retrieve_all()
 
     def get_conversation(self, profile_id: Optional[int]):
-
         return Conversation.from_defaults(
             target_id=profile_id,
             context=self._context
         )
 
     async def get_inbox(self) -> Inbox:
-
         return Inbox.from_defaults(
             context=self._context
         )
@@ -307,28 +325,30 @@ class GrindrClient(GrindrEmitter):
         inbox: Inbox = await self.get_inbox()
         return await inbox.retrieve_all()
 
-    async def load_extension(self, extension: Extension) -> str:
-        """
-        Load an extension
+    def add_extensions(self, *extensions: Extension) -> List[str]:
+        """Add multiple extensions"""
 
-        :param extension: The extension to load
-        :return: None
+        return [self.add_extension(extension) for extension in extensions]
 
-        """
+    def add_extension(self, extension: Extension) -> str:
+        """Add an extension to be loaded on connect"""
 
         extension_id: str = str(uuid.uuid4())
         self._extensions[extension_id] = extension
+        return extension_id
+
+    async def load_extension(self, extension: Extension) -> str:
+        """Load a single extension"""
+
+        if not (extension_id := self._extensions.get(extension.instance_id)):
+            extension_id = self.add_extension(extension)
+
         await extension.load(client=self, instance_id=extension_id)
+        self._logger.debug(f"Loaded the {extension.__class__.__name__} extension with ID {extension_id}")
         return extension_id
 
     async def unload_extension(self, extension: Extension):
-        """
-        Unload an extension
-
-        :param extension: The extension to unload
-        :return: None
-
-        """
+        """Unload an extension manually"""
 
         instance = self._extensions.get(extension.instance_id)
 
@@ -336,4 +356,17 @@ class GrindrClient(GrindrEmitter):
             return
 
         await instance.unload()
+        self._logger.debug(f"Unloaded the {extension.__class__.__name__} extension with ID {extension.instance_id}")
         del self._extensions[extension.instance_id]
+
+    async def _load_extensions(self) -> None:
+        """Load multiple extensions"""
+
+        for instance_id, extension in self._extensions.copy().items():
+            await self.load_extension(extension)
+
+    async def _unload_extensions(self) -> None:
+        """Unload all extensions"""
+
+        for extension in self._extensions.values():
+            await self.unload_extension(extension)
