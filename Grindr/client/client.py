@@ -34,7 +34,7 @@ class GrindrClient(GrindrEmitter):
 
     """
 
-    REFRESH_SESSION_INTERVAL: int = int(os.environ.get("GRINDR_REFRESH_INTERVAL", "600"))
+    REFRESH_SESSION_INTERVAL: int = int(os.environ.get("GRINDR_REFRESH_INTERVAL", "1200"))
 
     def __init__(
             self,
@@ -71,6 +71,7 @@ class GrindrClient(GrindrEmitter):
         )
 
         # Properties
+        self._email: Optional[str] = None
         self._session: Optional[SessionData] = None
         self._context: Optional[Context] = None
         self._event_loop_task: Optional[Task] = None
@@ -98,7 +99,7 @@ class GrindrClient(GrindrEmitter):
             raise AuthenticationDetailsMissingError("Authentication details must be sent! Either username/password, or session_token.")
 
         # Generate the session
-        self._session = await self.login(
+        await self.login(
             email=email,
             password=password
         )
@@ -110,9 +111,6 @@ class GrindrClient(GrindrEmitter):
             _emitter=self
         )
 
-        # Update the headers
-        self._web.set_session(self._session.sessionId)
-
         # Prevent dupes
         if self._ws.connected:
             raise AlreadyConnectedError("You can only make one connection per client!")
@@ -121,33 +119,45 @@ class GrindrClient(GrindrEmitter):
         self._event_loop_task = self._asyncio_loop.create_task(self._ws_loop())
         return self._event_loop_task
 
-    async def login(self, email: str, password: str) -> SessionData:
-        session: FetchSessionRouteResponse = await self._web.fetch_session_new(
+    async def login(
+            self,
+            email: str,
+            password: str
+    ) -> SessionData:
+
+        self._email = email
+
+        self._session = await self._web.fetch_session_new(
             body=FetchSessionRoutePayload(
-                email=email,
+                email=self._email,
                 password=password
             )
         )
 
-        self._web.set_session(session.sessionId)
-        return session
+        self._web.set_session(self._session.sessionId)
+        return self._session
 
     async def _refresh_session_loop(self) -> None:
 
         while self.connected:
+
+            # Note: Sessions expire after 30 minutes
             await asyncio.sleep(self.REFRESH_SESSION_INTERVAL)
 
-            response: SessionData = await self._web.fetch_session_refresh(
-                params=None,
-                body=FetchSessionRefreshRoutePayload(
-                    email=self._session.email,
-                    token=self._session.sessionId,
-                    authToken=self._session.authToken
+            try:
+                response: SessionData = await self._web.fetch_session_refresh(
+                    body=FetchSessionRefreshRoutePayload(
+                        email=self._email,
+                        token=self._session.sessionId,
+                        authToken=self._session.authToken
+                    )
                 )
-            )
 
-            self._logger.debug("Refreshed Grindr client session!")
-            self.web.set_session(response.sessionId)
+                self._logger.debug("Refreshed Grindr client session!")
+                self.web.set_session(response.sessionId)
+            except Exception as ex:
+                self._logger.error("Failed to refresh session!")
+                raise ex
 
     async def connect(self, **kwargs) -> Task:
         """
@@ -228,7 +238,6 @@ class GrindrClient(GrindrEmitter):
 
         ev = ConnectEvent()
         self.emit(ev.event_type, ev)
-
         self._session_loop_task = self._asyncio_loop.create_task(self._refresh_session_loop())
 
     async def _on_disconnect(self):
@@ -236,7 +245,6 @@ class GrindrClient(GrindrEmitter):
 
         ev = DisconnectEvent()
         self.emit(ev.event_type, ev)
-
         self._session_loop_task.cancel()
 
     @property

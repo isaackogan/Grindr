@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import random
 import textwrap
 import traceback
@@ -175,7 +176,7 @@ class ClientRoute(
     ]
 ):
 
-    def __init__(self, web: GrindrHTTPClient) -> object:
+    def __init__(self, web: GrindrHTTPClient):
         self._logger = GrindrLogHandler.get_logger()
         self._web: GrindrHTTPClient = web
 
@@ -253,7 +254,8 @@ class ClientRoute(
         # Build the payload reply
         try:
             data: dict = response.json() if response.content else {}
-            self._logger.debug("Received JSON: " + json.dumps(data))
+            if os.environ.get("G_DEBUG_JSON"):
+                self._logger.debug("Received JSON: " + json.dumps(data))
             return self.response(**data)
         except ValidationError:
             self._logger.error(f"Failed due to ValidationError: {response.status_code} {response.url}\n" + traceback.format_exc())

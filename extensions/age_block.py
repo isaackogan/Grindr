@@ -23,7 +23,7 @@ class AgeBlock(Extension):
     async def on_message(self, event: MessageEvent) -> None:
         """Block users who are too old or too young when they message."""
 
-        if self.client.session.profileId == event.senderId:
+        if self.client.profile_id == event.senderId:
             return
 
         # Get the profile
@@ -36,10 +36,10 @@ class AgeBlock(Extension):
 
         # If too old or too young
         if not profile.age <= self.min_age <= self.max_age:
-            self.client.logger.debug(f"Blocking {profile.name} ({profile.id})")
+            self.client.logger.debug(f"Blocking {profile.displayName} ({profile.profileId})")
             await profile.send_block()
 
-        self.client.logger.debug(f"Received message from {profile.name} ({profile.id}) within age parameters")
+        self.client.logger.debug(f"Received message from {profile.displayName} ({profile.profileId}) within age parameters")
 
     async def on_unload(self) -> None:
         """Clear the cache when the extension is unloaded."""
