@@ -14,7 +14,7 @@ class AgeBlock(Extension):
     """
 
     min_age: int = int(os.environ.get("G_MIN_AGE", "18"))
-    max_age: int = int(os.environ.get("G_MAX_AGE", "24"))
+    max_age: int = int(os.environ.get("G_MAX_AGE", "27"))
 
     # Private parts
     _profiles: dict[int, Profile] = PrivateAttr(default_factory=dict)
@@ -35,9 +35,10 @@ class AgeBlock(Extension):
             return
 
         # If too old or too young
-        if not profile.age <= self.min_age <= self.max_age:
+        if profile.age < self.min_age or profile.age > self.max_age:
             self.client.logger.debug(f"Blocking {profile.displayName} ({profile.profileId})")
             await profile.send_block()
+            return
 
         self.client.logger.debug(f"Received message from {profile.displayName} ({profile.profileId}) within age parameters")
 

@@ -233,11 +233,7 @@ class GrindrClient(GrindrEmitter):
 
     async def _on_connect(self):
         """Handle the client connect"""
-
         await self._load_extensions()
-
-        ev = ConnectEvent()
-        self.emit(ev.event_type, ev)
         self._session_loop_task = self._asyncio_loop.create_task(self._refresh_session_loop())
 
     async def _on_disconnect(self):

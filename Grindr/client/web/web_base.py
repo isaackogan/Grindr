@@ -9,12 +9,39 @@ from json import JSONDecodeError
 from typing import Optional, Any, Dict, Literal, TypeVar, Generic, ForwardRef, Type
 
 import curl_cffi.requests
+from curl_cffi import CurlSslVersion
 from curl_cffi.requests import AsyncSession
 from pydantic import BaseModel, ValidationError
 
 from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse
 from Grindr.client.logger import GrindrLogHandler
 from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS
+
+OKHTTP_4_ANDROID_10_JA3 = okhttp4_android10_ja3 = ",".join(
+    [
+        "771",
+        "4865-4866-4867-49195-49196-52393-49199-49200-52392-49171-49172-156-157-47-53",
+        "0-23-65281-10-11-35-16-5-13-51-45-43-21",
+        "29-23-24",
+        "0",
+    ]
+)
+
+OKHTTP_4_ANDROID_10_AKAMAI = "4:16777216|16711681|0|m,p,a,s"
+
+extra_fp = {
+    "tls_signature_algorithms": [
+        "ecdsa_secp256r1_sha256",
+        "rsa_pss_rsae_sha256",
+        "rsa_pkcs1_sha256",
+        "ecdsa_secp384r1_sha384",
+        "rsa_pss_rsae_sha384",
+        "rsa_pkcs1_sha384",
+        "rsa_pss_rsae_sha512",
+        "rsa_pkcs1_sha512",
+        "rsa_pkcs1_sha1",
+    ]
+}
 
 
 class GrindrHTTPClient:
@@ -34,7 +61,7 @@ class GrindrHTTPClient:
 
         self._session: AsyncSession = self._create_libcurl_client(
             proxy=proxy,
-            session_kwargs=session_kwargs or dict()
+            session_kwargs=session_kwargs or dict(),
         )
 
         self._session_token: Optional[str] = None
@@ -52,7 +79,10 @@ class GrindrHTTPClient:
         self.params: Dict[str, Any] = {**session_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
         self.headers['L-Device-Info'] = self.generate_device_info()
 
-        return AsyncSession(proxy=proxy, **session_kwargs)
+        return AsyncSession(
+            proxy=proxy,
+            **session_kwargs
+        )
 
     async def request(
             self,

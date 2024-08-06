@@ -1,3 +1,4 @@
+import asyncio
 import json
 import struct
 from typing import AsyncGenerator
@@ -42,6 +43,7 @@ class AsyncWebSocket(curl_cffi.requests.WebSocket):
         while self.keep_running:
             try:
                 msg, flags = await self.arecv()
+                await asyncio.sleep(0.25)
 
                 self.logger.debug(f"Received payload [w/ Flag(s) {flags}]: {msg}")
 

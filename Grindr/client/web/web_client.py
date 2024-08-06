@@ -1,4 +1,5 @@
-from .routes.fetch_album import FetchAlbumsRoute
+from .routes.fetch_album import FetchAlbumRoute
+from .routes.fetch_albums import FetchAlbumsRoute
 from .routes.fetch_blocks import FetchBlocksRoute
 from .routes.fetch_cascade import FetchCascadeRoute
 from .routes.fetch_messages import FetchMessagesRoute
@@ -51,6 +52,7 @@ class GrindrWebClient(GrindrHTTPClient):
         self.fetch_profile: FetchProfileRoute = FetchProfileRoute(self)
         self.fetch_cascade: FetchCascadeRoute = FetchCascadeRoute(self)
         self.fetch_albums: FetchAlbumsRoute = FetchAlbumsRoute(self)
+        self.fetch_album: FetchAlbumRoute = FetchAlbumRoute(self)
         self.fetch_shared_albums: FetchSharedAlbumsRoute = FetchSharedAlbumsRoute(self)
         self.fetch_favorites: FetchFavoritesRoute = FetchFavoritesRoute(self)
         self.fetch_blocks: FetchBlocksRoute = FetchBlocksRoute(self)

@@ -1,7 +1,7 @@
 from typing import Dict, Union
 
-GRINDR_BASE: str = "https://grindr.mobi"
-GRINDR_WS: str = "wss://grindr.mobi/v1/ws"
+GRINDR_BASE: str = "https://web.grindr.com/api"
+GRINDR_WS: str = "wss://web.grindr.com/api/v1/ws"
 
 GRINDR_V1: str = GRINDR_BASE + "/v1"
 GRINDR_V2: str = GRINDR_BASE + "/v2"
@@ -23,7 +23,7 @@ DEFAULT_REQUEST_HEADERS: Dict[str, str] = {
     "L-Locale": "en_US",
     "Accept-language": "en-US",
     "Content-Type": "application/json; charset=UTF-8",
-    "Host": "grindr.mobi",
+    "Host": "web.grindr.com",
     "Connection": "Keep-Alive",
     "Accept-Encoding": "gzip",
 }

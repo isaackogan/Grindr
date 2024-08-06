@@ -1,7 +1,7 @@
 import typing
 from typing import List
 
-from Grindr.client.web.routes.fetch_album import Album
+from Grindr.client.web.routes.fetch_albums import Album
 from Grindr.client.web.routes.fetch_profile import DetailedProfileData
 from Grindr.client.web.routes.fetch_shared_albums import FetchSharedAlbumsRouteParams, FetchSharedAlbumsRouteResponse
 from Grindr.client.web.routes.set_block_user import SetBlockUserRouteResponse, SetBlockUserRouteParams

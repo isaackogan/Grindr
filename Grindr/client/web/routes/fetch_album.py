@@ -1,45 +1,27 @@
-from typing import Optional, List, Any
+from pydantic import BaseModel
 
 from pydantic import BaseModel
 
-from Grindr.client.web.web_base import ClientRoute, URLTemplate
-from Grindr.client.web.web_settings import GRINDR_V1
+from Grindr.client.web.routes.fetch_albums import Album
+from Grindr.client.web.web_base import ClientRoute, URLTemplate, QueryParams
+from Grindr.client.web.web_settings import GRINDR_V2
 
 
-class AlbumContent(BaseModel):
-    contentId: Optional[int] = None
-    contentType: Optional[str] = None
-    url: Optional[str] = None
-    processing: Optional[bool] = None
-    thumbUrl: Optional[str] = None
-    coverUrl: Optional[str] = None
-    statusId: Optional[int] = None
-    rejectionId: Optional[Any] = None
+class FetchAlbumRouteResponse(Album, BaseModel):
+    pass
 
 
-class Album(BaseModel):
-    albumId: Optional[int] = None
-    albumName: Optional[str] = None
-    profileId: Optional[int] = None
-    sharedCount: Optional[int] = None
-    version: Optional[int] = None
-    createdAt: Optional[str] = None
-    updatedAt: Optional[str] = None
-    content: Optional[AlbumContent] = None
-    isShareable: Optional[bool] = None
+class FetchAlbumRouteParams(QueryParams):
+    albumId: int
 
 
-class FetchAlbumsRouteResponse(BaseModel):
-    albums: Optional[List[Album]] = None
-
-
-class FetchAlbumsRoute(
+class FetchAlbumRoute(
     ClientRoute[
         "GET",
-        URLTemplate(GRINDR_V1, "/albums"),
+        URLTemplate(GRINDR_V2, "/albums/{albumId}"),
+        FetchAlbumRouteParams,
         None,
-        None,
-        FetchAlbumsRouteResponse
+        FetchAlbumRouteResponse
     ]
 ):
     pass
