@@ -8,7 +8,7 @@ from datetime import datetime
 
 import pytz
 from pydantic import Field
-from typing import Any
+from typing import Any, Optional, Tuple
 
 import spotipy
 from pydantic import PrivateAttr
@@ -26,7 +26,7 @@ class PersonalBioUpdate(Extension):
     REDIRECT_URI: str = Field(default_factory=lambda: os.environ["SPOTIFY_REDIRECT_URI"])
     TOKEN_FP: str = Field(default_factory=lambda: os.getenv("SPOTIFY_TOKEN_FP", "spotify_token.json"))
     BIO_PATH: str = Field(default_factory=lambda: os.getenv("BIO_PATH", "personal_bio.json"))
-    UPDATE_INTERVAL: int = 60
+    UPDATE_INTERVAL: int = 69
 
     _spotify: spotipy.Spotify = PrivateAttr()
     _bio: SetProfileDetailsRouteBody = PrivateAttr()
@@ -49,6 +49,7 @@ class PersonalBioUpdate(Extension):
 
         self._bio = SetProfileDetailsRouteBody(**json.loads(open(self.BIO_PATH, "r").read()))
         self._original_about_me = self._bio.aboutMe
+        self._original_name = self._bio.displayName
 
     async def on_load(self) -> None:
         self._update_task = asyncio.create_task(self.update_task())
@@ -57,14 +58,18 @@ class PersonalBioUpdate(Extension):
         self._update_task.cancel()
         self._profiles.clear()
 
-    async def get_dynamic_bio(self) -> str:
-        currently_playing: dict = await asyncio.to_thread(self._spotify.currently_playing)
+    async def get_dynamic_bio(self) -> Optional[Tuple[str, str]]:
+        currently_playing: Optional[dict] = await asyncio.to_thread(self._spotify.currently_playing)
+
+        if currently_playing is None:
+            return None
 
         max_line_length: int = 37
         current_artist: str = currently_playing['item']['artists'][0]['name'][:max_line_length] + ("..." if len(currently_playing['item']['artists'][0]['name']) > 20 else "")
         current_song: str = currently_playing['item']['name'][:max_line_length] + ("..." if len(currently_playing['item']['name']) > 20 else "")
 
-        progress_char: str = "⏺️"
+        # progress char is play emoji if playing else pause emoji
+        progress_char: str = "▶️" if currently_playing['is_playing'] else "⏸️"
         progress_bar: str = "▬" * 11
         progress_percent = currently_playing['progress_ms'] / currently_playing['item']['duration_ms'] * 100
         progress_bar = progress_bar[:int(progress_percent / 8)] + progress_char + progress_bar[int(progress_percent / 8):]
@@ -83,20 +88,26 @@ class PersonalBioUpdate(Extension):
         dynamic_bio: str = re.sub(
             "money",
             "$$$",
-            f"Current Song (Updated {current_time_toronto}):\n\n{current_song} by {current_artist}\n{progress_bar} {progress_time}\n\nMy bio updates every {self.UPDATE_INTERVAL:,} seconds. Yes it's real.",
+            f"Currently Listening (Updated {current_time_toronto}):\n\n{current_song} by {current_artist}\n{progress_bar} {progress_time}\n\nMy bio updates every {self.UPDATE_INTERVAL:,} seconds.",
             flags=re.IGNORECASE
         )
 
-        return dynamic_bio
+        return dynamic_bio, f" 🎶" if currently_playing['is_playing'] else ""
 
     async def update_task(self):
 
         # Update the bio every minute
         while True:
             try:
-                self._bio.aboutMe = self._original_about_me + await self.get_dynamic_bio()
+                self.client.logger.debug("Updating the client's biography...")
+                dynamic_response = await self.get_dynamic_bio()
+                dynamic_bio = dynamic_response[0] if dynamic_response else "probably procrastinating..."
+                dynamic_name = dynamic_response[1] if dynamic_response else ""
+
+                self._bio.aboutMe = self._original_about_me + dynamic_bio
+                self._bio.displayName = self._original_name + dynamic_name
                 await self.client.web.set_profile_details(body=self._bio)
             except:
                 logging.error("Error updating bio! " + traceback.format_exc())
 
-            await asyncio.sleep(60)
+            await asyncio.sleep(self.UPDATE_INTERVAL)
