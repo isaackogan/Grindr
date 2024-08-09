@@ -6,3 +6,5 @@ dist
 Grindr.egg-info
 test.py
 mygrindr.py
+spotify_token.json
+personal_bio.json

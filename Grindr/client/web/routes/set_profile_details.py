@@ -41,7 +41,7 @@ class SetProfileDetailsRouteBody(BaseModel):
 
 class SetProfileDetailsRoute(
     ClientRoute[
-        "POST",
+        "PUT",
         URLTemplate(GRINDR_V3_1, "/me/profile"),
         None,
         SetProfileDetailsRouteBody,
