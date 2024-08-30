@@ -1,4 +1,5 @@
 import asyncio
+import functools
 import json
 import logging
 import re
@@ -58,15 +59,24 @@ class PersonalBioUpdate(Extension):
         self._update_task.cancel()
         self._profiles.clear()
 
+    async def get_views(self) -> int:
+        views = await self.client.web.fetch_views()
+        return views.totalViewers
+
     async def get_dynamic_bio(self) -> Optional[Tuple[str, str]]:
         currently_playing: Optional[dict] = await asyncio.to_thread(self._spotify.currently_playing)
+        playlist_text: str = ""
 
         if currently_playing is None:
             return None
 
-        max_line_length: int = 37
-        current_artist: str = currently_playing['item']['artists'][0]['name'][:max_line_length] + ("..." if len(currently_playing['item']['artists'][0]['name']) > 20 else "")
-        current_song: str = currently_playing['item']['name'][:max_line_length] + ("..." if len(currently_playing['item']['name']) > 20 else "")
+        if (currently_playing['context'] or {}).get("type") == "playlist":
+            playlist = await asyncio.to_thread(functools.partial(self._spotify.playlist, currently_playing['context']['uri']))
+            playlist_text = f"[Playlist: {playlist['name'][:27].strip()}]\n"
+
+        max_line_length: int = 35
+        current_artist: str = currently_playing['item']['artists'][0]['name'][:max_line_length] + ("..." if len(currently_playing['item']['artists'][0]['name']) > max_line_length else "")
+        current_song: str = currently_playing['item']['name'][:max_line_length] + ("..." if len(currently_playing['item']['name']) > max_line_length else "")
 
         # progress char is play emoji if playing else pause emoji
         progress_char: str = "▶️" if currently_playing['is_playing'] else "⏸️"
@@ -88,11 +98,11 @@ class PersonalBioUpdate(Extension):
         dynamic_bio: str = re.sub(
             "money",
             "$$$",
-            f"Currently Listening (Updated {current_time_toronto}):\n\n{current_song} by {current_artist}\n{progress_bar} {progress_time}\n\nMy bio updates every {self.UPDATE_INTERVAL:,} seconds.",
+            f"Currently Listening (Updated {current_time_toronto}):\n\n{current_song} by {current_artist}\n{playlist_text}{progress_bar} {progress_time}\n\nProfile has {await self.get_views():,} views in 7d.",
             flags=re.IGNORECASE
         )
 
-        return dynamic_bio, f" 🎶" if currently_playing['is_playing'] else ""
+        return dynamic_bio, f"studying 🎶" if currently_playing['is_playing'] else "scrolling 🔇"
 
     async def update_task(self):
 
@@ -101,11 +111,11 @@ class PersonalBioUpdate(Extension):
             try:
                 self.client.logger.debug("Updating the client's biography...")
                 dynamic_response = await self.get_dynamic_bio()
-                dynamic_bio = dynamic_response[0] if dynamic_response else "probably procrastinating..."
+                dynamic_bio = dynamic_response[0] if dynamic_response else f"Profile has {await self.get_views():,} views in the last 7d."
                 dynamic_name = dynamic_response[1] if dynamic_response else ""
 
                 self._bio.aboutMe = self._original_about_me + dynamic_bio
-                self._bio.displayName = self._original_name + dynamic_name
+                self._bio.displayName = dynamic_name
                 await self.client.web.set_profile_details(body=self._bio)
             except:
                 logging.error("Error updating bio! " + traceback.format_exc())

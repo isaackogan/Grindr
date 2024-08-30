@@ -9,7 +9,7 @@ from Grindr.client.web.web_settings import GRINDR_V6
 
 
 class ViewedProfilePreview(BaseModel):
-    distance: float = None
+    distance: Optional[float] = None
     lastViewed: Optional[int] = None
     profileImageMediaHash: Optional[str] = None
     seen: Optional[int] = None

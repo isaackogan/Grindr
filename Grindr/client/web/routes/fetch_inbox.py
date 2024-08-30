@@ -25,7 +25,7 @@ class Preview(BaseModel):
     lat: Optional[float] = None
     lon: Optional[float] = None
     albumId: Optional[int] = None
-    albumContentId: Optional[str] = None
+    albumContentId: Optional[int] = None
     albumContentReply: Optional[str] = None
     duration: Optional[int] = None
     imageHash: Optional[str] = None
