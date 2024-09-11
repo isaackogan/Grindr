@@ -21,7 +21,7 @@ DEFAULT_REQUEST_HEADERS: Dict[str, str] = {
     "L-Grindr-Roles": "[]",
     "L-Device-Info": "",
     "Accept": "application/json",
-    "User-Agent": "Grindr3/24.8.0.55320.047817240.99 (55320.047817240.99; iPhone8,1; iOS 15.8.2)",
+    "User-Agent": "Grindr3/24.12.2.55320.047817240.99 (55320.047817240.99; iPhone8,1; iOS 15.8.2)",
     "L-Locale": "en_US",
     "Accept-language": "en-US",
     "Content-Type": "application/json; charset=UTF-8",
