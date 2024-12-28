@@ -1,6 +1,6 @@
 from typing import Type, Optional, Callable, Union
 
-from pyee import AsyncIOEventEmitter
+from pyee.asyncio import AsyncIOEventEmitter
 from pyee.base import Handler
 
 from Grindr.events import Event

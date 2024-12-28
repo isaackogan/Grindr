@@ -7,7 +7,7 @@ manifest: dict = {
     "name": "Grindr",
     "license": "MIT",
     "author": "Isaac Kogan",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "email": "info@isaackogan.com"
 }
 
@@ -28,7 +28,7 @@ if __name__ == '__main__':
         long_description_content_type="text/markdown",
         keywords=["Grindr", "Grindr API", "python3", "api", "unofficial"],
         install_requires=[
-            "pyee>=9.0.4",
+            "pyee==12.1.1",
             "curl-cffi>=0.2.1",
             "pygeohash>=1.2.0",
             "pydantic"

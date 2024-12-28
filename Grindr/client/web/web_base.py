@@ -9,7 +9,6 @@ from json import JSONDecodeError
 from typing import Optional, Any, Dict, Literal, TypeVar, Generic, ForwardRef, Type
 
 import curl_cffi.requests
-from curl_cffi import CurlSslVersion
 from curl_cffi.requests import AsyncSession
 from pydantic import BaseModel, ValidationError
 
@@ -140,7 +139,7 @@ class GrindrHTTPClient:
         """iOS device info generator"""
         return f"{str(uuid.uuid4()).upper()};appStore;2;2107621376;1334x750"
 
-    @classmethod
+    @classmethod  # Not used anymore
     def _android_deprecated_generate_device_info(cls):
         identifier = uuid.uuid4()
         hex_identifier = identifier.hex
@@ -264,6 +263,9 @@ class ClientRoute(
             url=self.url % (params.model_dump() if params else {}),
             **kwargs
         )
+
+        if os.environ.get("G_DEBUG_JSON"):
+            self._logger.debug(f"Sent Payload to {response.request.url}: " + json.dumps(kwargs.get('json', {})))
 
         if response.status_code == 403:
             try:

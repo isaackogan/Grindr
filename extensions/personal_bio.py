@@ -98,11 +98,11 @@ class PersonalBioUpdate(Extension):
         dynamic_bio: str = re.sub(
             "money",
             "$$$",
-            f"Currently Listening (Updated {current_time_toronto}):\n\n{current_song} by {current_artist}\n{playlist_text}{progress_bar} {progress_time}\n\nProfile has {await self.get_views():,} views in 7d.",
+            f"Currently Listening (Updated {current_time_toronto}):\n\n{current_song} by {current_artist}\n{playlist_text}{progress_bar} {progress_time}\nMy spooky bio updates automatically!!",
             flags=re.IGNORECASE
         )
 
-        return dynamic_bio, f"studying 🎶" if currently_playing['is_playing'] else "scrolling 🔇"
+        return dynamic_bio, f"listening 🎶" if currently_playing['is_playing'] else "offline 🌙"
 
     async def update_task(self):
 
@@ -111,8 +111,8 @@ class PersonalBioUpdate(Extension):
             try:
                 self.client.logger.debug("Updating the client's biography...")
                 dynamic_response = await self.get_dynamic_bio()
-                dynamic_bio = dynamic_response[0] if dynamic_response else f"Profile has {await self.get_views():,} views in the last 7d."
-                dynamic_name = dynamic_response[1] if dynamic_response else ""
+                dynamic_bio = dynamic_response[0] if dynamic_response else f"be kind to people, even on Grindr; everyone deserves that."
+                dynamic_name = dynamic_response[1] if dynamic_response else "offline 🌙"
 
                 self._bio.aboutMe = self._original_about_me + dynamic_bio
                 self._bio.displayName = dynamic_name
