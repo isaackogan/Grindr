@@ -43,7 +43,7 @@ class SetProfileImageRouteResponse(BaseModel):
 class SetProfileImageRoute(
     ClientRoute[
         "POST",
-        URLTemplate(GRINDR_V3, "/me/profile/images"),
+        URLTemplate(GRINDR_V3, "/me/profile/images?thumbCoords={thumbCoords}"),
         SetProfileImageRouteParams,
         ImageBody,
         SetProfileImageRouteResponse

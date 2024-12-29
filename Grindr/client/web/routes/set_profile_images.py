@@ -11,7 +11,7 @@ class SetProfileImagesRouteBody(BodyParams):
     secondaryImageHashes: list[str] = Field(max_length=4)  # Max 4 secondary images
 
 
-class SetProfileImageRoute(
+class SetProfileImagesRoute(
     ClientRoute[
         "PUT",
         URLTemplate(GRINDR_V3, "/me/profile/images"),

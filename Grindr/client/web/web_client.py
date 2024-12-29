@@ -18,6 +18,7 @@ from .routes.set_media_upload import SetMediaUploadRoute
 from .routes.set_message_read import SetMessageReadRoute
 from .routes.set_profile_details import SetProfileDetailsRoute
 from .routes.set_profile_image import SetProfileImageRoute
+from .routes.set_profile_images import SetProfileImagesRoute
 from .routes.set_send_album import SetSendAlbumRoute
 from .routes.set_send_reaction import SetSendReactionRoute
 from .routes.set_send_tap import SetSendTapRoute
@@ -70,4 +71,4 @@ class GrindrWebClient(GrindrHTTPClient):
         self.set_media_upload: SetMediaUploadRoute = SetMediaUploadRoute(self)
         self.set_profile_details: SetProfileDetailsRoute = SetProfileDetailsRoute(self)
         self.set_profile_image: SetProfileImageRoute = SetProfileImageRoute(self)
-        self.set_profile_images: SetProfileImageRoute = SetProfileImageRoute(self)
+        self.set_profile_images: SetProfileImagesRoute = SetProfileImagesRoute(self)
