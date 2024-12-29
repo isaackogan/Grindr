@@ -3,6 +3,7 @@ from typing import List, Optional, Dict, Any
 from pydantic import BaseModel
 
 from Grindr.client.web.routes.fetch_profiles import ProfileData
+from Grindr.client.web.routes.set_profile_details import SexualPosition
 from Grindr.client.web.web_base import ClientRoute, URLTemplate, BodyParams
 from Grindr.client.web.web_settings import GRINDR_V4
 
@@ -24,7 +25,7 @@ class DetailedProfileData(ProfileData):
     lookingFor: Optional[List[int]] = None
     vaccines: Optional[List[int]] = None
     bodyType: Optional[int] = None
-    sexualPosition: Optional[int] = None
+    sexualPosition: Optional[SexualPosition] = None
     hivStatus: Optional[int] = None
     lastTestedDate: Optional[int] = None
     height: Optional[float] = None

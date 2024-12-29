@@ -1,8 +1,9 @@
-from typing import Optional, List, Any
+import enum
+from typing import Optional, List
 
 from pydantic import BaseModel
 
-from Grindr.client.web.web_base import ClientRoute, URLTemplate, BodyParams
+from Grindr.client.web.web_base import ClientRoute, URLTemplate
 from Grindr.client.web.web_settings import GRINDR_V3_1
 
 
@@ -10,6 +11,15 @@ class SocialNetworks(BaseModel):
     twitter: Optional[dict] = None
     facebook: Optional[dict] = None
     instagram: Optional[dict] = None
+
+
+class SexualPosition(int, enum.Enum):
+    TOP = 1
+    BOTTOM = 2
+    VERSATILE = 3
+    VERS_BOTTOM = 4
+    VERS_TOP = 5
+    SIDE = 6
 
 
 class SetProfileDetailsRouteBody(BaseModel):
@@ -31,7 +41,7 @@ class SetProfileDetailsRouteBody(BaseModel):
     profileTags: Optional[List[str]] = None
     pronouns: Optional[List[int]] = None
     relationshipStatus: Optional[int] = None
-    sexualPosition: Optional[int] = None
+    sexualPosition: Optional[SexualPosition] = None
     showAge: Optional[bool] = None
     showDistance: Optional[bool] = None
     socialNetworks: Optional[SocialNetworks] = None

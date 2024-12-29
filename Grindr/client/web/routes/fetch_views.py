@@ -4,8 +4,10 @@ from pydantic import BaseModel
 
 from Grindr.client.web.routes.fetch_profile import Media
 from Grindr.client.web.routes.fetch_profiles import ProfileData
+from Grindr.client.web.routes.set_profile_details import SexualPosition
 from Grindr.client.web.web_base import ClientRoute, URLTemplate
 from Grindr.client.web.web_settings import GRINDR_V6
+
 
 
 class ViewedProfilePreview(BaseModel):
@@ -13,7 +15,7 @@ class ViewedProfilePreview(BaseModel):
     lastViewed: Optional[int] = None
     profileImageMediaHash: Optional[str] = None
     seen: Optional[int] = None
-    sexualPosition: Optional[int] = None
+    sexualPosition: Optional[SexualPosition] = None
     foundVia: Optional[Any] = None
     rightNow: Optional[str] = None
     inBadNeighborhood: Optional[bool] = None
