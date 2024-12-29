@@ -12,7 +12,7 @@ import curl_cffi.requests
 from curl_cffi.requests import AsyncSession
 from pydantic import BaseModel, ValidationError
 
-from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse, GrindrRequestError
+from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse, GrindrRequestError, AccountBannedError
 from Grindr.client.logger import GrindrLogHandler
 from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS
 
@@ -274,6 +274,10 @@ class ClientRoute(
                     logging.error("Failed login attempt. Invalid account credentials (wrong user/pass)." + str(data))
                     raise LoginFailedResponse(response, "Invalid account credentials (wrong user/pass).")
                 else:
+
+                    if data.get('code') == 27:
+                        raise AccountBannedError(response, "Account has been banned.")
+
                     raise LoginFailedResponse(response, "Failed login attempt. Something went wrong: " + str(data))
 
             except JSONDecodeError:

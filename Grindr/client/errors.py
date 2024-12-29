@@ -23,5 +23,9 @@ class LoginFailedResponse(GrindrRequestError):
         super().__init__(*args)
 
 
+class AccountBannedError(LoginFailedResponse):
+    pass
+
+
 class CloudflareWAFResponse(LoginFailedResponse):
     pass
