@@ -265,8 +265,8 @@ class ClientRoute(
             # Upload an image
             if isinstance(body, ImageBody):
                 kwargs['data'] = body.image_data
-                kwargs['headers'] = {
-                    **kwargs.get('headers', {}),
+                kwargs['extra_headers'] = {
+                    **kwargs.get('extra_headers', {}),
                     'Content-Type': body.image_mimetype
                 }
 
@@ -276,7 +276,6 @@ class ClientRoute(
         else:
 
             raise NotImplementedError("This body type has not been implemented!")
-
 
         response: curl_cffi.requests.Response = await self._web.request(
             method=self.method,
