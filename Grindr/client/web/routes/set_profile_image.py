@@ -1,3 +1,7 @@
+from typing import Optional, List
+
+from pydantic import BaseModel
+
 from Grindr.client.web.web_base import ClientRoute, URLTemplate, ImageBody, QueryParams
 from Grindr.client.web.web_settings import GRINDR_V3
 
@@ -21,16 +25,31 @@ class SetProfileImageRouteParams(QueryParams):
         )
 
 
+class ProfilePhoto(BaseModel):
+    size: Optional[int] = None
+    fullUrl: Optional[str] = None
+    thumbnail: Optional[bool] = None
+    state: Optional[str] = None
+    mediaHash: Optional[str] = None
+    rejectionReason: Optional[str] = None
+
+
+class SetProfileImageRouteResponse(BaseModel):
+    hash: Optional[str] = None
+    imageSizes: List[ProfilePhoto] = None
+    mediaId: int
+
+
 class SetProfileImageRoute(
     ClientRoute[
         "POST",
         URLTemplate(GRINDR_V3, "/me/profile/images"),
         SetProfileImageRouteParams,
         ImageBody,
-        None
+        SetProfileImageRouteResponse
     ]
 ):
     """
-    Upload the hash of a profile image to the Grindr API
+    Upload a profile photo image to the Grindr API & receive a result
 
     """
