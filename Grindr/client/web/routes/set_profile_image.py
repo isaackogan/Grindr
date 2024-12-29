@@ -1,8 +1,8 @@
-from Grindr.client.web.web_base import ClientRoute, URLTemplate, BodyParams, ImageBody
+from Grindr.client.web.web_base import ClientRoute, URLTemplate, ImageBody, QueryParams
 from Grindr.client.web.web_settings import GRINDR_V3
 
 
-class SetProfileImageRouteParams(BodyParams):
+class SetProfileImageRouteParams(QueryParams):
     """Parameters for the SetProfileImageRoute route"""
 
     thumbCoords: str

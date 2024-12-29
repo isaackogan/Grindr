@@ -70,3 +70,4 @@ class GrindrWebClient(GrindrHTTPClient):
         self.set_media_upload: SetMediaUploadRoute = SetMediaUploadRoute(self)
         self.set_profile_details: SetProfileDetailsRoute = SetProfileDetailsRoute(self)
         self.set_profile_image: SetProfileImageRoute = SetProfileImageRoute(self)
+        self.set_profile_images: SetProfileImageRoute = SetProfileImageRoute(self)
