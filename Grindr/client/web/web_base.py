@@ -12,7 +12,7 @@ import curl_cffi.requests
 from curl_cffi.requests import AsyncSession
 from pydantic import BaseModel, ValidationError
 
-from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse
+from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse, GrindrRequestError
 from Grindr.client.logger import GrindrLogHandler
 from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS
 
@@ -272,16 +272,16 @@ class ClientRoute(
                 data = response.json()
                 if data.get('code') == 4:
                     logging.error("Failed login attempt. Invalid account credentials (wrong user/pass)." + str(data))
-                    raise LoginFailedResponse("Invalid account credentials (wrong user/pass).")
+                    raise LoginFailedResponse(response, "Invalid account credentials (wrong user/pass).")
                 else:
-                    raise LoginFailedResponse("Failed login attempt. Something went wrong: " + str(data))
+                    raise LoginFailedResponse(response, "Failed login attempt. Something went wrong: " + str(data))
 
             except JSONDecodeError:
-                raise CloudflareWAFResponse("Blocked by the Grindr Cloudflare WAF!")
+                raise CloudflareWAFResponse(response, "Blocked by the Grindr Cloudflare WAF!")
 
         if response.status_code != 200:
             self._logger.debug("Request Failed: " + str(response.status_code) + response.content.decode())
-            return None
+            raise GrindrRequestError(response, "A request to Grindr failed!")
 
         # Build the payload reply
         try:
@@ -289,6 +289,7 @@ class ClientRoute(
             if os.environ.get("G_DEBUG_JSON"):
                 self._logger.debug("Received JSON: " + json.dumps(data))
             return self.response(**data)
-        except ValidationError:
-            self._logger.error(f"Failed due to ValidationError: {response.status_code} {response.url}\n" + traceback.format_exc())
-            return None
+        except ValidationError as ex:
+            if os.environ.get('G_DEBUG_JSON'):
+                self._logger.error(f"Failed due to ValidationError: {response.status_code} {response.url}\n" + traceback.format_exc())
+            raise ValidationError(response, ex)
