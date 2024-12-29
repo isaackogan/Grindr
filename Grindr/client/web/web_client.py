@@ -2,9 +2,9 @@ from .routes.fetch_album import FetchAlbumRoute
 from .routes.fetch_albums import FetchAlbumsRoute
 from .routes.fetch_blocks import FetchBlocksRoute
 from .routes.fetch_cascade import FetchCascadeRoute
-from .routes.fetch_messages import FetchMessagesRoute
 from .routes.fetch_favorites import FetchFavoritesRoute
 from .routes.fetch_inbox import FetchInboxRoute
+from .routes.fetch_messages import FetchMessagesRoute
 from .routes.fetch_profile import FetchProfileRoute
 from .routes.fetch_profiles import FetchProfilesRoute
 from .routes.fetch_session import FetchSessionNewRoute, FetchSessionRefreshRoute
@@ -17,6 +17,7 @@ from .routes.set_location import SetLocationRoute
 from .routes.set_media_upload import SetMediaUploadRoute
 from .routes.set_message_read import SetMessageReadRoute
 from .routes.set_profile_details import SetProfileDetailsRoute
+from .routes.set_profile_image import SetProfileImageRoute
 from .routes.set_send_album import SetSendAlbumRoute
 from .routes.set_send_reaction import SetSendReactionRoute
 from .routes.set_send_tap import SetSendTapRoute
@@ -68,3 +69,4 @@ class GrindrWebClient(GrindrHTTPClient):
         self.set_send_tap: SetSendTapRoute = SetSendTapRoute(self)
         self.set_media_upload: SetMediaUploadRoute = SetMediaUploadRoute(self)
         self.set_profile_details: SetProfileDetailsRoute = SetProfileDetailsRoute(self)
+        self.set_profile_image: SetProfileImageRoute = SetProfileImageRoute(self)

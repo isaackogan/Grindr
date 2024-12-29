@@ -195,6 +195,11 @@ Body = TypeVar('Body')
 Response = TypeVar('Response')
 
 
+class ImageBody(BaseModel):
+    image_data: bytes
+    image_mimetype: str
+
+
 class ClientRoute(
     Generic[
         Method,
@@ -254,9 +259,24 @@ class ClientRoute(
 
         """
 
-        # Add the body
-        if body is not None:
+        # If the body is a model
+        if isinstance(body, BaseModel):
+
+            # Upload an image
+            if isinstance(body, ImageBody):
+                kwargs['data'] = body.image_data
+                kwargs['headers'] = {
+                    **kwargs.get('headers', {}),
+                    'Content-Type': body.image_mimetype
+                }
+
+            # Otherwise encode as JSON
             kwargs['json'] = kwargs.get('json', body.model_dump())
+
+        else:
+
+            raise NotImplementedError("This body type has not been implemented!")
+
 
         response: curl_cffi.requests.Response = await self._web.request(
             method=self.method,
