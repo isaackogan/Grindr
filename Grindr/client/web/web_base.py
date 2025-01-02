@@ -259,22 +259,19 @@ class ClientRoute(
 
         """
 
+        # Upload an image
+        if isinstance(body, ImageBody):
+            kwargs['data'] = body.image_data
+            kwargs['extra_headers'] = {
+                **kwargs.get('extra_headers', {}),
+                'Content-Type': body.image_mimetype
+            }
         # If the body is a model
-        if isinstance(body, BaseModel):
-
-            # Upload an image
-            if isinstance(body, ImageBody):
-                kwargs['data'] = body.image_data
-                kwargs['extra_headers'] = {
-                    **kwargs.get('extra_headers', {}),
-                    'Content-Type': body.image_mimetype
-                }
-
+        elif isinstance(body, BaseModel):
             # Otherwise encode as JSON
             kwargs['json'] = kwargs.get('json', body.model_dump())
 
-        else:
-
+        elif body is not None:
             raise NotImplementedError("This body type has not been implemented!")
 
         response: curl_cffi.requests.Response = await self._web.request(

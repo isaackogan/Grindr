@@ -12,15 +12,20 @@ class AuthenticationDetailsMissingError(RuntimeError):
 class GrindrRequestError(RuntimeError):
 
     def __init__(self, response: httpx.Response | None, *args):
-        self.response = response
         super().__init__(*args)
+        self._response = response
+
+    @property
+    def response(self) -> httpx.Response | None:
+        return self._response
+
+    @property
+    def request(self) -> httpx.Request | None:
+        return self._response.request
 
 
 class LoginFailedResponse(GrindrRequestError):
-
-    def __init__(self, response: httpx.Response | None, *args):
-        self.response = response
-        super().__init__(*args)
+    pass
 
 
 class AccountBannedError(LoginFailedResponse):
