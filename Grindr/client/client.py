@@ -15,12 +15,12 @@ from Grindr.client.emitter import GrindrEmitter
 from Grindr.client.errors import AuthenticationDetailsMissingError, AlreadyConnectedError
 from Grindr.client.extension import Extension
 from Grindr.client.logger import GrindrLogHandler, LogLevel
-from Grindr.client.web.routes.fetch_session import SessionData, FetchSessionRoutePayload, FetchSessionRefreshRoutePayload, FetchSessionRouteResponse
+from Grindr.client.web.routes.fetch_session import SessionData, FetchSessionRoutePayload, FetchSessionRefreshRoutePayload
 from Grindr.client.web.web_client import GrindrWebClient
 from Grindr.client.web.web_settings import GRINDR_WS
 from Grindr.client.ws.ws_client import GrindrWSClient
 from Grindr.client.ws.ws_settings import DEFAULT_WS_HEADERS
-from Grindr.events import Event, DisconnectEvent, ConnectEvent
+from Grindr.events import Event, DisconnectEvent
 from Grindr.events.mappings import get_event
 from Grindr.models.context import Context
 from Grindr.models.conversation import Conversation
@@ -58,12 +58,12 @@ class GrindrClient(GrindrEmitter):
 
         self._ws: GrindrWSClient = GrindrWSClient(
             ws_kwargs=ws_kwargs or dict(),
-            proxy=ws_proxy
+            ws_proxy=ws_proxy
         )
 
         self._web: GrindrWebClient = GrindrWebClient(
-            session_kwargs=web_kwargs or dict(),
-            proxy=web_proxy
+            web_kwargs=web_kwargs or dict(),
+            web_proxy=web_proxy
         )
 
         self._logger: Logger = GrindrLogHandler.get_logger(
@@ -215,7 +215,10 @@ class GrindrClient(GrindrEmitter):
         # Emit events while connected
         first_event: bool = True
 
-        async for message in self._ws.connect(uri=GRINDR_WS, headers={**self._web.headers, **DEFAULT_WS_HEADERS, "Sec-Websocket-Key": "8y/TkqcKQ6snPVQTsvpvWg=="}):
+        async for message in self._ws.connect(
+                url=GRINDR_WS,
+                headers={**self._web.headers, **DEFAULT_WS_HEADERS}
+        ):
 
             # Keep session continually updated
             if first_event:

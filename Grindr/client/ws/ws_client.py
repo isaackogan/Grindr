@@ -1,13 +1,13 @@
 import asyncio
-import json
-from typing import Optional, AsyncIterator, Dict
+from ssl import SSLContext
+from typing import Optional, AsyncIterator, Dict, Union, Type
 
-from curl_cffi.requests import AsyncSession
+from websockets.legacy.client import WebSocketClientProtocol
 
 from Grindr.client.logger import GrindrLogHandler
-from Grindr.client.ws.AsyncWS.client import AsyncWebSocket
+from Grindr.client.web.tls_patch.tls_patch import patched_ssl_context
+from Grindr.client.ws.ws_connect import GrindrConnect, GrindrProxyConnect, GrindrWSProxy
 from Grindr.events import WebsocketResponse
-from . import AsyncWS
 
 
 class GrindrWSClient:
@@ -16,7 +16,8 @@ class GrindrWSClient:
     def __init__(
             self,
             ws_kwargs: dict = None,
-            proxy: str = None
+            ws_proxy: GrindrWSProxy = None,
+            ws_ssl_context: SSLContext = patched_ssl_context(),
     ):
         """
         Initialize GrindrWSClient
@@ -27,12 +28,39 @@ class GrindrWSClient:
 
         self._ws_kwargs: dict = ws_kwargs or {}
         self._ws_cancel: Optional[asyncio.Event] = None
-        self._ws: Optional[AsyncWebSocket] = None
-        self._ws_proxy: Optional[str] = proxy
+        self._ws: Optional = None
+        self._ws_proxy: Optional[str] = ws_proxy or ws_kwargs.get("proxy")
+        self._ssl_context: Optional[SSLContext] = ws_kwargs.get('ws_ssl_context', ws_ssl_context)
         self._logger = GrindrLogHandler.get_logger()
+        self._connect_generator_class: Union[Type[GrindrConnect], Type[GrindrProxyConnect]] = GrindrProxyConnect if self._ws_proxy else GrindrConnect
+        self._connection_generator: Optional[Union[GrindrConnect, GrindrProxyConnect]] = None
 
-        if self._ws_proxy:
-            self._ws_kwargs["proxy"] = self._ws_proxy
+    @property
+    def ws(self) -> Optional[WebSocketClientProtocol]:
+        """
+        Get the current WebSocketClientProtocol
+
+        :return: WebSocketClientProtocol
+
+        """
+
+        # None because there's no generator
+        if not self._connection_generator:
+            return None
+
+        # Optional[WebSocketClientProtocol]
+        return self._connection_generator.ws
+
+    @property
+    def connected(self) -> bool:
+        """
+        Check if the WebSocket is open
+
+        :return: WebSocket status
+
+        """
+
+        return self.ws and self.ws.open
 
     async def disconnect(self) -> None:
         """
@@ -44,71 +72,27 @@ class GrindrWSClient:
         if not self.connected:
             return
 
-        self._ws_cancel = asyncio.Event()
-        await self._ws_cancel.wait()
-        self._ws_cancel = None
+        await self.ws.close()
 
     async def connect(
-            self,
-            uri: str,
-            headers: Dict[str, str]
-    ) -> AsyncIterator[WebsocketResponse]:
-        """
-        Connect to the Webcast websocket server & handle cancellation
-
-        :param uri:
-        :param headers:
-        :return:
-        """
-
-        # Reset the cancel var
-        self._ws_cancel = None
-
-        # Yield while existent
-        async for webcast_message in self.connect_loop(uri, headers):
-            yield webcast_message
-
-        # After loop breaks, gracefully shut down & send the cancellation event
-        if self._ws_cancel is not None:
-            await self._ws.close()
-            self._ws_cancel.set()
-
-    async def connect_loop(
             self,
             url: str,
             headers: Dict[str, str]
     ) -> AsyncIterator[WebsocketResponse]:
-        # Run connection loop
-        async with AsyncWS.connect(
-                url=self._ws_kwargs.pop("url", url),
-                headers={**headers, **self._ws_kwargs.pop("headers", {})},
-                **self._ws_kwargs
-        ) as websocket:
-            self._ws = websocket
 
-            # Each time we receive a message, process it
-            async for message in websocket:
+        ws_kwargs: dict = self._ws_kwargs.copy()
 
-                yield WebsocketResponse(**json.loads(message))
+        if self._ws_proxy is not None:
+            ws_kwargs["proxy_conn_timeout"] = ws_kwargs.get("proxy_conn_timeout", 10.0)
+            ws_kwargs["proxy"] = self._ws_proxy
 
-                # Handle cancellation request
-                if self._ws_cancel is not None:
-                    return
+        self._connection_generator = self._connect_generator_class(
+            uri=url,
+            extra_headers=headers,
+            logger=self._logger,
+            ssl=self._ssl_context,
+            **ws_kwargs
+        )
 
-            if self._ws_cancel is not None:
-                return
-
-    @property
-    def connected(self) -> bool:
-        """
-        Check if the websocket is currently connected
-
-        :return: Connection status
-
-        """
-
-        return self._ws and self._ws.keep_running
-
-    @property
-    def ws(self) -> AsyncWebSocket:
-        return self._ws
+        async for message in self._connection_generator:
+            yield message

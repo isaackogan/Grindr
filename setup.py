@@ -29,9 +29,10 @@ if __name__ == '__main__':
         keywords=["Grindr", "Grindr API", "python3", "api", "unofficial"],
         install_requires=[
             "pyee==12.1.1",
-            "curl-cffi>=0.2.1",
-            "pygeohash>=1.2.0",
-            "pydantic"
+            "httpx==0.28.1",
+            "pygeohash==1.2.0",
+            "pydantic==2.10.4",
+            "websockets_proxy==0.1.3",
         ],
         classifiers=[
             "Development Status :: 4 - Beta",

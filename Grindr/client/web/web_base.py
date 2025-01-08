@@ -8,80 +8,58 @@ import uuid
 from json import JSONDecodeError
 from typing import Optional, Any, Dict, Literal, TypeVar, Generic, ForwardRef, Type
 
-import curl_cffi.requests
-from curl_cffi.requests import AsyncSession
+import httpx
+from httpx import AsyncClient
 from pydantic import BaseModel, ValidationError
 
 from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse, GrindrRequestError, AccountBannedError
 from Grindr.client.logger import GrindrLogHandler
+from Grindr.client.web.tls_patch.tls_patch import patched_ssl_context
 from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS
-
-OKHTTP_4_ANDROID_10_JA3 = okhttp4_android10_ja3 = ",".join(
-    [
-        "771",
-        "4865-4866-4867-49195-49196-52393-49199-49200-52392-49171-49172-156-157-47-53",
-        "0-23-65281-10-11-35-16-5-13-51-45-43-21",
-        "29-23-24",
-        "0",
-    ]
-)
-
-OKHTTP_4_ANDROID_10_AKAMAI = "4:16777216|16711681|0|m,p,a,s"
-
-extra_fp = {
-    "tls_signature_algorithms": [
-        "ecdsa_secp256r1_sha256",
-        "rsa_pss_rsae_sha256",
-        "rsa_pkcs1_sha256",
-        "ecdsa_secp384r1_sha384",
-        "rsa_pss_rsae_sha384",
-        "rsa_pkcs1_sha384",
-        "rsa_pss_rsae_sha512",
-        "rsa_pkcs1_sha512",
-        "rsa_pkcs1_sha1",
-    ]
-}
 
 
 class GrindrHTTPClient:
 
     def __init__(
             self,
-            proxy: Optional[str] = None,
-            session_kwargs: Optional[dict] = None
+            web_proxy: Optional[str] = None,
+            web_kwargs: Optional[dict] = None
     ):
         """
         Create an HTTP client for interacting with the various APIs
 
-        :param proxy: An optional proxy for the HTTP client
-        :param session_kwargs: Additional kwargs
+        :param web_proxy: An optional proxy for the HTTP client
+        :param web_kwargs: Additional kwargs
 
         """
 
-        self._session: AsyncSession = self._create_libcurl_client(
-            proxy=proxy,
-            session_kwargs=session_kwargs or dict(),
+        self._session = self._create_httpx_client(
+            web_proxy=web_proxy,
+            web_kwargs=web_kwargs
         )
 
         self._session_token: Optional[str] = None
 
     @property
-    def http_client(self) -> AsyncSession:
+    def http_client(self) -> AsyncClient:
         return self._session
 
-    def _create_libcurl_client(
+    def _create_httpx_client(
             self,
-            proxy: Optional[str],
-            session_kwargs: Dict[str, Any]
-    ) -> AsyncSession:
-        self.headers = {**session_kwargs.pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
-        self.params: Dict[str, Any] = {**session_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
+            web_proxy: Optional[str],
+            web_kwargs: Dict[str, Any]
+    ) -> AsyncClient:
+        self.headers = {**web_kwargs.pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
+        self.params: Dict[str, Any] = {**web_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
         self.headers['L-Device-Info'] = self.generate_device_info()
 
-        return AsyncSession(
-            proxy=proxy,
-            **session_kwargs
+        client = AsyncClient(
+            proxy=web_proxy,
+            verify=web_kwargs.get('verify', patched_ssl_context()),
+            **web_kwargs
         )
+
+        return client
 
     async def request(
             self,
@@ -89,11 +67,11 @@ class GrindrHTTPClient:
             url: str,
             extra_params: dict = None,
             extra_headers: dict = None,
-            client: Optional[AsyncSession] = None,
+            client: Optional[AsyncClient] = None,
             base_params: bool = True,
             base_headers: bool = True,
             **kwargs
-    ) -> curl_cffi.requests.Response:
+    ) -> httpx.Response:
         headers: dict = {
             **(self.headers if base_headers else {}),
             **(extra_headers or {}),
@@ -274,7 +252,7 @@ class ClientRoute(
         elif body is not None:
             raise NotImplementedError("This body type has not been implemented!")
 
-        response: curl_cffi.requests.Response = await self._web.request(
+        response: Response = await self._web.request(
             method=self.method,
             url=self.url % (params.model_dump() if params else {}),
             **kwargs
