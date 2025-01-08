@@ -63,9 +63,10 @@ def patched_ssl_context(verify_mode: ssl.VerifyMode = ssl.VerifyMode.CERT_REQUIR
         if keylogfile and not sys.flags.ignore_environment:
             context.keylog_filename = keylogfile
 
-    # Set the ciphers to EMPTY, because the default behaviour of OpenSSL will be to fall back to the
+    # Set the ciphers to JUST TLS_AES_128_GCM_SHA256. That is the *actual* cipher_suite in the tls.browserleaks.com/tls dump.
+    # Then for other *preferred* cipher options, the default behaviour of OpenSSL will be to fall back to the
     # default ciphers in openssl.cnf. If this throws an error that it could not find a cipher name, your openssl.cnf is not loaded
-    context.set_ciphers("")
+    context.set_ciphers("TLS_AES_128_GCM_SHA256")
 
     # Disable/Enable TLS extensions required to match the ja3 fingerprint
     context.check_hostname = False
