@@ -7,7 +7,7 @@ manifest: dict = {
     "name": "Grindr",
     "license": "MIT",
     "author": "Isaac Kogan",
-    "version": "0.2.0.post1",
+    "version": "0.2.0.post2",
     "email": "info@isaackogan.com"
 }
 
@@ -21,6 +21,10 @@ if __name__ == '__main__':
         version=manifest["version"],
         license=manifest["license"],
         description="Grindr Python Client",
+        include_package_data=True,  # Ensure non-Python files are included
+        package_data={
+            'Grindr.client.web.tls_patch': ['ja3_blueprint.json', 'openssl.cnf'],
+        },
         author=manifest["author"],
         author_email=manifest["email"],
         url="https://github.com/isaackogan/Grindr",
