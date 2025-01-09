@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Optional
+import json
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -41,6 +42,10 @@ class WebsocketResponse(BaseModel):
     type: str | None = None
     ref: Any | None = None
     payload: dict | None = None
+
+    @classmethod
+    def from_bytes(cls, data: bytes) -> WebsocketResponse:
+        return cls(**json.loads(data.decode("utf-8")))
 
 
 class UnknownEvent(Event):

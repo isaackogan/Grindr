@@ -1,9 +1,9 @@
 import os
 from typing import Union
 
-import httpx
+from curl_cffi import requests
 
-from Grindr.client.web.tls_patch import tls_patch
+from Grindr.client.tls_match import tls_match
 
 GRINDR_HOST: str = os.getenv("GRINDR_HOST", "grindr.mobi")
 GRINDR_BASE: str = os.getenv("GRINDR_API_BASE", f"https://{GRINDR_HOST}")
@@ -23,7 +23,7 @@ DEFAULT_REQUEST_PARAMS: dict[str, Union[int, bool, str]] = {}
 BUILD_NUMBER: str = "132462"
 
 LATEST_APP: str = (
-    httpx.get("https://itunes.apple.com/lookup?id=319881193").json()["results"][0]["version"]
+    requests.get("https://itunes.apple.com/lookup?id=319881193").json()["results"][0]["version"]
     if os.environ.get('USE_LATEST_VERSION') else "24.19.0"
 )
 
@@ -33,7 +33,7 @@ DEFAULT_REQUEST_HEADERS: dict[str, str] = {
     "L-Grindr-Roles": "[]",
     "L-Device-Info": "",  # Supplied by the web client
     "Accept": "application/json",
-    "User-Agent": tls_patch.user_agent().replace("24.19.0", LATEST_APP).replace("132462", BUILD_NUMBER),
+    "User-Agent": tls_match.user_agent().replace("24.19.0", LATEST_APP).replace("132462", BUILD_NUMBER),
     "L-Locale": "en_US",
     "Accept-language": "en-US",
     "Content-Type": "application/json; charset=UTF-8",

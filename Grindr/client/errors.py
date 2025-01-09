@@ -1,4 +1,4 @@
-import httpx
+from curl_cffi.requests import Response, Request
 
 
 class AlreadyConnectedError(RuntimeError):
@@ -11,16 +11,16 @@ class AuthenticationDetailsMissingError(RuntimeError):
 
 class GrindrRequestError(RuntimeError):
 
-    def __init__(self, response: httpx.Response | None, *args):
+    def __init__(self, response: Response | None, *args):
         super().__init__(*args)
         self._response = response
 
     @property
-    def response(self) -> httpx.Response | None:
+    def response(self) -> Response | None:
         return self._response
 
     @property
-    def request(self) -> httpx.Request | None:
+    def request(self) -> Request | None:
         return self._response.request
 
 

@@ -23,7 +23,7 @@ if __name__ == '__main__':
         description="Grindr Python Client",
         include_package_data=True,  # Ensure non-Python files are included
         package_data={
-            'Grindr.client.web.tls_patch': ['ja3_blueprint.json', 'openssl.cnf'],
+            'Grindr.client.web.tls_match': ['ja3_blueprint.json'],
         },
         author=manifest["author"],
         author_email=manifest["email"],
@@ -33,11 +33,9 @@ if __name__ == '__main__':
         keywords=["Grindr", "Grindr API", "python3", "api", "unofficial"],
         install_requires=[
             "pyee==12.1.1",
-            "httpx==0.28.1",
             "pygeohash==1.2.0",
             "pydantic",
-            "websockets_proxy==0.1.3",
-            "packaging"
+            "curl_cffi==0.8.1b8"
         ],
         classifiers=[
             "Development Status :: 4 - Beta",

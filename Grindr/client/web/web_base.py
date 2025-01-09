@@ -8,13 +8,12 @@ import uuid
 from json import JSONDecodeError
 from typing import Any, Literal, ForwardRef, Type
 
-import httpx
-from httpx import AsyncClient
+from curl_cffi.requests import AsyncSession, Response
 from pydantic import BaseModel, ValidationError
 
 from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse, GrindrRequestError, AccountBannedError
 from Grindr.client.logger import GrindrLogHandler
-from Grindr.client.web.tls_patch.tls_patch import patched_ssl_context
+from Grindr.client.tls_match.tls_match import create_async_client
 from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS
 
 
@@ -33,34 +32,35 @@ class GrindrHTTPClient:
 
         """
 
-        self._session = self._create_httpx_client(
+        self._logger = GrindrLogHandler.get_logger()
+        self._session_token: str | None = None
+
+        self._session = self._create_http_client(
             web_proxy=web_proxy,
             web_kwargs=web_kwargs
         )
 
-        self._session_token: str | None = None
 
     @property
-    def http_client(self) -> AsyncClient:
+    def http_client(self) -> AsyncSession:
         return self._session
 
-    def _create_httpx_client(
+    def _create_http_client(
             self,
             web_proxy: str | None,
             web_kwargs: dict[str, Any] | None
-    ) -> AsyncClient:
+    ) -> AsyncSession:
         web_kwargs = web_kwargs or {}
         self.headers = {**web_kwargs.pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
         self.params: dict[str, Any] = {**web_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
         self.headers['L-Device-Info'] = self.generate_device_info()
 
-        client = AsyncClient(
+        # Create the async client
+        self._logger.debug('Creating HTTP client')
+        return create_async_client(
             proxy=web_proxy,
-            verify=web_kwargs.get('verify', patched_ssl_context()),
             **web_kwargs
         )
-
-        return client
 
     async def request(
             self,
@@ -68,11 +68,11 @@ class GrindrHTTPClient:
             url: str,
             extra_params: dict = None,
             extra_headers: dict = None,
-            client: AsyncClient | None = None,
+            client: AsyncSession | None = None,
             base_params: bool = True,
             base_headers: bool = True,
             **kwargs
-    ) -> httpx.Response:
+    ) -> Response:
         headers: dict = {
             **(self.headers if base_headers else {}),
             **(extra_headers or {}),

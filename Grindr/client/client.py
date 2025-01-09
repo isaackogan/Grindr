@@ -76,7 +76,6 @@ class GrindrClient(GrindrEmitter):
         self._event_loop_task: Task | None = None
         self._session_loop_task: Task | None = None
         self._extensions: dict[str, Extension] = dict()
-
         self.add_extensions(*extensions or [])
 
     async def start(
@@ -98,6 +97,7 @@ class GrindrClient(GrindrEmitter):
             raise AuthenticationDetailsMissingError("Authentication details must be sent! Either username/password, or session_token.")
 
         # Generate the session
+        self._logger.debug("Logging in to Grindr...")
         await self.login(
             email=email,
             password=password
@@ -115,6 +115,7 @@ class GrindrClient(GrindrEmitter):
             raise AlreadyConnectedError("You can only make one connection per client!")
 
         # Start the websocket connection & return it
+        self._logger.debug("Starting the Grindr client event loop...")
         self._event_loop_task = self._asyncio_loop.create_task(self._ws_loop())
         return self._event_loop_task
 
@@ -195,13 +196,9 @@ class GrindrClient(GrindrEmitter):
 
         """
 
-        # Wait gracefully for things to finish
         await self._ws.disconnect()
-        await self._unload_extensions()
         await self._event_loop_task
-
-        # Reset state vars
-        self._event_loop_task = None
+        # self._event_loop_task = None
 
     async def _ws_loop(self) -> None:
         """
@@ -218,7 +215,6 @@ class GrindrClient(GrindrEmitter):
                 url=GRINDR_WS,
                 headers={**self._web.headers, **DEFAULT_WS_HEADERS}
         ):
-
             # Keep session continually updated
             if first_event:
                 first_event = False
@@ -243,7 +239,16 @@ class GrindrClient(GrindrEmitter):
 
         ev = DisconnectEvent()
         self.emit(ev.event_type, ev)
+
+        # Close the web
+        await self._web.close()
+
+        # Cancel the session refresh loop
         self._session_loop_task.cancel()
+        await self._session_loop_task
+
+        # Unload all extensions
+        await self._unload_extensions()
 
     @property
     def web(self) -> GrindrWebClient:

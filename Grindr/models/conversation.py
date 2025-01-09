@@ -166,7 +166,7 @@ class Conversation(GrindrModel):
 
         """
 
-        await self.context.ws.ws.asend(
+        await self.context.ws.ws.send(
             payload=WSMessage.from_defaults(
                 payload=WSMessagePayload.from_defaults(
                     target_id=self.target_id,
