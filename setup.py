@@ -7,7 +7,7 @@ manifest: dict = {
     "name": "Grindr",
     "license": "MIT",
     "author": "Isaac Kogan",
-    "version": "0.2.0.post3",
+    "version": "0.2.1",
     "email": "info@isaackogan.com"
 }
 
@@ -37,6 +37,7 @@ if __name__ == '__main__':
             "pygeohash==1.2.0",
             "pydantic",
             "websockets_proxy==0.1.3",
+            "packaging"
         ],
         classifiers=[
             "Development Status :: 4 - Beta",
@@ -44,9 +45,7 @@ if __name__ == '__main__':
             "Topic :: Software Development :: Build Tools",
             "License :: OSI Approved :: MIT License",
             "Natural Language :: English",
-            "Programming Language :: Python :: 3.8",
-            "Programming Language :: Python :: 3.9",
-            "Programming Language :: Python :: 3.10",
-            "Programming Language :: Python :: 3.11",
+            "Programming Language :: Python :: 3.12",
+            "Framework :: Pydantic :: 2"
         ]
     )

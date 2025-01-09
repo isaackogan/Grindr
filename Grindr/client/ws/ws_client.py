@@ -1,6 +1,6 @@
 import asyncio
 from ssl import SSLContext
-from typing import Optional, AsyncIterator, Dict, Union, Type
+from typing import Optional, AsyncIterator, Union, Type
 
 from websockets.legacy.client import WebSocketClientProtocol
 
@@ -17,7 +17,7 @@ class GrindrWSClient:
             self,
             ws_kwargs: dict = None,
             ws_proxy: GrindrWSProxy = None,
-            ws_ssl_context: SSLContext = patched_ssl_context(),
+            ws_ssl_context: SSLContext | None = None
     ):
         """
         Initialize GrindrWSClient
@@ -27,16 +27,16 @@ class GrindrWSClient:
         """
 
         self._ws_kwargs: dict = ws_kwargs or {}
-        self._ws_cancel: Optional[asyncio.Event] = None
+        self._ws_cancel: asyncio.Event | None = None
         self._ws: Optional = None
-        self._ws_proxy: Optional[str] = ws_proxy or ws_kwargs.get("proxy")
-        self._ssl_context: Optional[SSLContext] = ws_kwargs.get('ws_ssl_context', ws_ssl_context)
+        self._ws_proxy: str | None = ws_proxy or ws_kwargs.get("proxy")
+        self._ssl_context: SSLContext | None = ws_ssl_context or ws_kwargs.get('ws_ssl_context', patched_ssl_context())
         self._logger = GrindrLogHandler.get_logger()
         self._connect_generator_class: Union[Type[GrindrConnect], Type[GrindrProxyConnect]] = GrindrProxyConnect if self._ws_proxy else GrindrConnect
-        self._connection_generator: Optional[Union[GrindrConnect, GrindrProxyConnect]] = None
+        self._connection_generator: Union[GrindrConnect, GrindrProxyConnect | None] = None
 
     @property
-    def ws(self) -> Optional[WebSocketClientProtocol]:
+    def ws(self) -> WebSocketClientProtocol | None:
         """
         Get the current WebSocketClientProtocol
 
@@ -48,7 +48,7 @@ class GrindrWSClient:
         if not self._connection_generator:
             return None
 
-        # Optional[WebSocketClientProtocol]
+        # WebSocketClientProtocol | None
         return self._connection_generator.ws
 
     @property
@@ -77,7 +77,7 @@ class GrindrWSClient:
     async def connect(
             self,
             url: str,
-            headers: Dict[str, str]
+            headers: dict[str, str]
     ) -> AsyncIterator[WebsocketResponse]:
 
         ws_kwargs: dict = self._ws_kwargs.copy()

@@ -7,18 +7,18 @@ from Grindr.client.web.web_settings import GRINDR_V3
 
 
 class ProfileData(BaseModel):
-    profileId: Optional[int] = None
-    displayName: Optional[str] = None
-    profileImageMediaHash: Optional[str] = None
-    distance: Optional[float] = None
-    isFavorite: Optional[bool] = None
-    timestamp: Optional[int] = None
-    tapType: Optional[int] = None
-    lastOnline: Optional[int] = None
-    isBoosting: Optional[bool] = None
-    isMutual: Optional[bool] = None
-    rightNowType: Optional[str] = None
-    isViewable: Optional[bool] = None
+    profileId: int | None = None
+    displayName: str | None = None
+    profileImageMediaHash: str | None = None
+    distance: float | None = None
+    isFavorite: bool | None = None
+    timestamp: int | None = None
+    tapType: int | None = None
+    lastOnline: int | None = None
+    isBoosting: bool | None = None
+    isMutual: bool | None = None
+    rightNowType: str | None = None
+    isViewable: bool | None = None
 
 
 class FetchProfilesRouteResponse(BaseModel):
@@ -26,7 +26,7 @@ class FetchProfilesRouteResponse(BaseModel):
 
 
 class FetchProfilesRouteBody(BodyParams):
-    targetProfileIds: List[str]
+    targetProfileIds: list[str]
 
 
 class FetchProfilesRoute(

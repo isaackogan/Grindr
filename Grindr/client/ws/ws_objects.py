@@ -4,7 +4,7 @@ from typing import Union, Type
 
 from pydantic import BaseModel
 
-from Grindr.models.message import SendMessageType, MessageType
+from Grindr.models.message import SendMessageType
 
 
 class WSMessagePayloadTarget(BaseModel):

@@ -11,7 +11,7 @@ class SetBlockUserRouteParams(QueryParams):
 
 
 class SetBlockUserRouteResponse(BaseModel):
-    updateTime: Optional[int] = None
+    updateTime: int | None = None
 
 
 class SetBlockUserRoute(

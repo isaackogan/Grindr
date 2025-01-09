@@ -32,40 +32,40 @@ class Ethnicity(int, enum.Enum):
 
 
 class CascadeProfileData(BaseModel):
-    type: Optional[str] = Field(None, alias='@type')
-    profileId: Optional[int] = None
-    lastOnline: Optional[int] = None
-    onlineUntil: Optional[int] = None
-    distanceMeters: Optional[int] = None
-    displayName: Optional[str] = None
-    aboutMe: Optional[str] = None
-    age: Optional[int] = None
-    photoMediaHashes: Optional[List[str]] = None
-    heightCm: Optional[int] = None
-    lookingFor: Optional[List[int]] = None
-    tribes: Optional[List[int]] = None
-    meetAt: Optional[List[int]] = None
-    vaccines: Optional[List[int]] = None
-    genders: Optional[List[int]] = None
-    pronouns: Optional[List[int]] = None
-    relationshipStatus: Optional[int] = None
-    ethnicity: Optional[Ethnicity] = None
-    bodyType: Optional[int] = None
-    acceptsNsfwPics: Optional[int] = None
-    hivStatus: Optional[int] = None
-    approximateDistance: Optional[bool] = None
-    tags: Optional[List[str]] = None
-    isFavorite: Optional[bool] = None
-    socialNetworks: Optional[list[dict]] = None
-    isBoosting: Optional[bool] = None
-    hasChattedInLast24Hrs: Optional[bool] = None
-    hasUnviewedSpark: Optional[bool] = None
-    isTeleporting: Optional[bool] = None
-    isRoaming: Optional[bool] = None
-    isRightNow: Optional[bool] = None
-    unreadCount: Optional[int] = None
-    rightNow: Optional[str] = None
-    isPopular: Optional[bool] = None
+    type: str | None = Field(None, alias='@type')
+    profileId: int | None = None
+    lastOnline: int | None = None
+    onlineUntil: int | None = None
+    distanceMeters: int | None = None
+    displayName: str | None = None
+    aboutMe: str | None = None
+    age: int | None = None
+    photoMediaHashes: list[str] | None = None
+    heightCm: int | None = None
+    lookingFor: list[int] | None = None
+    tribes: list[int] | None = None
+    meetAt: list[int] | None = None
+    vaccines: list[int] | None = None
+    genders: list[int] | None = None
+    pronouns: list[int] | None = None
+    relationshipStatus: int | None = None
+    ethnicity: Ethnicity | None = None
+    bodyType: int | None = None
+    acceptsNsfwPics: int | None = None
+    hivStatus: int | None = None
+    approximateDistance: bool | None = None
+    tags: list[str] | None = None
+    isFavorite: bool | None = None
+    socialNetworks: list[dict] | None = None
+    isBoosting: bool | None = None
+    hasChattedInLast24Hrs: bool | None = None
+    hasUnviewedSpark: bool | None = None
+    isTeleporting: bool | None = None
+    isRoaming: bool | None = None
+    isRightNow: bool | None = None
+    unreadCount: int | None = None
+    rightNow: str | None = None
+    isPopular: bool | None = None
 
 
 class CascadeProfile(BaseModel):
@@ -74,8 +74,8 @@ class CascadeProfile(BaseModel):
 
 
 class FetchCascadeRouteResponse(BaseModel):
-    items: List[CascadeProfile]
-    nextPage: Optional[int] = None
+    items: list[CascadeProfile]
+    nextPage: int | None = None
 
 
 class FetchCascadeRoute(

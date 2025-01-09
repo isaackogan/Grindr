@@ -8,9 +8,9 @@ from Grindr.client.web.web_settings import GRINDR_V3_1
 
 
 class SocialNetworks(BaseModel):
-    twitter: Optional[dict] = None
-    facebook: Optional[dict] = None
-    instagram: Optional[dict] = None
+    twitter: dict | None = None
+    facebook: dict | None = None
+    instagram: dict | None = None
 
 
 class SexualPosition(int, enum.Enum):
@@ -23,30 +23,30 @@ class SexualPosition(int, enum.Enum):
 
 
 class SetProfileDetailsRouteBody(BaseModel):
-    aboutMe: Optional[str] = None
-    nsfw: Optional[int] = None
-    age: Optional[int] = None
-    approximateDistance: Optional[bool] = None
-    bodyType: Optional[int] = None
-    displayName: Optional[str] = None
-    ethnicity: Optional[int] = None
-    genders: Optional[List[int]] = None
-    grindrTribes: Optional[List[int]] = None
-    hashtags: Optional[List[str]] = None
-    height: Optional[float] = None
-    hivStatus: Optional[int] = None
-    lastTestedDate: Optional[int] = None
-    lookingFor: Optional[List[int]] = None
-    meetAt: Optional[List[int]] = None
-    profileTags: Optional[List[str]] = None
-    pronouns: Optional[List[int]] = None
-    relationshipStatus: Optional[int] = None
-    sexualPosition: Optional[SexualPosition] = None
-    showAge: Optional[bool] = None
-    showDistance: Optional[bool] = None
-    socialNetworks: Optional[SocialNetworks] = None
-    vaccines: Optional[List[int]] = None
-    weight: Optional[float] = None
+    aboutMe: str | None = None
+    nsfw: int | None = None
+    age: int | None = None
+    approximateDistance: bool | None = None
+    bodyType: int | None = None
+    displayName: str | None = None
+    ethnicity: int | None = None
+    genders: list[int] | None = None
+    grindrTribes: list[int] | None = None
+    hashtags: list[str] | None = None
+    height: float | None = None
+    hivStatus: int | None = None
+    lastTestedDate: int | None = None
+    lookingFor: list[int] | None = None
+    meetAt: list[int] | None = None
+    profileTags: list[str] | None = None
+    pronouns: list[int] | None = None
+    relationshipStatus: int | None = None
+    sexualPosition: SexualPosition | None = None
+    showAge: bool | None = None
+    showDistance: bool | None = None
+    socialNetworks: SocialNetworks | None = None
+    vaccines: list[int] | None = None
+    weight: float | None = None
 
 
 class SetProfileDetailsRoute(

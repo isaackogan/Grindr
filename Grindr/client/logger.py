@@ -38,10 +38,10 @@ class GrindrLogHandler(logging.StreamHandler):
     """
 
     LOGGER_NAME: str = "Grindr"
-    LOGGER: Optional[logging.Logger] = None
+    LOGGER: logging.Logger | None = None
     TIME_FORMAT: str = "%H:%M:%S"
 
-    SPACING: Dict[int, int] = {
+    SPACING: dict[int, int] = {
         logging.INFO: 1,
         logging.ERROR: 0,
         logging.WARNING: 1,
@@ -52,8 +52,8 @@ class GrindrLogHandler(logging.StreamHandler):
 
     def __init__(
             self,
-            stream: Optional[Any] = None,
-            formatter: Optional[logging.Formatter] = None
+            stream: Any | None = None,
+            formatter: logging.Formatter | None = None
     ):
         """
         The python output stream to write to
@@ -68,8 +68,8 @@ class GrindrLogHandler(logging.StreamHandler):
     @classmethod
     def get_logger(
             cls,
-            level: Optional[LogLevel] = None,
-            stream: Optional[Any] = None
+            level: LogLevel | None = None,
+            stream: Any | None = None
     ) -> logging.Logger:
         """
         Create a logger or retrieve the existing one
@@ -108,8 +108,8 @@ class GrindrLogHandler(logging.StreamHandler):
         if start_location >= 0:
             stack_path = stack_path[start_location + len(work_dir) + 1:]
 
-        path_parts: List[str] = stack_path.split("/")
-        finished_parts: List[str] = []
+        path_parts: list[str] = stack_path.split("/")
+        finished_parts: list[str] = []
 
         for idx, part in enumerate(path_parts):
 

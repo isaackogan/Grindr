@@ -19,10 +19,10 @@ class Conversation(GrindrModel):
     # Format [TargetID:YourID]
     id: str = Field(pattern=r"^\d+:\d+$")
 
-    profile: Optional[Profile] = None
-    messages: Optional[List[Message]] = None
+    profile: Profile | None = None
+    messages: list[Message] | None = None
 
-    _on_message: Optional[Callable] = PrivateAttr(default=None)
+    _on_message: Callable | None = PrivateAttr(default=None)
 
     async def retrieve_all(self) -> "Conversation":
         await self.retrieve_messages()
@@ -96,7 +96,7 @@ class Conversation(GrindrModel):
         return f"{target_id}:{profile_id}"
 
     @classmethod
-    def from_defaults(cls, target_id: int, context: Context, profile: Optional[Profile] = None) -> "Conversation":
+    def from_defaults(cls, target_id: int, context: Context, profile: Profile | None = None) -> "Conversation":
         return cls(
             context=context,
             id=cls.get_conversation_id(profile_id=context.profile_id, target_id=target_id),
@@ -122,12 +122,12 @@ class Conversation(GrindrModel):
         await profile.retrieve_all()
         return profile
 
-    async def retrieve_messages(self, page_limit: Optional[int] = 1) -> List[Message]:
+    async def retrieve_messages(self, page_limit: int | None = 1) -> list[Message]:
 
         current_page: int = 0
         page_key: str = ""
         continue_pagination: Callable[[], bool] = (lambda: (current_page < max(1, page_limit)) if page_limit is not None else True)
-        messages: List[Message] = []
+        messages: list[Message] = []
 
         while continue_pagination():
             current_page += 1
@@ -180,7 +180,7 @@ class Conversation(GrindrModel):
             self,
             text: str,
             send_typing: bool = True,
-            wpm: Optional[int] = 60
+            wpm: int | None = 60
     ) -> None:
         await self.set_typing()
 

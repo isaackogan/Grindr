@@ -8,7 +8,7 @@ from Grindr.client.web.web_settings import GRINDR_V2
 
 
 class FetchSharedAlbumsRouteResponse(BaseModel):
-    albums: Optional[List[Album]] = None
+    albums: list[Album] | None = None
 
 
 class FetchSharedAlbumsRouteParams(BaseModel):

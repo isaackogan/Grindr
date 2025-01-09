@@ -6,7 +6,7 @@ import textwrap
 import traceback
 import uuid
 from json import JSONDecodeError
-from typing import Optional, Any, Dict, Literal, TypeVar, Generic, ForwardRef, Type
+from typing import Any, Literal, ForwardRef, Type
 
 import httpx
 from httpx import AsyncClient
@@ -22,8 +22,8 @@ class GrindrHTTPClient:
 
     def __init__(
             self,
-            web_proxy: Optional[str] = None,
-            web_kwargs: Optional[dict] = None
+            web_proxy: str | None = None,
+            web_kwargs: dict | None = None
     ):
         """
         Create an HTTP client for interacting with the various APIs
@@ -38,7 +38,7 @@ class GrindrHTTPClient:
             web_kwargs=web_kwargs
         )
 
-        self._session_token: Optional[str] = None
+        self._session_token: str | None = None
 
     @property
     def http_client(self) -> AsyncClient:
@@ -46,11 +46,11 @@ class GrindrHTTPClient:
 
     def _create_httpx_client(
             self,
-            web_proxy: Optional[str],
-            web_kwargs: Dict[str, Any]
+            web_proxy: str | None,
+            web_kwargs: dict[str, Any] | None
     ) -> AsyncClient:
         self.headers = {**web_kwargs.pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
-        self.params: Dict[str, Any] = {**web_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
+        self.params: dict[str, Any] = {**web_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
         self.headers['L-Device-Info'] = self.generate_device_info()
 
         client = AsyncClient(
@@ -67,7 +67,7 @@ class GrindrHTTPClient:
             url: str,
             extra_params: dict = None,
             extra_headers: dict = None,
-            client: Optional[AsyncClient] = None,
+            client: AsyncClient | None = None,
             base_params: bool = True,
             base_headers: bool = True,
             **kwargs
@@ -165,28 +165,12 @@ class URLTemplate:
         return d
 
 
-# Define a TypeVar that can be any subclass of BaseModel
-Method = TypeVar('Method', bound=Literal["GET", "POST", "PUT", "DELETE"])
-Url = TypeVar('Url', bound=URLTemplate)
-Params = TypeVar('Params')
-Body = TypeVar('Body')
-Response = TypeVar('Response')
-
-
 class ImageBody(BaseModel):
     image_data: bytes
     image_mimetype: str
 
 
-class ClientRoute(
-    Generic[
-        Method,
-        Url,
-        Params,
-        Body,
-        Response
-    ]
-):
+class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTemplate, Params: Any, Body: Any, Response: Any]:
 
     def __init__(self, web: GrindrHTTPClient):
         self._logger = GrindrLogHandler.get_logger()
@@ -195,6 +179,7 @@ class ClientRoute(
     @classmethod
     def __get_generic(cls, index: int) -> Any:
         base = getattr(cls, "__orig_bases__")[0]
+
         generics = base.__args__
         method = generics[index]
 
@@ -228,7 +213,7 @@ class ClientRoute(
             params: Params = None,
             body: Body = None,
             **kwargs: Any
-    ) -> Optional[Response]:
+    ) -> Response | None:
         """
         Method used for calling the route as a function
 

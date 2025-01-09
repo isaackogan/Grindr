@@ -26,17 +26,17 @@ class SetProfileImageRouteParams(QueryParams):
 
 
 class ProfilePhoto(BaseModel):
-    size: Optional[int] = None
-    fullUrl: Optional[str] = None
-    thumbnail: Optional[bool] = None
-    state: Optional[str] = None
-    mediaHash: Optional[str] = None
-    rejectionReason: Optional[str] = None
+    size: int | None = None
+    fullUrl: str | None = None
+    thumbnail: bool | None = None
+    state: str | None = None
+    mediaHash: str | None = None
+    rejectionReason: str | None = None
 
 
 class SetProfileImageRouteResponse(BaseModel):
-    hash: Optional[str] = None
-    imageSizes: List[ProfilePhoto] = None
+    hash: str | None = None
+    imageSizes: list[ProfilePhoto] = None
     mediaId: int
 
 

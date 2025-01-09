@@ -1,5 +1,3 @@
-from typing import Optional, List
-
 from pydantic import BaseModel
 
 from Grindr.client.web.web_base import ClientRoute, URLTemplate
@@ -17,7 +15,7 @@ class FavoriteProfile(BaseModel):
 
 
 class FetchFavoritesRouteResponse(BaseModel):
-    favorites: Optional[List[FavoriteProfile]] = None
+    favorites: list[FavoriteProfile] | None = None
 
 
 class FetchFavoritesRoute(

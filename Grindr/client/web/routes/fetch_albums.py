@@ -7,30 +7,30 @@ from Grindr.client.web.web_settings import GRINDR_V1
 
 
 class AlbumContent(BaseModel):
-    contentId: Optional[int] = None
-    contentType: Optional[str] = None
-    url: Optional[str] = None
-    processing: Optional[bool] = None
-    thumbUrl: Optional[str] = None
-    coverUrl: Optional[str] = None
-    statusId: Optional[int] = None
-    rejectionId: Optional[Any] = None
+    contentId: int | None = None
+    contentType: str | None = None
+    url: str | None = None
+    processing: bool | None = None
+    thumbUrl: str | None = None
+    coverUrl: str | None = None
+    statusId: int | None = None
+    rejectionId: Any | None = None
 
 
 class Album(BaseModel):
-    albumId: Optional[int] = None
-    albumName: Optional[str] = None
-    profileId: Optional[int] = None
-    sharedCount: Optional[int] = None
-    version: Optional[int] = None
-    createdAt: Optional[str] = None
-    updatedAt: Optional[str] = None
-    content: Optional[AlbumContent] = None
-    isShareable: Optional[bool] = None
+    albumId: int | None = None
+    albumName: str | None = None
+    profileId: int | None = None
+    sharedCount: int | None = None
+    version: int | None = None
+    createdAt: str | None = None
+    updatedAt: str | None = None
+    content: AlbumContent | None = None
+    isShareable: bool | None = None
 
 
 class FetchAlbumsRouteResponse(BaseModel):
-    albums: Optional[List[Album]] = None
+    albums: list[Album] | None = None
 
 
 class FetchAlbumsRoute(

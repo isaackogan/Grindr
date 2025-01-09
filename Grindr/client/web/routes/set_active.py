@@ -7,7 +7,7 @@ from Grindr.client.web.web_settings import GRINDR_V1
 
 
 class SetActiveRouteResponse(BaseModel):
-    post: Optional[Any]
+    post: Any | None
 
 
 class SetActiveRoute(

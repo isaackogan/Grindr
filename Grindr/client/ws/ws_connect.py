@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Optional, Tuple, Union, Type, AsyncIterator
+from typing import Union, Type, AsyncIterator
 
 import httpx
 from python_socks import ProxyType, parse_proxy_url
@@ -21,15 +21,15 @@ class GrindrConnect(Connect):
     def __init__(
             self,
             logger: logging.Logger,
-            uri: Optional[str] = None,
+            uri: str | None = None,
             **kwargs
     ):
         super().__init__(uri, logger=logger, **kwargs)
         self.logger = self._logger = logger
-        self._ws: Optional[WebSocketClientProtocol] = None
+        self._ws: WebSocketClientProtocol | None = None
 
     @property
-    def ws(self) -> Optional[WebSocketClientProtocol]:
+    def ws(self) -> WebSocketClientProtocol | None:
         """Get the current WebSocketClientProtocol"""
 
         return self._ws
@@ -54,7 +54,7 @@ class GrindrProxyConnect(ProxyConnect, GrindrConnect):
 
     def __init__(
             self,
-            proxy: Optional[GrindrWSProxy],
+            proxy: GrindrWSProxy | None,
             **kwargs
     ):
         super().__init__(
@@ -65,7 +65,7 @@ class GrindrProxyConnect(ProxyConnect, GrindrConnect):
     @classmethod
     def _convert_proxy(cls, proxy: httpx.Proxy) -> websockets_proxy.Proxy:
         """Convert an HTTPX proxy to a websockets_proxy Proxy"""
-        parsed: Tuple[ProxyType, str, int, Optional[str], Optional[str]] = parse_proxy_url(str(proxy.url))
+        parsed: tuple[ProxyType, str, int, str, str] | None = parse_proxy_url(str(proxy.url))
         parsed: list = list(parsed)
 
         # Add auth back

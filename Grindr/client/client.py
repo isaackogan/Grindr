@@ -7,7 +7,6 @@ import traceback
 import uuid
 from asyncio import AbstractEventLoop, Task, CancelledError
 from logging import Logger
-from typing import Optional, Dict, List
 
 from pydantic import ValidationError
 
@@ -38,11 +37,11 @@ class GrindrClient(GrindrEmitter):
 
     def __init__(
             self,
-            web_proxy: Optional[str] = None,
-            ws_proxy: Optional[str] = None,
+            web_proxy: str | None = None,
+            ws_proxy: str | None = None,
             web_kwargs: dict = None,
             ws_kwargs: dict = None,
-            extensions: Optional[List[Extension]] = None
+            extensions: list[Extension] | None = None
     ):
         """
         Instantiate the GrindrClient object
@@ -71,12 +70,12 @@ class GrindrClient(GrindrEmitter):
         )
 
         # Properties
-        self._email: Optional[str] = None
-        self._session: Optional[SessionData] = None
-        self._context: Optional[Context] = None
-        self._event_loop_task: Optional[Task] = None
-        self._session_loop_task: Optional[Task] = None
-        self._extensions: Dict[str, Extension] = dict()
+        self._email: str | None = None
+        self._session: SessionData | None = None
+        self._context: Context | None = None
+        self._event_loop_task: Task | None = None
+        self._session_loop_task: Task | None = None
+        self._extensions: dict[str, Extension] = dict()
 
         self.add_extensions(*extensions or [])
 
@@ -317,7 +316,7 @@ class GrindrClient(GrindrEmitter):
         conversation: Conversation = self.get_conversation(profile_id=profile_id)
         return await conversation.retrieve_all()
 
-    def get_conversation(self, profile_id: Optional[int]):
+    def get_conversation(self, profile_id: int | None):
         return Conversation.from_defaults(
             target_id=profile_id,
             context=self._context
@@ -332,7 +331,7 @@ class GrindrClient(GrindrEmitter):
         inbox: Inbox = await self.get_inbox()
         return await inbox.retrieve_all()
 
-    def add_extensions(self, *extensions: Extension) -> List[str]:
+    def add_extensions(self, *extensions: Extension) -> list[str]:
         """Add multiple extensions"""
 
         return [self.add_extension(extension) for extension in extensions]

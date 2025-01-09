@@ -38,9 +38,9 @@ class Event(BaseModel):
 
 
 class WebsocketResponse(BaseModel):
-    type: Optional[str] = None
-    ref: Optional[Any] = None
-    payload: Optional[dict] = None
+    type: str | None = None
+    ref: Any | None = None
+    payload: dict | None = None
 
 
 class UnknownEvent(Event):
@@ -50,7 +50,7 @@ class UnknownEvent(Event):
     """
 
     data: dict
-    payload: Optional[dict] = None
+    payload: dict | None = None
 
 
 class ConnectEvent(Event):
@@ -62,14 +62,14 @@ class ConnectEvent(Event):
 
 class MessageEventReplyPreview(BaseModel):
     senderId: int
-    type: Optional[MessageType] = None
-    chat1Type: Optional[str] = None
+    type: MessageType | None = None
+    chat1Type: str | None = None
     previewMessageId: str
-    text: Optional[str]
-    lat: Optional[Any]
-    lon: Optional[Any]
-    albumId: Optional[Any]
-    duration: Optional[Any]
+    text: str | None
+    lat: Any | None
+    lon: Any | None
+    albumId: Any | None
+    duration: Any | None
 
 
 class MessageEvent(Message, Event):
@@ -77,24 +77,24 @@ class MessageEvent(Message, Event):
 
 
 class TapEvent(Event):
-    timestamp: Optional[int] = None
-    senderId: Optional[int] = None
-    recipientId: Optional[int] = None
-    tapType: Optional[int] = None
-    senderProfileImageHash: Optional[str] = None
-    senderDisplayName: Optional[str] = None
-    isMutual: Optional[bool] = None
+    timestamp: int | None = None
+    senderId: int | None = None
+    recipientId: int | None = None
+    tapType: int | None = None
+    senderProfileImageHash: str | None = None
+    senderDisplayName: str | None = None
+    isMutual: bool | None = None
 
 
 class ViewedEventMostRecent(BaseModel):
-    profileId: Optional[str] = None
-    photoHash: Optional[str] = None
-    timestamp: Optional[int] = None
+    profileId: str | None = None
+    photoHash: str | None = None
+    timestamp: int | None = None
 
 
 class ViewedEvent(Event):
-    viewedCount: Optional[int] = None
-    mostRecent: Optional[ViewedEventMostRecent] = None
+    viewedCount: int | None = None
+    mostRecent: ViewedEventMostRecent | None = None
 
 
 class DisconnectEvent(Event):

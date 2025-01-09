@@ -17,7 +17,7 @@ class SetSendAlbumRouteBodyProfile(BaseModel):
 
 
 class SetSendAlbumRouteBody(BodyParams):
-    profiles: List[SetSendAlbumRouteBodyProfile]
+    profiles: list[SetSendAlbumRouteBodyProfile]
 
 
 class SetSendAlbumRoute(

@@ -13,14 +13,14 @@ class FetchMessagesRouteParams(QueryParams):
 
 
 class Metadata(BaseModel):
-    translate: Optional[bool] = None
-    hasSharedAlbums: Optional[bool] = None
+    translate: bool | None = None
+    hasSharedAlbums: bool | None = None
 
 
 class FetchMessagesRouteResponse(BaseModel):
-    lastReadTimestamp: Optional[int] = None
-    messages: Optional[List[Message]] = None
-    metadata: Optional[Metadata] = None
+    lastReadTimestamp: int | None = None
+    messages: list[Message] | None = None
+    metadata: Metadata | None = None
 
 
 class FetchMessagesRoute(

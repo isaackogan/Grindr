@@ -14,9 +14,9 @@ if typing.TYPE_CHECKING:
 
 
 class Profile(DetailedProfileData, GrindrModel):
-    albums: List[Album] = []
+    albums: list[Album] = []
 
-    async def retrieve_albums(self) -> List[Album]:
+    async def retrieve_albums(self) -> list[Album]:
         """
         Retrieve the albums for the profile
         :return: The albums for the profile

@@ -63,8 +63,8 @@ class PersonalBioUpdate(Extension):
         views = await self.client.web.fetch_views()
         return views.totalViewers
 
-    async def get_dynamic_bio(self) -> Optional[Tuple[str, str]]:
-        currently_playing: Optional[dict] = await asyncio.to_thread(self._spotify.currently_playing)
+    async def get_dynamic_bio(self) -> Tuple[str, str] | None:
+        currently_playing: dict | None = await asyncio.to_thread(self._spotify.currently_playing)
         playlist_text: str = ""
 
         if currently_playing is None:

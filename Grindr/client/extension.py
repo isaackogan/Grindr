@@ -18,8 +18,8 @@ class Extension(BaseModel, ABC):
     """
 
     _listeners: dict[Type[Event], str] = PrivateAttr(default_factory=dict)
-    _client: Optional[GrindrEmitter] = PrivateAttr(default=None)
-    _instance_id: Optional[str] = PrivateAttr(default=None)
+    _client: GrindrEmitter | None = PrivateAttr(default=None)
+    _instance_id: str | None = PrivateAttr(default=None)
 
     def _add_decorated_listeners(self) -> None:
         """Add listeners to the client"""

@@ -2,3 +2,4 @@
 build
 python-dotenv
 twine
+setuptools

@@ -7,18 +7,18 @@ from Grindr.models.context import GrindrModel, Context
 
 
 class Inbox(GrindrModel):
-    _currentPage: Optional[int] = PrivateAttr(default=1)
-    _entries: List[InboxConversationData] = PrivateAttr(default_factory=list)
+    _currentPage: int | None = PrivateAttr(default=1)
+    _entries: list[InboxConversationData] = PrivateAttr(default_factory=list)
 
     @classmethod
     def from_defaults(cls, context: Context) -> "Inbox":
         return cls(context=context)
 
     @property
-    def entries(self) -> List[InboxConversationData]:
+    def entries(self) -> list[InboxConversationData]:
         return self._entries
 
-    async def retrieve_next_page(self) -> List[InboxConversationData]:
+    async def retrieve_next_page(self) -> list[InboxConversationData]:
 
         # If there are no further pages to retrieve
         if self._currentPage is None:
@@ -35,7 +35,7 @@ class Inbox(GrindrModel):
 
         return response.entries
 
-    async def retrieve_pages(self, page_limit: int = 1) -> List[InboxConversationData]:
+    async def retrieve_pages(self, page_limit: int = 1) -> list[InboxConversationData]:
         for _ in range(page_limit):
             await self.retrieve_next_page()
             if self._currentPage is None:

@@ -8,7 +8,7 @@ from Grindr.client.web.web_settings import GRINDR_V2
 
 
 class FetchTapsRouteResponse(BaseModel):
-    profiles: Optional[List[ProfileData]]
+    profiles: list[ProfileData] | None
 
 
 class FetchTapsRoute(

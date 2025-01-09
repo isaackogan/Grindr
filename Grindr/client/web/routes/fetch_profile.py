@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Any
 
 from pydantic import BaseModel
 
@@ -9,58 +9,58 @@ from Grindr.client.web.web_settings import GRINDR_V4
 
 
 class Media(BaseModel):
-    mediaHash: Optional[str] = None
-    type: Optional[int] = None
-    state: Optional[int] = None
-    reason: Optional[Any] = None
+    mediaHash: str | None = None
+    type: int | None = None
+    state: int | None = None
+    reason: Any | None = None
 
 
 class DetailedProfileData(ProfileData):
-    aboutMe: Optional[str] = None
-    age: Optional[int] = None
-    showAge: Optional[bool] = None
-    ethnicity: Optional[int] = None
-    relationshipStatus: Optional[int] = None
-    grindrTribes: Optional[List[int]] = None
-    lookingFor: Optional[List[int]] = None
-    vaccines: Optional[List[int]] = None
-    bodyType: Optional[int] = None
-    sexualPosition: Optional[SexualPosition] = None
-    hivStatus: Optional[int] = None
-    lastTestedDate: Optional[int] = None
-    height: Optional[float] = None
-    weight: Optional[float] = None
-    socialNetworks: Optional[Any] = None
-    showDistance: Optional[bool] = None
-    approximateDistance: Optional[bool] = None
-    seen: Optional[int] = None
-    medias: Optional[List[Media]] = None
-    identity: Optional[Any] = None
-    lastChatTimestamp: Optional[int] = None
-    isNew: Optional[bool] = None
-    lastViewed: Optional[int] = None
-    meetAt: Optional[List[int]] = None
-    nsfw: Optional[int] = None
-    hashtags: Optional[List[str]] = None
-    profileTags: Optional[List[str]] = None
-    lastUpdatedTime: Optional[int] = None
-    genders: Optional[List[int]] = None
-    pronouns: Optional[List[int]] = None
-    tapped: Optional[bool] = None
-    isTeleporting: Optional[bool] = None
-    isRoaming: Optional[bool] = None
-    arrivalDays: Optional[int] = None
-    foundVia: Optional[int] = None
-    unreadCount: Optional[int] = None
-    rightNow: Optional[str] = None
-    rightNowText: Optional[str] = None
-    rightNowPosted: Optional[int] = None
-    rightNowDistance: Optional[float] = None
-    verifiedInstagramId: Optional[str] = None
+    aboutMe: str | None = None
+    age: int | None = None
+    showAge: bool | None = None
+    ethnicity: int | None = None
+    relationshipStatus: int | None = None
+    grindrTribes: list[int] | None = None
+    lookingFor: list[int] | None = None
+    vaccines: list[int] | None = None
+    bodyType: int | None = None
+    sexualPosition: SexualPosition | None = None
+    hivStatus: int | None = None
+    lastTestedDate: int | None = None
+    height: float | None = None
+    weight: float | None = None
+    socialNetworks: Any | None = None
+    showDistance: bool | None = None
+    approximateDistance: bool | None = None
+    seen: int | None = None
+    medias: list[Media] | None = None
+    identity: Any | None = None
+    lastChatTimestamp: int | None = None
+    isNew: bool | None = None
+    lastViewed: int | None = None
+    meetAt: list[int] | None = None
+    nsfw: int | None = None
+    hashtags: list[str] | None = None
+    profileTags: list[str] | None = None
+    lastUpdatedTime: int | None = None
+    genders: list[int] | None = None
+    pronouns: list[int] | None = None
+    tapped: bool | None = None
+    isTeleporting: bool | None = None
+    isRoaming: bool | None = None
+    arrivalDays: int | None = None
+    foundVia: int | None = None
+    unreadCount: int | None = None
+    rightNow: str | None = None
+    rightNowText: str | None = None
+    rightNowPosted: int | None = None
+    rightNowDistance: float | None = None
+    verifiedInstagramId: str | None = None
 
 
 class FetchProfileRouteResponse(BaseModel):
-    profiles: List[DetailedProfileData]
+    profiles: list[DetailedProfileData]
 
 
 class FetchProfileRouteParams(BodyParams):

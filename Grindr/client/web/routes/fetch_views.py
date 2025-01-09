@@ -11,40 +11,40 @@ from Grindr.client.web.web_settings import GRINDR_V6
 
 
 class ViewedProfilePreview(BaseModel):
-    distance: Optional[float] = None
-    lastViewed: Optional[int] = None
-    profileImageMediaHash: Optional[str] = None
-    seen: Optional[int] = None
-    sexualPosition: Optional[SexualPosition] = None
-    foundVia: Optional[Any] = None
-    rightNow: Optional[str] = None
-    inBadNeighborhood: Optional[bool] = None
-    secretAdmirer: Optional[bool] = None
-    viewedMeFreshFace: Optional[bool] = None
-    favorite: Optional[bool] = None
+    distance: float | None = None
+    lastViewed: int | None = None
+    profileImageMediaHash: str | None = None
+    seen: int | None = None
+    sexualPosition: SexualPosition | None = None
+    foundVia: Any | None = None
+    rightNow: str | None = None
+    inBadNeighborhood: bool | None = None
+    secretAdmirer: bool | None = None
+    viewedMeFreshFace: bool | None = None
+    favorite: bool | None = None
 
 
 class ViewedProfile(ViewedProfilePreview):
-    profileId: Optional[int] = None
-    displayName: Optional[str] = None
-    age: Optional[int] = None
-    showAge: Optional[bool] = None
-    showDistance: Optional[bool] = None
-    approximateDistance: Optional[bool] = None
-    lastChatTimestamp: Optional[int] = None
-    hasFaceRecognition: Optional[bool] = None
-    medias: Optional[List[Media]] = None
-    lastUpdatedTime: Optional[int] = None
-    boosting: Optional[bool] = None
-    profileTags: Optional[List[str]] = None
-    incognito: Optional[bool] = None
-    new: Optional[bool] = None
+    profileId: int | None = None
+    displayName: str | None = None
+    age: int | None = None
+    showAge: bool | None = None
+    showDistance: bool | None = None
+    approximateDistance: bool | None = None
+    lastChatTimestamp: int | None = None
+    hasFaceRecognition: bool | None = None
+    medias: list[Media] | None = None
+    lastUpdatedTime: int | None = None
+    boosting: bool | None = None
+    profileTags: list[str] | None = None
+    incognito: bool | None = None
+    new: bool | None = None
 
 
 class FetchViewsRouteResponse(BaseModel):
     totalViewers: int
-    profiles: List[ProfileData]
-    previews: List[ViewedProfilePreview]
+    profiles: list[ProfileData]
+    previews: list[ViewedProfilePreview]
     ttl: int
 
 

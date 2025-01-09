@@ -36,7 +36,7 @@ class SetMediaUploadRoute(
             params: None = None,
             body: SetMediaUploadRouteBody = None,
             **kwargs: Any
-    ) -> Optional[SetMediaUploadRouteResponse]:
+    ) -> SetMediaUploadRouteResponse | None:
 
         response = await self._web.request(
             method="POST",

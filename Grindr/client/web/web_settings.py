@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Union
+from typing import Union
 
 import httpx
 
@@ -17,7 +17,7 @@ GRINDR_V4: str = GRINDR_BASE + "/v4"
 GRINDR_V5: str = GRINDR_BASE + "/v5"
 GRINDR_V6: str = GRINDR_BASE + "/v6"
 
-DEFAULT_REQUEST_PARAMS: Dict[str, Union[int, bool, str]] = {}
+DEFAULT_REQUEST_PARAMS: dict[str, Union[int, bool, str]] = {}
 
 # Not validated, but if they start validating it, it becomes a bit more of a pain
 BUILD_NUMBER: str = "132462"
@@ -27,7 +27,7 @@ LATEST_APP: str = (
     if os.environ.get('USE_LATEST_VERSION') else "24.19.0"
 )
 
-DEFAULT_REQUEST_HEADERS: Dict[str, str] = {
+DEFAULT_REQUEST_HEADERS: dict[str, str] = {
     "requireRealDeviceInfo": "true",
     "L-Time-Zone": "America/Toronto",
     "L-Grindr-Roles": "[]",
@@ -41,5 +41,3 @@ DEFAULT_REQUEST_HEADERS: Dict[str, str] = {
     "Connection": "Keep-Alive",
     "Accept-Encoding": "gzip",
 }
-
-"grindr3\/24.19.0.132462;132462;Free;Android 13;Redmi Note 9S;Xiaomi"

@@ -7,50 +7,50 @@ from Grindr.client.web.web_settings import GRINDR_V1
 
 
 class Participant(BaseModel):
-    profileId: Optional[int] = None
-    primaryMediaHash: Optional[str] = None
-    lastOnline: Optional[int] = None
-    distanceMetres: Optional[float] = None
+    profileId: int | None = None
+    primaryMediaHash: str | None = None
+    lastOnline: int | None = None
+    distanceMetres: float | None = None
 
 
 class Preview(BaseModel):
-    conversationId: Optional[dict] = None
-    messageId: Optional[str] = None
-    chat1MessageId: Optional[str] = None
-    senderId: Optional[int] = None
-    type: Optional[str] = None
-    chat1Type: Optional[str] = None
-    text: Optional[str] = None
-    url: Optional[str] = None
-    lat: Optional[float] = None
-    lon: Optional[float] = None
-    albumId: Optional[int] = None
-    albumContentId: Optional[int] = None
-    albumContentReply: Optional[str] = None
-    duration: Optional[int] = None
-    imageHash: Optional[str] = None
-    photoContentReply: Optional[str] = None
+    conversationId: dict | None = None
+    messageId: str | None = None
+    chat1MessageId: str | None = None
+    senderId: int | None = None
+    type: str | None = None
+    chat1Type: str | None = None
+    text: str | None = None
+    url: str | None = None
+    lat: float | None = None
+    lon: float | None = None
+    albumId: int | None = None
+    albumContentId: int | None = None
+    albumContentReply: str | None = None
+    duration: int | None = None
+    imageHash: str | None = None
+    photoContentReply: str | None = None
 
 
 class InboxConversationData(BaseModel):
-    conversationId: Optional[str] = None
-    name: Optional[str] = None
-    participants: Optional[List[Participant]] = None
-    lastActivityTimestamp: Optional[int] = None
-    unreadCount: Optional[int] = None
-    preview: Optional[Preview] = None
-    muted: Optional[bool] = None
-    pinned: Optional[bool] = None
-    favorite: Optional[bool] = None
-    context: Optional[str] = None
-    onlineUntil: Optional[int] = None
-    translatable: Optional[bool] = None
-    rightNow: Optional[str] = None
+    conversationId: str | None = None
+    name: str | None = None
+    participants: list[Participant] | None = None
+    lastActivityTimestamp: int | None = None
+    unreadCount: int | None = None
+    preview: Preview | None = None
+    muted: bool | None = None
+    pinned: bool | None = None
+    favorite: bool | None = None
+    context: str | None = None
+    onlineUntil: int | None = None
+    translatable: bool | None = None
+    rightNow: str | None = None
 
 
 class FetchInboxRouteResponse(BaseModel):
-    entries: Optional[List[InboxConversationData]] = []
-    nextPage: Optional[int] = None
+    entries: list[InboxConversationData] | None = []
+    nextPage: int | None = None
 
 
 class FetchInboxRouteParams(QueryParams):

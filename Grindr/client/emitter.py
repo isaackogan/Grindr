@@ -8,7 +8,7 @@ from Grindr.events import Event
 
 class GrindrEmitter(AsyncIOEventEmitter):
 
-    def on(self, event: Type[Event], f: Optional[Callable] = None) -> Union[Handler, Callable[[Handler], Handler]]:
+    def on(self, event: Type[Event], f: Callable | None = None) -> Union[Handler, Callable[[Handler], Handler]]:
         """
         Decorator that can be used to register a Python function as an event listener
 

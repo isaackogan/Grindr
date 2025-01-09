@@ -40,27 +40,27 @@ class ProfilePhotoReplyMedia(BaseModel):
 
 
 class AlbumContentReplyMedia(BaseModel):
-    albumId: Optional[int] = None
-    ownerProfileId: Optional[int] = None
-    albumContentId: Optional[int] = None
-    albumContentReply: Optional[str] = None
-    previewUrl: Optional[str] = None
-    expiresAt: Optional[int] = None
+    albumId: int | None = None
+    ownerProfileId: int | None = None
+    albumContentId: int | None = None
+    albumContentReply: str | None = None
+    previewUrl: str | None = None
+    expiresAt: int | None = None
 
 
 MediaBody = Union[TextMedia, ImageMedia, ProfilePhotoReplyMedia, AlbumContentReplyMedia, dict]
 
 
 class Message(BaseModel):
-    messageId: Optional[str] = None
-    conversationId: Optional[str] = None
-    senderId: Optional[int] = None
-    timestamp: Optional[int] = None
-    unsent: Optional[bool] = None
-    reactions: Optional[List] = None
+    messageId: str | None = None
+    conversationId: str | None = None
+    senderId: int | None = None
+    timestamp: int | None = None
+    unsent: bool | None = None
+    reactions: List | None = None
     type: MessageType = None
-    body: Optional[MediaBody] = None
-    replyToMessage: Optional[Message] = None
-    dynamic: Optional[bool] = None
-    chat1Type: Optional[str] = None
-    replyPreview: Optional[dict] = None
+    body: MediaBody | None = None
+    replyToMessage: Message | None = None
+    dynamic: bool | None = None
+    chat1Type: str | None = None
+    replyPreview: dict | None = None
