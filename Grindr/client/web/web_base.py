@@ -49,6 +49,7 @@ class GrindrHTTPClient:
             web_proxy: str | None,
             web_kwargs: dict[str, Any] | None
     ) -> AsyncClient:
+        web_kwargs = web_kwargs or {}
         self.headers = {**web_kwargs.pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
         self.params: dict[str, Any] = {**web_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
         self.headers['L-Device-Info'] = self.generate_device_info()
