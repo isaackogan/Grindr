@@ -1,13 +1,18 @@
-from pydantic import BaseModel
+import time
+from typing import Callable
+
+from pydantic import BaseModel, Field
 
 from Grindr.client.web.web_base import ClientRoute, BodyParams, URLTemplate
 from Grindr.client.web.web_settings import GRINDR_V4, GRINDR_V3
+
+generate_token: Callable[[], str] = lambda: f"{time.time() * 1000:.3f}"
 
 
 class FetchSessionRoutePayload(BodyParams):
     email: str
     password: str
-    token: str = ""
+    token: str = Field(default_factory=generate_token)
 
 
 class FetchSessionRouteResponse(BaseModel):
@@ -37,8 +42,8 @@ class FetchSessionNewRoute(
 
 class FetchSessionRefreshRoutePayload(BodyParams):
     email: str
-    token: str
     authToken: str
+    token: str = Field(default_factory=generate_token)
 
 
 class FetchSessionRefreshRoute(

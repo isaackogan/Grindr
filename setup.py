@@ -7,7 +7,7 @@ manifest: dict = {
     "name": "Grindr",
     "license": "MIT",
     "author": "Isaac Kogan",
-    "version": "0.2.2.post1",
+    "version": "0.2.4",
     "email": "info@isaackogan.com"
 }
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         description="Grindr Python Client",
         include_package_data=True,  # Ensure non-Python files are included
         package_data={
-            'Grindr.client.web.tls_match': ['ja3_blueprint.json'],
+            'Grindr.client.tls_match': ['ja3_blueprint.json'],
         },
         author=manifest["author"],
         author_email=manifest["email"],

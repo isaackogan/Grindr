@@ -9,7 +9,13 @@ from curl_cffi.requests import AsyncSession, Response, ExtraFingerprints
 
 from Grindr.client.logger import GrindrLogHandler
 
-JA3_BLUEPRINT: dict = json.load(Path(__file__).parent.joinpath('./ja3_blueprint.json').open('r'))
+# Load the ja3 blueprint
+JA3_BLUEPRINT: dict = (
+    json.load(Path(__file__).parent.joinpath('./ja3_blueprint.json').open('r'))
+    if 'G_JA3_API_URL' not in os.environ else
+    json.load(Path(os.environ['G_JA3_API_URL']).open('r')).json()
+)
+
 JA3_BLUEPRINT_CERT_NAMES: list[str] = [suite["name"] for suite in JA3_BLUEPRINT["cipher_suites"]]
 JA3_SIGNATURE_ALGORITHMS_EXTENSION: dict = [ext for ext in JA3_BLUEPRINT["extensions"] if ext["name"] == "signature_algorithms"][0]
 JA3_SIGNATURE_ALGORITHMS: list[str] = [algo['name'] for algo in JA3_SIGNATURE_ALGORITHMS_EXTENSION['data']['algorithms']]

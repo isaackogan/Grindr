@@ -8,6 +8,7 @@ import uuid
 from json import JSONDecodeError
 from typing import Any, Literal, ForwardRef, Type
 
+import curl_cffi.requests
 from curl_cffi.requests import AsyncSession, Response
 from pydantic import BaseModel, ValidationError
 
@@ -40,6 +41,13 @@ class GrindrHTTPClient:
             web_kwargs=web_kwargs
         )
 
+    def set_proxy(self, proxy: str | None):
+        """Update the current proxy on the client"""
+        self._session.proxies = {"all": proxy}
+
+    def clear_cookies(self):
+        """Clear the cookies on the client"""
+        self._session.cookies.clear()
 
     @property
     def http_client(self) -> AsyncSession:
@@ -238,9 +246,11 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
         elif body is not None:
             raise NotImplementedError("This body type has not been implemented!")
 
-        response: Response = await self._web.request(
+        url: str = self.url % (params.model_dump() if params else {})
+
+        response: curl_cffi.requests.Response = await self._web.request(
             method=self.method,
-            url=self.url % (params.model_dump() if params else {}),
+            url=url,
             **kwargs
         )
 
@@ -264,7 +274,7 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
                 raise CloudflareWAFResponse(response, "Blocked by the Grindr Cloudflare WAF!")
 
         if response.status_code != 200:
-            self._logger.debug("Request Failed: " + str(response.status_code) + response.content.decode())
+            self._logger.debug(f"Request Failed ({response.status_code}): Payload: {body.model_dump()} - URL: {url} - Response: {response.content.decode('utf-8')}")
             raise GrindrRequestError(response, "A request to Grindr failed!")
 
         # Build the payload reply

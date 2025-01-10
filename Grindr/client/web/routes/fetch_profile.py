@@ -3,7 +3,7 @@ from typing import List, Optional, Any
 from pydantic import BaseModel
 
 from Grindr.client.web.routes.fetch_profiles import ProfileData
-from Grindr.client.web.routes.set_profile_details import SexualPosition
+from Grindr.client.web.routes.set_profile_details import SexualPosition, SocialNetworks
 from Grindr.client.web.web_base import ClientRoute, URLTemplate, BodyParams
 from Grindr.client.web.web_settings import GRINDR_V4
 
@@ -30,7 +30,7 @@ class DetailedProfileData(ProfileData):
     lastTestedDate: int | None = None
     height: float | None = None
     weight: float | None = None
-    socialNetworks: Any | None = None
+    socialNetworks: SocialNetworks | None = None
     showDistance: bool | None = None
     approximateDistance: bool | None = None
     seen: int | None = None
