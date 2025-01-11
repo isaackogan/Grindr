@@ -229,6 +229,7 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
             self,
             params: Params = None,
             body: Body = None,
+            url_template: URLTemplate = None,
             **kwargs: Any
     ) -> Response | None:
         """
@@ -254,7 +255,7 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
         elif body is not None:
             raise NotImplementedError("This body type has not been implemented!")
 
-        url: str = self.url % (params.model_dump() if params else {})
+        url: str = (url_template or self.url) % (params.model_dump() if params else {})
 
         response: curl_cffi.requests.Response = await self._web.request(
             method=self.method,
