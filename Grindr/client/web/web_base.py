@@ -81,6 +81,7 @@ class GrindrHTTPClient:
             base_headers: bool = True,
             **kwargs
     ) -> Response:
+
         headers: dict = {
             **(self.headers if base_headers else {}),
             **(extra_headers or {}),
@@ -229,7 +230,8 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
             self,
             params: Params = None,
             body: Body = None,
-            url_template: URLTemplate = None,
+            url_override: URLTemplate = None,
+            header_override: dict[str, str] = None,
             **kwargs: Any
     ) -> Response | None:
         """
@@ -239,6 +241,12 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
         :return: Return to be overridden
 
         """
+
+        if header_override is not None:
+            kwargs['extra_headers'] = {
+                **kwargs.get('extra_headers', {}),
+                **header_override
+            }
 
         # Upload an image
         if isinstance(body, ImageBody):
@@ -255,7 +263,7 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
         elif body is not None:
             raise NotImplementedError("This body type has not been implemented!")
 
-        url: str = (url_template or self.url) % (params.model_dump() if params else {})
+        url: str = (url_override or self.url) % (params.model_dump() if params else {})
 
         response: curl_cffi.requests.Response = await self._web.request(
             method=self.method,
