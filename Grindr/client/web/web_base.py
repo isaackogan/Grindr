@@ -15,7 +15,7 @@ from pydantic import BaseModel, ValidationError
 from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse, GrindrRequestError, AccountBannedError
 from Grindr.client.logger import GrindrLogHandler
 from Grindr.client.tls_match.tls_match import create_async_client
-from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS
+from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS, generate_user_agent
 
 
 class GrindrHTTPClient:
@@ -61,7 +61,7 @@ class GrindrHTTPClient:
         web_kwargs = web_kwargs or {}
         self.headers = {**web_kwargs.pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
         self.params: dict[str, Any] = {**web_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
-        self.headers['L-Device-Info'] = self.generate_device_info()
+        self.refresh_device_info(refresh_user_agent=False)
 
         # Create the async client
         self._logger.debug('Creating HTTP client')
@@ -122,16 +122,24 @@ class GrindrHTTPClient:
         return self._session_token
 
     @classmethod
-    def generate_device_info(cls):
+    def _deprecated_generate_device_info_ios(cls):
         """iOS device info generator"""
         return f"{str(uuid.uuid4()).upper()};appStore;2;2107621376;1334x750"
 
     @classmethod  # Not used anymore
-    def _android_deprecated_generate_device_info(cls):
+    def generate_device_info_android(cls):
         identifier = uuid.uuid4()
         hex_identifier = identifier.hex
         random_integer = random.randint(1000000000, 9999999999)
         return f"{hex_identifier};GLOBAL;2;{random_integer};2277x1080;{identifier}"
+
+    def refresh_device_info(self, refresh_user_agent: bool):
+        """Refresh the device info"""
+        self.headers['L-Device-Info'] = self.generate_device_info_android()
+
+        # May lead to ja3 mismatch, it just depends on how strictly cloudflare checks
+        if refresh_user_agent:
+            self.headers['User-Agent'] = generate_user_agent()
 
 
 class QueryParams(BaseModel):
@@ -274,7 +282,7 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
                 raise CloudflareWAFResponse(response, "Blocked by the Grindr Cloudflare WAF!")
 
         if response.status_code != 200:
-            self._logger.debug(f"Request Failed ({response.status_code}): Payload: {body.model_dump()} - URL: {url} - Response: {response.content.decode('utf-8')}")
+            self._logger.debug(f"Request Failed ({response.status_code}): Payload: {body.model_dump() if isinstance(body, BaseModel) else None} - URL: {url} - Response: {(response.content or b'').decode('utf-8')}")
             raise GrindrRequestError(response, "A request to Grindr failed!")
 
         # Build the payload reply

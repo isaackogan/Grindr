@@ -1,4 +1,5 @@
 import os
+import random
 from typing import Union
 
 from curl_cffi import requests
@@ -41,3 +42,29 @@ DEFAULT_REQUEST_HEADERS: dict[str, str] = {
     "Connection": "Keep-Alive",
     "Accept-Encoding": "gzip",
 }
+
+DEVICE_MANUFACTURER_LIST: list[tuple[str, str]] = [
+    ("Galaxy S21", "Samsung"),
+    ("Xperia 1 III", "Sony"),
+    ("Mi 11", "Xiaomi"),
+    ("OnePlus 9", "OnePlus"),
+    ("Nokia 8.3", "Nokia"),
+    ("Moto G Power", "Motorola"),
+    ("P40 Pro", "Huawei"),
+    ("Find X3", "Oppo"),
+    ("V60 ThinQ", "LG"),
+    ("Redmi Note 10", "Xiaomi"),
+    ("Reno 6", "Oppo"),
+    ("Pixel 5", "Google"),
+    ("Galaxy Note 20", "Samsung"),
+    ("ROG Phone 5", "Asus"),
+    ("Magic 3", "Honor"),
+]
+
+
+def generate_user_agent() -> str:
+    """Generate user agent"""
+
+    device, manufacturer = random.choice(DEVICE_MANUFACTURER_LIST)
+    user_agent = f"grindr3/{LATEST_APP}.{BUILD_NUMBER};{BUILD_NUMBER};Free;Android {random.randint(12, 14)};{device};{manufacturer}"
+    return user_agent
