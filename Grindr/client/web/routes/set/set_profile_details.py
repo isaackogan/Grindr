@@ -22,7 +22,7 @@ class SexualPosition(int, enum.Enum):
     SIDE = 6
 
 
-class SetProfileDetailsRouteBody(BaseModel):
+class SetProfileDetailsRoutePayload(BaseModel):
     aboutMe: str | None = None
     nsfw: int | None = None
     age: int | None = None
@@ -54,7 +54,7 @@ class SetProfileDetailsRoute(
         "PUT",
         URLTemplate(GRINDR_V3_1, "/me/profile"),
         None,
-        SetProfileDetailsRouteBody,
+        SetProfileDetailsRoutePayload,
         None
     ]
 ):

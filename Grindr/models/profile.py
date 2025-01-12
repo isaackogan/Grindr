@@ -1,12 +1,11 @@
 import typing
-from typing import List
 
-from Grindr.client.web.routes.fetch_albums import Album
-from Grindr.client.web.routes.fetch_profile import DetailedProfileData
-from Grindr.client.web.routes.fetch_shared_albums import FetchSharedAlbumsRouteParams, FetchSharedAlbumsRouteResponse
-from Grindr.client.web.routes.set_block_user import SetBlockUserRouteResponse, SetBlockUserRouteParams
-from Grindr.client.web.routes.set_send_tap import SetSendTapRouteBody, SetSendTapRouteResponse
-from Grindr.client.web.routes.set_unblock_user import SetUnblockUserRouteParams, SetUnblockUserRouteResponse
+from Grindr.client.web.routes.fetch.fetch_albums import Album
+from Grindr.client.web.routes.fetch.fetch_profile import DetailedProfileData
+from Grindr.client.web.routes.fetch.fetch_shared_albums import FetchSharedAlbumsRouteParams, FetchSharedAlbumsRouteResponse
+from Grindr.client.web.routes.set.set_block_user import SetBlockUserRouteResponse, SetBlockUserRouteParams
+from Grindr.client.web.routes.set.set_send_tap import SetSendTapRoutePayload, SetSendTapRouteResponse
+from Grindr.client.web.routes.set.set_unblock_user import SetUnblockUserRouteParams, SetUnblockUserRouteResponse
 from Grindr.models.context import GrindrModel, Context
 
 if typing.TYPE_CHECKING:
@@ -44,7 +43,7 @@ class Profile(DetailedProfileData, GrindrModel):
 
     async def send_tap(self) -> SetSendTapRouteResponse:
         return await self.context.web.set_send_tap(
-            body=SetSendTapRouteBody(
+            body=SetSendTapRoutePayload(
                 profileId=self.profileId
             )
         )

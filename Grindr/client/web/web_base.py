@@ -5,17 +5,18 @@ import random
 import textwrap
 import traceback
 import uuid
+from functools import cached_property
 from json import JSONDecodeError
 from typing import Any, Literal, ForwardRef, Type
 
 import curl_cffi.requests
 from curl_cffi.requests import AsyncSession, Response
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, TypeAdapter
 
 from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse, GrindrRequestError, AccountBannedError
 from Grindr.client.logger import GrindrLogHandler
 from Grindr.client.tls_match.tls_match import create_async_client
-from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS, generate_user_agent
+from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS, get_mobile_user_agent, get_desktop_user_agent
 
 
 class GrindrHTTPClient:
@@ -81,7 +82,6 @@ class GrindrHTTPClient:
             base_headers: bool = True,
             **kwargs
     ) -> Response:
-
         headers: dict = {
             **(self.headers if base_headers else {}),
             **(extra_headers or {}),
@@ -134,13 +134,13 @@ class GrindrHTTPClient:
         random_integer = random.randint(1000000000, 9999999999)
         return f"{hex_identifier};GLOBAL;2;{random_integer};2277x1080;{identifier}"
 
-    def refresh_device_info(self, refresh_user_agent: bool):
+    def refresh_device_info(self, refresh_user_agent: bool, user_agent_type: Literal["web", "mobile"] = "web"):
         """Refresh the device info"""
         self.headers['L-Device-Info'] = self.generate_device_info_android()
 
         # May lead to ja3 mismatch, it just depends on how strictly cloudflare checks
         if refresh_user_agent:
-            self.headers['User-Agent'] = generate_user_agent()
+            self.headers['User-Agent'] = get_mobile_user_agent() if user_agent_type == "mobile" else get_desktop_user_agent()
 
 
 class QueryParams(BaseModel):
@@ -160,7 +160,7 @@ class URLTemplate:
     def __init__(self, base_url: str, path: str):
         """
         Create the URL template
-        :param url_template: The URL acting as a template
+        :param base_url: The URL acting as a template
 
         """
 
@@ -179,6 +179,7 @@ class URLTemplate:
         """
 
         # Take the params and add them and return a string
+        data = {k: str(v).lower() if isinstance(str, bool) else v for k, v in data.items() if v is not None}
         d = self._url.format(**data)
         return d
 
@@ -190,7 +191,7 @@ class ImageBody(BaseModel):
 
 class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTemplate, Params: Any, Body: Any, Response: Any]:
 
-    def __init__(self, web: GrindrHTTPClient):
+    def __init__(self, web: GrindrHTTPClient) -> object:
         self._logger = GrindrLogHandler.get_logger()
         self._web: GrindrHTTPClient = web
 
@@ -225,6 +226,10 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
     @property
     def response(self) -> Type[Response]:
         return self.__get_generic(4)
+
+    @cached_property
+    def adapter(self) -> TypeAdapter:
+        return TypeAdapter(self.response)
 
     async def __call__(
             self,
@@ -291,15 +296,35 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
                 raise CloudflareWAFResponse(response, "Blocked by the Grindr Cloudflare WAF!")
 
         if response.status_code != 200:
-            self._logger.debug(f"Request Failed ({response.status_code}): Payload: {body.model_dump() if isinstance(body, BaseModel) else None} - URL: {url} - Response: {(response.content or b'').decode('utf-8')}")
-            raise GrindrRequestError(response, "A request to Grindr failed!")
+
+            if isinstance(body, ImageBody):
+                payload_preview = f"Image: {body.image_mimetype} ({len(body.image_data)} bytes)"
+            elif isinstance(body, BaseModel):
+                payload_preview = body.model_dump()
+            elif body is not None:
+                payload_preview = str(body)[:100] + "..." if len(str(body)) > 100 else str(body)
+            else:
+                payload_preview = None
+
+            self._logger.debug(f"Request Failed ({response.status_code}): Payload: {payload_preview} - URL: {url} - Response: {(response.content or b'').decode('utf-8')}")
+            raise GrindrRequestError(response, f"A request to Grindr at {response.url} failed with status code {response.status_code}!")
 
         # Build the payload reply
         try:
             data: dict = response.json() if response.content else {}
             if os.environ.get("G_DEBUG_JSON"):
                 self._logger.debug("Received JSON: " + json.dumps(data))
-            return self.response(**data)
+
+            # Handle the parsing of the object
+            return self.adapter.validate_python(data)
+        except JSONDecodeError as ex:
+            content_preview = response.content.decode("utf-8", errors="replace")  # Convert bytes to string
+            content_excerpt = content_preview[:2500]  # truncate for readability
+            raise JSONDecodeError(
+                f"Failed to decode JSON response at {response.url} for a successful request (200): {content_excerpt or '<Empty>'}",
+                content_preview,
+                ex.pos,
+            ) from ex
         except ValidationError as ex:
             if os.environ.get('G_DEBUG_JSON'):
                 self._logger.error(f"Failed due to ValidationError: {response.status_code} {response.url}\n" + traceback.format_exc())

@@ -6,9 +6,9 @@ import setuptools
 manifest: dict = {
     "name": "Grindr",
     "license": "MIT",
-    "author": "Isaac Kogan",
-    "version": "0.2.6",
-    "email": "info@isaackogan.com"
+    "author": "Tricorder",
+    "version": "0.2.8",
+    "email": "tricorder@isaackogan.com"
 }
 
 if __name__ == '__main__':

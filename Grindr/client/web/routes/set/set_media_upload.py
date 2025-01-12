@@ -14,7 +14,7 @@ class SetMediaUploadRouteResponse(BaseModel):
     url: str
 
 
-class SetMediaUploadRouteBody(BaseModel):
+class SetMediaUploadRoutePayload(BaseModel):
     image_bytes: bytes
 
 
@@ -23,7 +23,7 @@ class SetMediaUploadRoute(
         "POST",
         URLTemplate(GRINDR_V4, "/chat/media/upload"),
         None,
-        SetMediaUploadRouteBody,
+        SetMediaUploadRoutePayload,
         SetMediaUploadRouteResponse
     ]
 ):
@@ -34,7 +34,7 @@ class SetMediaUploadRoute(
     async def __call__(
             self,
             params: None = None,
-            body: SetMediaUploadRouteBody = None,
+            body: SetMediaUploadRoutePayload = None,
             **kwargs: Any
     ) -> SetMediaUploadRouteResponse | None:
 

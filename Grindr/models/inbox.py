@@ -1,8 +1,6 @@
-from typing import List, Optional
-
 from pydantic import PrivateAttr
 
-from Grindr.client.web.routes.fetch_inbox import FetchInboxRouteResponse, FetchInboxRouteParams, InboxConversationData
+from Grindr.client.web.routes.fetch.fetch_inbox import FetchInboxRouteResponse, FetchInboxRouteParams, InboxConversationData
 from Grindr.models.context import GrindrModel, Context
 
 

@@ -1,11 +1,10 @@
 import enum
-from typing import Optional, List
 
 from pydantic import BaseModel, Field
 from pygeohash import geohash
 
 from Grindr.client.web.web_base import ClientRoute, URLTemplate, QueryParams
-from Grindr.client.web.web_settings import GRINDR_V1
+from Grindr.client.web.web_settings import GRINDR_V1, GRINDR_V3
 
 
 class FetchCascadeRouteParams(QueryParams):
@@ -15,8 +14,9 @@ class FetchCascadeRouteParams(QueryParams):
     photoOnly: bool = False
     faceOnly: bool = False
     notRecentlyChatted: bool = False
-    fresh: bool = False
     favorites: bool = False
+    showSponsoredProfiles: bool = False
+    shuffle: bool = False
 
 
 class Ethnicity(int, enum.Enum):
@@ -82,16 +82,17 @@ class FetchCascadeRoute(
     ClientRoute[
         "GET",
         URLTemplate(
-            GRINDR_V1,
+            GRINDR_V3,
             "/cascade"
             "?nearbyGeoHash={geohash}"
             "&onlineOnline={onlineOnly}"
             "&photoOnly={photoOnly}"
             "&faceOnly={faceOnly}"
             "&notRecentlyChatted={notRecentlyChatted}"
-            "&fresh={fresh}"
             "&pageNumber={pageNumber}"
             "&favorites={favorites}"
+            "&showSponsoredProfiles={showSponsoredProfiles}"
+            "&shuffle={shuffle}"
         ),
         FetchCascadeRouteParams,
         None,

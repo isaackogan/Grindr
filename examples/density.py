@@ -4,7 +4,7 @@ import os
 from typing import Tuple, List
 
 from Grindr import GrindrClient
-from Grindr.client.web.routes.fetch_cascade import FetchCascadeRoute, FetchCascadeRouteResponse, FetchCascadeRouteParams
+from Grindr.client.web.routes.fetch.fetch_cascade import FetchCascadeRoute, FetchCascadeRouteResponse, FetchCascadeRouteParams
 
 client = GrindrClient()
 

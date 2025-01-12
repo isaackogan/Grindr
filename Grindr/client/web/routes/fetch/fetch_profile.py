@@ -1,9 +1,9 @@
-from typing import List, Optional, Any
+from typing import Any
 
 from pydantic import BaseModel
 
-from Grindr.client.web.routes.fetch_profiles import ProfileData
-from Grindr.client.web.routes.set_profile_details import SexualPosition, SocialNetworks
+from Grindr.client.web.routes.fetch.fetch_profiles import ProfileData
+from Grindr.client.web.routes.set.set_profile_details import SexualPosition, SocialNetworks
 from Grindr.client.web.web_base import ClientRoute, URLTemplate, BodyParams
 from Grindr.client.web.web_settings import GRINDR_V4
 
@@ -57,11 +57,19 @@ class DetailedProfileData(ProfileData):
     rightNowPosted: int | None = None
     rightNowDistance: float | None = None
     verifiedInstagramId: str | None = None
+    isBlockable: bool | None = None
+    lastThrobTimestamp: int | None = None
+    sexualHealth: list[int] | None = None
+
 
 
 class FetchProfileRouteResponse(BaseModel):
     profiles: list[DetailedProfileData]
 
+
+if __name__ == '__main__':
+    d = print(FetchProfileRouteResponse(profiles=[DetailedProfileData()]).model_dump_json())
+    exit()
 
 class FetchProfileRouteParams(BodyParams):
     profileId: int

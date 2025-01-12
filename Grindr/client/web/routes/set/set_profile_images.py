@@ -4,10 +4,10 @@ from Grindr.client.web.web_base import ClientRoute, URLTemplate, BodyParams
 from Grindr.client.web.web_settings import GRINDR_V3
 
 
-class SetProfileImagesRouteBody(BodyParams):
+class SetProfileImagesRoutePayload(BodyParams):
     """Set profile images body"""
 
-    primaryImageHash: str  # Only one primary image, obviously
+    primaryImageHash: str | None  # Only one primary image, obviously
     secondaryImageHashes: list[str] = Field(max_length=4)  # Max 4 secondary images
 
 
@@ -16,7 +16,7 @@ class SetProfileImagesRoute(
         "PUT",
         URLTemplate(GRINDR_V3, "/me/profile/images"),
         None,
-        SetProfileImagesRouteBody,
+        SetProfileImagesRoutePayload,
         None
     ]
 ):

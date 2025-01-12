@@ -9,7 +9,7 @@ from datetime import datetime
 
 import pytz
 from pydantic import Field
-from typing import Any, Optional, Tuple
+from typing import Any, Tuple
 
 import spotipy
 from pydantic import PrivateAttr
@@ -18,7 +18,7 @@ from spotipy.oauth2 import SpotifyOAuth
 import os
 
 from Grindr.client.extension import Extension
-from Grindr.client.web.routes.set_profile_details import SetProfileDetailsRouteBody
+from Grindr.client.web.routes.set.set_profile_details import SetProfileDetailsRoutePayload
 
 
 class PersonalBioUpdate(Extension):
@@ -30,7 +30,7 @@ class PersonalBioUpdate(Extension):
     UPDATE_INTERVAL: int = 69
 
     _spotify: spotipy.Spotify = PrivateAttr()
-    _bio: SetProfileDetailsRouteBody = PrivateAttr()
+    _bio: SetProfileDetailsRoutePayload = PrivateAttr()
     _update_task: Task = PrivateAttr(default=None)
 
     def __init__(self, /, **data: Any):
@@ -48,7 +48,7 @@ class PersonalBioUpdate(Extension):
             )
         )
 
-        self._bio = SetProfileDetailsRouteBody(**json.loads(open(self.BIO_PATH, "r").read()))
+        self._bio = SetProfileDetailsRoutePayload(**json.loads(open(self.BIO_PATH, "r").read()))
         self._original_about_me = self._bio.aboutMe
         self._original_name = self._bio.displayName
 

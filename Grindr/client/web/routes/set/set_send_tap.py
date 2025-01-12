@@ -16,7 +16,7 @@ class SetSendTapRouteResponse(BaseModel):
     isMutual: bool
 
 
-class SetSendTapRouteBody(BodyParams):
+class SetSendTapRoutePayload(BodyParams):
     recipientId: int
     tapType: TapType
 
@@ -26,7 +26,7 @@ class SetSendTapRoute(
         "POST",
         URLTemplate(GRINDR_V2, "/taps/add"),
         None,
-        SetSendTapRouteBody,
+        SetSendTapRoutePayload,
         SetSendTapRouteResponse
     ]
 ):

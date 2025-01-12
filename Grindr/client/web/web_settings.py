@@ -18,6 +18,9 @@ GRINDR_V4: str = GRINDR_BASE + "/v4"
 GRINDR_V5: str = GRINDR_BASE + "/v5"
 GRINDR_V6: str = GRINDR_BASE + "/v6"
 
+GRINDR_PUBLIC_V1: str = GRINDR_BASE + "/public/v1"
+GRINDR_PUBLIC_V2: str = GRINDR_BASE + "/public/v2"
+
 DEFAULT_REQUEST_PARAMS: dict[str, Union[int, bool, str]] = {}
 
 # Not validated, but if they start validating it, it becomes a bit more of a pain
@@ -61,8 +64,36 @@ DEVICE_MANUFACTURER_LIST: list[tuple[str, str]] = [
     ("Magic 3", "Honor"),
 ]
 
+DESKTOP_USER_AGENTS: list[str] = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/115.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:114.0) Gecko/20100101 Firefox/114.0",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:113.0) Gecko/20100101 Firefox/113.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.2 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15"
+]
 
-def generate_user_agent() -> str:
+
+def get_desktop_user_agent() -> str:
+    """
+    Get a random desktop user agent string.
+
+    Returns:
+        str: A random desktop user agent string.
+    """
+    return random.choice(DESKTOP_USER_AGENTS)
+
+
+def get_mobile_user_agent() -> str:
     """Generate user agent"""
 
     device, manufacturer = random.choice(DEVICE_MANUFACTURER_LIST)

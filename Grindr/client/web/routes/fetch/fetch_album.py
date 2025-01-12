@@ -1,8 +1,6 @@
 from pydantic import BaseModel
 
-from pydantic import BaseModel
-
-from Grindr.client.web.routes.fetch_albums import Album
+from Grindr.client.web.routes.fetch.fetch_albums import Album
 from Grindr.client.web.web_base import ClientRoute, URLTemplate, QueryParams
 from Grindr.client.web.web_settings import GRINDR_V2
 

@@ -11,13 +11,13 @@ class SetSendAlbumRouteParams(QueryParams):
     albumId: int
 
 
-class SetSendAlbumRouteBodyProfile(BaseModel):
+class SetSendAlbumRoutePayloadProfile(BaseModel):
     profileId: int
     shareId: str = Field(default_factory=lambda: str(uuid.uuid4()))
 
 
-class SetSendAlbumRouteBody(BodyParams):
-    profiles: list[SetSendAlbumRouteBodyProfile]
+class SetSendAlbumRoutePayload(BodyParams):
+    profiles: list[SetSendAlbumRoutePayloadProfile]
 
 
 class SetSendAlbumRoute(
@@ -25,7 +25,7 @@ class SetSendAlbumRoute(
         "POST",
         URLTemplate(GRINDR_V1, "/albums/{albumId}/shares"),
         SetSendAlbumRouteParams,
-        SetSendAlbumRouteBody,
+        SetSendAlbumRoutePayload,
         None
     ]
 ):
@@ -38,10 +38,10 @@ class SetSendAlbumRoute(
     def create_payload(
             cls,
             profile_id: int
-    ) -> SetSendAlbumRouteBody:
-        return SetSendAlbumRouteBody(
+    ) -> SetSendAlbumRoutePayload:
+        return SetSendAlbumRoutePayload(
             profiles=[
-                SetSendAlbumRouteBodyProfile(
+                SetSendAlbumRoutePayloadProfile(
                     profileId=profile_id
                 )
             ]

@@ -25,7 +25,7 @@ class FetchProfilesRouteResponse(BaseModel):
     profiles: list[ProfileData]
 
 
-class FetchProfilesRouteBody(BodyParams):
+class FetchProfilesRoutePayload(BodyParams):
     targetProfileIds: list[str]
 
 
@@ -34,7 +34,7 @@ class FetchProfilesRoute(
         "POST",
         URLTemplate(GRINDR_V3, "/profiles"),
         None,
-        FetchProfilesRouteBody,
+        FetchProfilesRoutePayload,
         FetchProfilesRouteResponse
     ]
 ):

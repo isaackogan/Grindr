@@ -14,7 +14,7 @@ from Grindr.client.emitter import GrindrEmitter
 from Grindr.client.errors import AuthenticationDetailsMissingError, AlreadyConnectedError
 from Grindr.client.extension import Extension
 from Grindr.client.logger import GrindrLogHandler, LogLevel
-from Grindr.client.web.routes.fetch_session import SessionData, FetchSessionRoutePayload, FetchSessionRefreshRoutePayload
+from Grindr.client.web.routes.fetch.fetch_session import SessionData, FetchSessionRoutePayload, FetchSessionRefreshRoutePayload
 from Grindr.client.web.web_client import GrindrWebClient
 from Grindr.client.web.web_settings import GRINDR_WS
 from Grindr.client.ws.ws_client import GrindrWSClient

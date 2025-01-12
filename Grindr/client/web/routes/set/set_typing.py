@@ -13,7 +13,7 @@ class TypingStatus(str, enum.Enum):
     SENT = "Sent"
 
 
-class SetTypingRouteBody(QueryParams):
+class SetTypingRoutePayload(QueryParams):
     conversationId: str
     status: TypingStatus
 
@@ -23,7 +23,7 @@ class SetTypingRoute(
         "POST",
         URLTemplate(GRINDR_V4, "/chatstatus/typing"),
         None,
-        SetTypingRouteBody,
+        SetTypingRoutePayload,
         None
     ]
 ):

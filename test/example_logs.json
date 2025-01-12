@@ -1,0 +1,1316 @@
+[
+  {
+    "id": 10271,
+    "name": "chat_received",
+    "timestamp": 1736623137199,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":247200,\"last_seen\":1736622890000,\"source\":\"\",\"type\":\"Text\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"165287931\",\"pii_message_id\":\"8-54-84a3:7121ae615c9f1--24b83894e1c10ef19733e8296\"}"
+  },
+  {
+    "id": 10272,
+    "name": "chat_received",
+    "timestamp": 1736623139456,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":5448673,\"last_seen\":1736617690786,\"source\":\"\",\"type\":\"Image\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"426280310\",\"pii_message_id\":\"99fcfebb0-ab311c921b3f60ba4c37:39ef64161818-31-9-b\"}"
+  },
+  {
+    "id": 10273,
+    "name": "chat_received",
+    "timestamp": 1736623150692,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":2070694,\"last_seen\":1736621080000,\"source\":\"\",\"type\":\"Text\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"978657247\",\"pii_message_id\":\"763543-1:13b9b-4cb42442b291167464-c0cfdc449503-71c\"}"
+  },
+  {
+    "id": 10274,
+    "name": "chat_received",
+    "timestamp": 1736623159894,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":349212,\"last_seen\":1736622810682,\"source\":\"\",\"type\":\"Image\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"795649395\",\"pii_message_id\":\"f63398f-fed-f58c14926ee3-3006042522f7-d59eb616a0:a\"}"
+  },
+  {
+    "id": 10275,
+    "name": "chat_received",
+    "timestamp": 1736623160857,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":350176,\"last_seen\":1736622810682,\"source\":\"\",\"type\":\"Image\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"695374959\",\"pii_message_id\":\"e-2186d5993:-b-83d2016e93049062b6c5194902519-3b741\"}"
+  },
+  {
+    "id": 10276,
+    "name": "chat_received",
+    "timestamp": 1736623161898,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":351218,\"last_seen\":1736622810682,\"source\":\"\",\"type\":\"Image\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"654399957\",\"pii_message_id\":\"3094e24:-c0b11dcb-6-231-6977c75b517862bd36646556cd\"}"
+  },
+  {
+    "id": 10277,
+    "name": "chat_received",
+    "timestamp": 1736623423678,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":1736623423680,\"last_seen\":0,\"source\":\"\",\"type\":\"Text\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"419629791\",\"pii_message_id\":\"919446aa72ab-2a5-42:-6413b17-658e213c933a543a25860\"}"
+  },
+  {
+    "id": 10278,
+    "name": "chat_received",
+    "timestamp": 1736623433877,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":39921,\"last_seen\":1736623393957,\"source\":\"\",\"type\":\"Image\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"496799112\",\"pii_message_id\":\"256b-c7f43:96344a90135af4337450151c367--b0f689e-7e\"}"
+  },
+  {
+    "id": 10279,
+    "name": "chat_received",
+    "timestamp": 1736623434838,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":40883,\"last_seen\":1736623393957,\"source\":\"\",\"type\":\"Image\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"917691492\",\"pii_message_id\":\"60048d16:9441e20f66-335--951-ade24920b337f82ec5747\"}"
+  },
+  {
+    "id": 10280,
+    "name": "chat_received",
+    "timestamp": 1736623435929,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":41973,\"last_seen\":1736623393957,\"source\":\"\",\"type\":\"Image\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"291946917\",\"pii_message_id\":\"134d7502b0cc185--6f536bf59-6f7-e:41db664368cc498a3\"}"
+  },
+  {
+    "id": 10281,
+    "name": "chat_received",
+    "timestamp": 1736623593326,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":199370,\"last_seen\":1736623393957,\"source\":\"\",\"type\":\"Text\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"974291916\",\"pii_message_id\":\"c371-d6da2ed1e9393921df1:964-b331695--360275a565bc\"}"
+  },
+  {
+    "id": 10282,
+    "name": "chat_received",
+    "timestamp": 1736623827516,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":2357516,\"last_seen\":1736621470000,\"source\":\"\",\"type\":\"Text\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"369531728\",\"pii_message_id\":\"5d9112-46e42874f4dd5919-0aa4821d-fa17973:3286-1c35\"}"
+  },
+  {
+    "id": 10283,
+    "name": "chat_received",
+    "timestamp": 1736623836029,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":1736623836029,\"last_seen\":0,\"source\":\"\",\"type\":\"Text\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"13686907\",\"pii_message_id\":\"-42a2b7fe75139-74a64163746-680834-35f:6006c1097487\"}"
+  },
+  {
+    "id": 10284,
+    "name": "chat_received",
+    "timestamp": 1736623842265,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":18645,\"last_seen\":1736623823623,\"source\":\"\",\"type\":\"Text\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"758162393\",\"pii_message_id\":\"441b839d786434-6cb2a771a77243d6-64-d3e5af4-96a:ae4\"}"
+  },
+  {
+    "id": 10285,
+    "name": "chat_received",
+    "timestamp": 1736623866450,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":2666452,\"last_seen\":1736621200000,\"source\":\"\",\"type\":\"Text\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"767318361\",\"pii_message_id\":\"c503fca64c134-6-29:9e-f47a9db681669-d6d21f32f67bfb\"}"
+  },
+  {
+    "id": 10286,
+    "name": "chat_received",
+    "timestamp": 1736624024552,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":2335369,\"last_seen\":1736621689183,\"source\":\"\",\"type\":\"Text\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"017867960\",\"pii_message_id\":\"9169eaac1f61a505a7a2f32478b4-8372:dc91c56-53-99-21\"}"
+  },
+  {
+    "id": 10287,
+    "name": "websocket_event",
+    "timestamp": 1736624057228,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Error\",\"error_type\":\"Unknown\",\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10288,
+    "name": "websocket_event",
+    "timestamp": 1736624057231,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connecting\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10289,
+    "name": "websocket_event",
+    "timestamp": 1736624057437,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connected\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10290,
+    "name": "page",
+    "timestamp": 1736624060984,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ProfilesActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10291,
+    "name": "subscription_status_changed",
+    "timestamp": 1736624062855,
+    "params": "{\"is_background\":true,\"version_code\":132462,\"subscription_status_changed_to\":\"FREE\"}"
+  },
+  {
+    "id": 10292,
+    "name": "location_first_request_time",
+    "timestamp": 1736624063097,
+    "params": "{\"is_background\":true,\"version_code\":132462,\"time\":84}"
+  },
+  {
+    "id": 10293,
+    "name": "assignment_load_called",
+    "timestamp": 1736624063102,
+    "params": "{\"is_background\":true,\"version_code\":132462}"
+  },
+  {
+    "id": 10294,
+    "name": "assignment_load_success",
+    "timestamp": 1736624063430,
+    "params": "{\"is_background\":true,\"version_code\":132462}"
+  },
+  {
+    "id": 10295,
+    "name": "cascade_screen_viewed",
+    "timestamp": 1736624066704,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10296,
+    "name": "websocket_event",
+    "timestamp": 1736624066714,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connecting\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10297,
+    "name": "enable_location_result",
+    "timestamp": 1736624066904,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"result\":\"allowed\"}"
+  },
+  {
+    "id": 10298,
+    "name": "app_opened",
+    "timestamp": 1736624066917,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"distance_setting_enabled\":false,\"launch_from_push\":false,\"push_enabled\":true,\"launch_type\":\"launch\",\"network_status\":\"WIFI\",\"api_level\":33,\"installer_package\":\"com.android.shell\",\"old_signature\":false,\"pii_advertising_id\":\"f-7-ed7b1cc9359ad-3239ed908-c1b8f431\"}"
+  },
+  {
+    "id": 10299,
+    "name": "noti_settings_update",
+    "timestamp": 1736624066918,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"show_notification\":true,\"general\":true,\"tap\":true,\"individual_chat\":false,\"video_call\":false}"
+  },
+  {
+    "id": 10300,
+    "name": "cascade_session_end",
+    "timestamp": 1736624066919,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"cascade_session_id\":\"51961121375140886727715263d91084655373\",\"position_in_cascade\":-1,\"max_distance\":\"unknown\"}"
+  },
+  {
+    "id": 10301,
+    "name": "session_end",
+    "timestamp": 1736624066919,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"duration\":1083350}"
+  },
+  {
+    "id": 10302,
+    "name": "session_start",
+    "timestamp": 1736624066920,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"86934167460611077d85705221451732651603\"}"
+  },
+  {
+    "id": 10303,
+    "name": "first_open",
+    "timestamp": 1736624066921,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10304,
+    "name": "page",
+    "timestamp": 1736624066923,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10305,
+    "name": "active_user_pageflow",
+    "timestamp": 1736624066946,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"70910675728751264d43311216550106387466\",\"pii_profile_id\":\"828115755\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10306,
+    "name": "cascade_session_start",
+    "timestamp": 1736624067403,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"cascade_session_id\":\"2381006148057656706314151123174574677d\",\"cascade_type\":\"null\",\"request_type\":\"manual\",\"filters\":\"{\\\"online_now\\\":\\\"true\\\",\\\"not_recently_chatted\\\":\\\"true\\\"}\",\"fresh\":false,\"tags\":[]}"
+  },
+  {
+    "id": 10308,
+    "name": "inbox_screen_viewed",
+    "timestamp": 1736624070244,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10309,
+    "name": "active_user_pageflow",
+    "timestamp": 1736624070261,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"270926d5583001446532166765871763101174\",\"pii_profile_id\":\"555278811\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10310,
+    "name": "inbox_messages_viewed",
+    "timestamp": 1736624070290,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10311,
+    "name": "active_user_pageflow",
+    "timestamp": 1736624070318,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"6587416547780797630612465d011221603513\",\"pii_profile_id\":\"115582758\",\"page\":\"INBOX\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10312,
+    "name": "websocket_event",
+    "timestamp": 1736624072501,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connected\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10313,
+    "name": "websocket_event",
+    "timestamp": 1736624072728,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Closed\",\"error_type\":null,\"code\":1000,\"message\":\"Normal closure\"}"
+  },
+  {
+    "id": 10314,
+    "name": "websocket_event",
+    "timestamp": 1736624072729,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connecting\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10315,
+    "name": "websocket_event",
+    "timestamp": 1736624073050,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connected\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10316,
+    "name": "applovin_init_result",
+    "timestamp": 1736624073384,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"result\":\"Success\"}"
+  },
+  {
+    "id": 10317,
+    "name": "chat_received",
+    "timestamp": 1736624905281,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"time_passed_since_last_seen\":1736624905283,\"last_seen\":0,\"source\":\"\",\"type\":\"Text\",\"push_notification\":false,\"boost\":false,\"pii_target_profile_id\":\"498949990\",\"pii_message_id\":\"8-:-31c33dc6b4a9b4-c5e28-26d0a49426227e7d716608202\"}"
+  },
+  {
+    "id": 10318,
+    "name": "session_end",
+    "timestamp": 1736624905293,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"duration\":838373}"
+  },
+  {
+    "id": 10319,
+    "name": "cascade_session_end",
+    "timestamp": 1736624905294,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"cascade_session_id\":\"3805675812460173116514067147672d130574\",\"position_in_cascade\":38,\"max_distance\":\"1683.0\"}"
+  },
+  {
+    "id": 10320,
+    "name": "session_start",
+    "timestamp": 1736624905294,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"9761106187506135558341076192d472352474\"}"
+  },
+  {
+    "id": 10321,
+    "name": "subscription_status_changed",
+    "timestamp": 1736625338872,
+    "params": "{\"is_background\":true,\"version_code\":132462,\"subscription_status_changed_to\":\"FREE\"}"
+  },
+  {
+    "id": 10322,
+    "name": "location_first_request_time",
+    "timestamp": 1736625339076,
+    "params": "{\"is_background\":true,\"version_code\":132462,\"time\":28}"
+  },
+  {
+    "id": 10323,
+    "name": "assignment_load_called",
+    "timestamp": 1736625339078,
+    "params": "{\"is_background\":true,\"version_code\":132462}"
+  },
+  {
+    "id": 10324,
+    "name": "assignment_load_success",
+    "timestamp": 1736625339468,
+    "params": "{\"is_background\":true,\"version_code\":132462}"
+  },
+  {
+    "id": 10325,
+    "name": "websocket_event",
+    "timestamp": 1736625346947,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connecting\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10326,
+    "name": "cascade_screen_viewed",
+    "timestamp": 1736625346954,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10327,
+    "name": "enable_location_result",
+    "timestamp": 1736625347116,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"result\":\"allowed\"}"
+  },
+  {
+    "id": 10328,
+    "name": "app_opened",
+    "timestamp": 1736625347123,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"distance_setting_enabled\":false,\"launch_from_push\":false,\"push_enabled\":true,\"launch_type\":\"launch\",\"network_status\":\"WIFI\",\"api_level\":33,\"installer_package\":\"com.android.shell\",\"old_signature\":false,\"pii_advertising_id\":\"98f9a1bc570b-e981e194d3-3d3-d-fc273c\"}"
+  },
+  {
+    "id": 10329,
+    "name": "noti_settings_update",
+    "timestamp": 1736625347123,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"show_notification\":true,\"general\":true,\"tap\":true,\"individual_chat\":false,\"video_call\":false}"
+  },
+  {
+    "id": 10330,
+    "name": "page",
+    "timestamp": 1736625347124,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10331,
+    "name": "first_open",
+    "timestamp": 1736625347123,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10332,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625347144,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"54926166010532673150321085878d77721154\",\"pii_profile_id\":\"755218518\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10333,
+    "name": "websocket_event",
+    "timestamp": 1736625347498,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connected\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10334,
+    "name": "cascade_session_start",
+    "timestamp": 1736625347590,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"cascade_session_id\":\"3188753d714602417663217147305560579155\",\"cascade_type\":\"null\",\"request_type\":\"manual\",\"filters\":\"{\\\"online_now\\\":\\\"true\\\",\\\"not_recently_chatted\\\":\\\"true\\\"}\",\"fresh\":false,\"tags\":[]}"
+  },
+  {
+    "id": 10336,
+    "name": "websocket_event",
+    "timestamp": 1736625348269,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Closed\",\"error_type\":null,\"code\":1000,\"message\":\"Normal closure\"}"
+  },
+  {
+    "id": 10337,
+    "name": "websocket_event",
+    "timestamp": 1736625348268,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connecting\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10338,
+    "name": "websocket_event",
+    "timestamp": 1736625348621,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connected\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10339,
+    "name": "applovin_init_result",
+    "timestamp": 1736625349357,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"result\":\"Success\"}"
+  },
+  {
+    "id": 10340,
+    "name": "profile_interaction",
+    "timestamp": 1736625356185,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"pii_counter_profile_ids\":\"456372171\",\"index\":4,\"has_unread_throb\":false,\"pii_no_interaction_profiles\":{\"0\":\"724017993\",\"1\":\"544821766\",\"2\":\"724194654\",\"3\":\"52425450\",\"5\":\"724200382\",\"6\":\"648201537\",\"7\":\"724394123\",\"8\":\"715804157\"}}"
+  },
+  {
+    "id": 10341,
+    "name": "page",
+    "timestamp": 1736625356197,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10342,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625356200,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"750727421506127391518138065617d5836204\",\"pii_profile_id\":\"521851758\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10343,
+    "name": "view_profile_from_notification",
+    "timestamp": 1736625356216,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10344,
+    "name": "screenshot_obs_noperm",
+    "timestamp": 1736625356227,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10345,
+    "name": "page",
+    "timestamp": 1736625356232,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ProfilesActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10346,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625356234,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"6585041d147753073798178200521616326215\",\"pii_profile_id\":\"215155887\",\"page\":\"PROFILE_PAGE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"427165371\"}"
+  },
+  {
+    "id": 10347,
+    "name": "profile_quickbar_closed",
+    "timestamp": 1736625356430,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10348,
+    "name": "profile_viewed",
+    "timestamp": 1736625356441,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"target_is_online\":false,\"is_favorite\":false,\"is_new\":false,\"filter\":\"{\\\"online_now\\\":\\\"true\\\",\\\"not_recently_chatted\\\":\\\"true\\\"}\",\"target_profile_type\":\"\",\"referring_screen\":\"notification\",\"pii_target_profile_id\":\"546712731\",\"position_in_cascade\":0,\"current_cascade_size\":1}"
+  },
+  {
+    "id": 10349,
+    "name": "page",
+    "timestamp": 1736625357677,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ProfilesActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10350,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625357678,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"2770311805302115897375684d764201165256\",\"pii_profile_id\":\"517128585\",\"page\":\"PROFILE_PAGE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"421375176\"}"
+  },
+  {
+    "id": 10351,
+    "name": "page",
+    "timestamp": 1736625357686,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10352,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625357690,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"8183525410606119371507275727d153426086\",\"pii_profile_id\":\"527155818\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10353,
+    "name": "inbox_screen_viewed",
+    "timestamp": 1736625359261,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10354,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625359277,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"d8065117232003164487029135655767218715\",\"pii_profile_id\":\"518551782\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10355,
+    "name": "inbox_messages_viewed",
+    "timestamp": 1736625359311,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10356,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625359334,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"937305686157202172675165723180d4150481\",\"pii_profile_id\":\"175588251\",\"page\":\"INBOX\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10357,
+    "name": "page",
+    "timestamp": 1736625359696,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10358,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625359699,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"7822715560091314757d175126818026364350\",\"pii_profile_id\":\"181582557\",\"page\":\"INBOX\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10359,
+    "name": "screenshot_obs_noperm",
+    "timestamp": 1736625359776,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10360,
+    "name": "page",
+    "timestamp": 1736625359812,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ChatActivityV2\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10361,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625359815,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"884223670691111577825d1760354510536207\",\"pii_profile_id\":\"188552517\",\"page\":\"CHAT\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"261573983\"}"
+  },
+  {
+    "id": 10362,
+    "name": "chat_screen_viewed",
+    "timestamp": 1736625359957,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"referring_screen\":\"inbox\",\"prev_referrer\":\"inbox\",\"is_group_chat\":false,\"has_unread_throb\":false,\"boost\":false,\"chat_session_id\":\"5351:72325955378679138216571668_7\",\"pii_target_profile_id\":\"852173936\"}"
+  },
+  {
+    "id": 10363,
+    "name": "chat_close",
+    "timestamp": 1736625360352,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"chat_session_id\":\"33371875691275876:1_8555796252316\",\"chat_session_length\":0,\"referring_screen\":\"inbox\",\"previous_referring_screen\":\"inbox\",\"chat_sent_count\":0}"
+  },
+  {
+    "id": 10364,
+    "name": "page",
+    "timestamp": 1736625360372,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ChatActivityV2\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10365,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625360376,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"6d842015515035174893376206181577072162\",\"pii_profile_id\":\"528581715\",\"page\":\"CHAT\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"386125937\"}"
+  },
+  {
+    "id": 10366,
+    "name": "page",
+    "timestamp": 1736625360413,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10367,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625360421,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"6685757243111263055807179281d236471500\",\"pii_profile_id\":\"125517588\",\"page\":\"INBOX\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10368,
+    "name": "cascade_screen_viewed",
+    "timestamp": 1736625360978,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10369,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625360978,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"20256117727604637375d11546310855180928\",\"pii_profile_id\":\"551751882\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10370,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625360978,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"1235602761355376028d101581057681249774\",\"pii_profile_id\":\"558825171\",\"page\":\"INBOX\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10371,
+    "name": "cascade_filtered",
+    "timestamp": 1736625362356,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"filter\":\"online_now_haven't_chatted\",\"location\":\"nearby\"}"
+  },
+  {
+    "id": 10372,
+    "name": "cascade_session_end",
+    "timestamp": 1736625362357,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"cascade_session_id\":\"1725015869374175715845473631d521630067\",\"position_in_cascade\":14,\"max_distance\":\"888.0\"}"
+  },
+  {
+    "id": 10373,
+    "name": "cascade_session_start",
+    "timestamp": 1736625362357,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"cascade_session_id\":\"6731283577558703516660146123571d241573\",\"cascade_type\":\"null\",\"request_type\":\"manual\",\"filters\":\"{\\\"online_now\\\":\\\"true\\\",\\\"not_recently_chatted\\\":\\\"true\\\"}\",\"fresh\":true,\"tags\":[]}"
+  },
+  {
+    "id": 10374,
+    "name": "page",
+    "timestamp": 1736625364096,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10375,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625364099,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"4026275008567831175679163131055d184272\",\"pii_profile_id\":\"585218157\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10376,
+    "name": "explore_map_viewed",
+    "timestamp": 1736625364112,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"subscription_status\":\"FREE\"}"
+  },
+  {
+    "id": 10377,
+    "name": "enable_location_result",
+    "timestamp": 1736625364383,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"result\":\"allowed\"}"
+  },
+  {
+    "id": 10378,
+    "name": "page",
+    "timestamp": 1736625364388,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"BrowseExploreMapActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10379,
+    "name": "page",
+    "timestamp": 1736625365057,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"BrowseExploreMapActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10380,
+    "name": "page",
+    "timestamp": 1736625365069,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10381,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625365073,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"2118193004770d174556282635537682611075\",\"pii_profile_id\":\"755181852\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10382,
+    "name": "cascade_explore_screen_time_on_screen",
+    "timestamp": 1736625365631,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"explore_time_spent\":1}"
+  },
+  {
+    "id": 10383,
+    "name": "drawer_profile_screen_viewed",
+    "timestamp": 1736625367311,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10384,
+    "name": "drawer_profile_edit_profile_clicked",
+    "timestamp": 1736625367660,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10385,
+    "name": "page",
+    "timestamp": 1736625367682,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10386,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625367686,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"1176311d802165730847214807297665052535\",\"pii_profile_id\":\"581158572\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10387,
+    "name": "edit_profile_viewed",
+    "timestamp": 1736625367709,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10388,
+    "name": "page",
+    "timestamp": 1736625367736,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"EditProfileActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10389,
+    "name": "page",
+    "timestamp": 1736625368331,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"EditProfileActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10390,
+    "name": "page",
+    "timestamp": 1736625368342,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10391,
+    "name": "drawer_profile_screen_viewed",
+    "timestamp": 1736625368343,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10392,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625368348,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"957585460122d3878711550062137266103741\",\"pii_profile_id\":\"185785251\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10393,
+    "name": "page",
+    "timestamp": 1736625368880,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10394,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625368882,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"23067850811162578091246d06274371355517\",\"pii_profile_id\":\"155572818\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10395,
+    "name": "page",
+    "timestamp": 1736625368900,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"AlbumLandingActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10396,
+    "name": "my_albums_viewed",
+    "timestamp": 1736625369104,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"source\":\"side_menu\"}"
+  },
+  {
+    "id": 10397,
+    "name": "page",
+    "timestamp": 1736625369110,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"AlbumLandingActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10398,
+    "name": "page",
+    "timestamp": 1736625369127,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"MyAlbumsActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10399,
+    "name": "page",
+    "timestamp": 1736625369401,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"MyAlbumsActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10400,
+    "name": "page",
+    "timestamp": 1736625369408,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10401,
+    "name": "drawer_profile_screen_viewed",
+    "timestamp": 1736625369411,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10402,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625369415,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"1630230431d128107687862655747970525115\",\"pii_profile_id\":\"758185215\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10403,
+    "name": "drawer_profile_thumbnail_clicked",
+    "timestamp": 1736625370795,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10404,
+    "name": "page",
+    "timestamp": 1736625370813,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10405,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625370815,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"82513193080550158d26265177631077764124\",\"pii_profile_id\":\"821155587\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10406,
+    "name": "view_profile_from_drawer",
+    "timestamp": 1736625370832,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10407,
+    "name": "screenshot_obs_noperm",
+    "timestamp": 1736625370836,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10408,
+    "name": "page",
+    "timestamp": 1736625370838,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ProfilesActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10409,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625370840,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"90355140278067116728106d25551247337168\",\"pii_profile_id\":\"188125755\",\"page\":\"PROFILE_PAGE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"115557828\"}"
+  },
+  {
+    "id": 10410,
+    "name": "profile_quickbar_closed",
+    "timestamp": 1736625370972,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10411,
+    "name": "profile_own_viewed",
+    "timestamp": 1736625370974,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"target_profile_type\":\"\",\"referring_screen\":\"drawer\",\"position_in_cascade\":0,\"current_cascade_size\":1}"
+  },
+  {
+    "id": 10412,
+    "name": "page",
+    "timestamp": 1736625371314,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ProfilesActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10413,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625371315,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"17775108d53154301806218192724267650365\",\"pii_profile_id\":\"112585578\",\"page\":\"PROFILE_PAGE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"881552751\"}"
+  },
+  {
+    "id": 10414,
+    "name": "page",
+    "timestamp": 1736625371333,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10415,
+    "name": "drawer_profile_screen_viewed",
+    "timestamp": 1736625371334,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10416,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625371336,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"44221185566181d55713750032908136277760\",\"pii_profile_id\":\"152551878\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10417,
+    "name": "drawer_profile_settings_clicked",
+    "timestamp": 1736625371959,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10418,
+    "name": "page",
+    "timestamp": 1736625371977,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10419,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625371978,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"d5087361522685097612816177011405524337\",\"pii_profile_id\":\"817555128\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10420,
+    "name": "settings_viewed",
+    "timestamp": 1736625372000,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10421,
+    "name": "assignment_log_exposure_called",
+    "timestamp": 1736625372005,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"key\":\"test-enabled-lighter-text-in-settings-android\"}"
+  },
+  {
+    "id": 10422,
+    "name": "page",
+    "timestamp": 1736625372017,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"SettingsActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10423,
+    "name": "assignment_log_exposure_success",
+    "timestamp": 1736625372091,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"key\":\"test-enabled-lighter-text-in-settings-android\"}"
+  },
+  {
+    "id": 10424,
+    "name": "setting_keepPhoneAwake",
+    "timestamp": 1736625372123,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"setting_keepPhoneAwake_result\":true}"
+  },
+  {
+    "id": 10425,
+    "name": "page",
+    "timestamp": 1736625372484,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"SettingsActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10426,
+    "name": "page",
+    "timestamp": 1736625372491,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10427,
+    "name": "drawer_profile_screen_viewed",
+    "timestamp": 1736625372496,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10428,
+    "name": "active_user_pageflow",
+    "timestamp": 1736625372501,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"723770d1568741582611625100957063532481\",\"pii_profile_id\":\"578581215\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10429,
+    "name": "websocket_event",
+    "timestamp": 1736625568228,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connecting\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10430,
+    "name": "websocket_event",
+    "timestamp": 1736625568228,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Closed\",\"error_type\":null,\"code\":1000,\"message\":\"Normal closure\"}"
+  },
+  {
+    "id": 10431,
+    "name": "websocket_event",
+    "timestamp": 1736625568438,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":0,\"event_id\":0,\"event_type\":\"Connected\",\"error_type\":null,\"code\":null,\"message\":null}"
+  },
+  {
+    "id": 10432,
+    "name": "page",
+    "timestamp": 1736626795516,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10433,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626795538,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"554350651778d6004173131227889615021726\",\"pii_profile_id\":\"521758518\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10434,
+    "name": "session_end",
+    "timestamp": 1736626795538,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"duration\":1566638}"
+  },
+  {
+    "id": 10435,
+    "name": "session_start",
+    "timestamp": 1736626795539,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"612057675513535217976634601783d1418957\"}"
+  },
+  {
+    "id": 10436,
+    "name": "cascade_session_end",
+    "timestamp": 1736626795539,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"cascade_session_id\":\"d6387571173325157511632867607412453605\",\"position_in_cascade\":14,\"max_distance\":\"888.0\"}"
+  },
+  {
+    "id": 10437,
+    "name": "page",
+    "timestamp": 1736626795588,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"AlbumLandingActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10438,
+    "name": "my_albums_viewed",
+    "timestamp": 1736626795742,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"source\":\"side_menu\"}"
+  },
+  {
+    "id": 10439,
+    "name": "page",
+    "timestamp": 1736626795745,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"AlbumLandingActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10440,
+    "name": "page",
+    "timestamp": 1736626795768,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"MyAlbumsActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10441,
+    "name": "page",
+    "timestamp": 1736626796070,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"MyAlbumsActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10442,
+    "name": "page",
+    "timestamp": 1736626796086,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10443,
+    "name": "drawer_profile_screen_viewed",
+    "timestamp": 1736626796088,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10444,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626796094,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"47966374753118603250653556127d19185717\",\"pii_profile_id\":\"578511852\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10445,
+    "name": "drawer_profile_edit_profile_clicked",
+    "timestamp": 1736626796620,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10446,
+    "name": "page",
+    "timestamp": 1736626796629,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10447,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626796632,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"29573761315890567251576d76161037438451\",\"pii_profile_id\":\"217558158\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10448,
+    "name": "edit_profile_viewed",
+    "timestamp": 1736626796646,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10449,
+    "name": "page",
+    "timestamp": 1736626796667,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"EditProfileActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10450,
+    "name": "page",
+    "timestamp": 1736626797217,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"EditProfileActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10451,
+    "name": "page",
+    "timestamp": 1736626797228,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10452,
+    "name": "drawer_profile_screen_viewed",
+    "timestamp": 1736626797230,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10453,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626797233,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"568117043036965837412d7517726151535697\",\"pii_profile_id\":\"881215575\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10454,
+    "name": "drawer_profile_thumbnail_clicked",
+    "timestamp": 1736626798127,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10455,
+    "name": "page",
+    "timestamp": 1736626798146,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10456,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626798147,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"066741752618712794530163581335d9551776\",\"pii_profile_id\":\"257581185\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10457,
+    "name": "view_profile_from_drawer",
+    "timestamp": 1736626798162,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10458,
+    "name": "screenshot_obs_noperm",
+    "timestamp": 1736626798166,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10459,
+    "name": "page",
+    "timestamp": 1736626798169,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ProfilesActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10460,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626798171,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"1910d571168317713325590452546768356677\",\"pii_profile_id\":\"257551881\",\"page\":\"PROFILE_PAGE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"821187555\"}"
+  },
+  {
+    "id": 10461,
+    "name": "profile_quickbar_closed",
+    "timestamp": 1736626798300,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10462,
+    "name": "profile_own_viewed",
+    "timestamp": 1736626798302,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"target_profile_type\":\"\",\"referring_screen\":\"drawer\",\"position_in_cascade\":0,\"current_cascade_size\":1}"
+  },
+  {
+    "id": 10463,
+    "name": "page",
+    "timestamp": 1736626798860,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ProfilesActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10464,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626798861,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"614d5574767629150753261533081187759631\",\"pii_profile_id\":\"517818255\",\"page\":\"PROFILE_PAGE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"528115578\"}"
+  },
+  {
+    "id": 10465,
+    "name": "page",
+    "timestamp": 1736626798873,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10466,
+    "name": "drawer_profile_screen_viewed",
+    "timestamp": 1736626798880,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10467,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626798883,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"1277967613d056518736573351560127958414\",\"pii_profile_id\":\"287551158\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10468,
+    "name": "drawer_profile_thumbnail_clicked",
+    "timestamp": 1736626799760,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10469,
+    "name": "page",
+    "timestamp": 1736626799782,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10470,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626799784,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"1d716551506184839027657293743117763556\",\"pii_profile_id\":\"152871855\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10471,
+    "name": "view_profile_from_drawer",
+    "timestamp": 1736626799797,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10472,
+    "name": "screenshot_obs_noperm",
+    "timestamp": 1736626799803,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10473,
+    "name": "page",
+    "timestamp": 1736626799807,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ProfilesActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10474,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626799809,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"171675503d7753231656294596770143581168\",\"pii_profile_id\":\"188551725\",\"page\":\"PROFILE_PAGE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"285755811\"}"
+  },
+  {
+    "id": 10475,
+    "name": "profile_quickbar_closed",
+    "timestamp": 1736626799954,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10476,
+    "name": "profile_own_viewed",
+    "timestamp": 1736626799957,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"target_profile_type\":\"\",\"referring_screen\":\"drawer\",\"position_in_cascade\":0,\"current_cascade_size\":1}"
+  },
+  {
+    "id": 10477,
+    "name": "page",
+    "timestamp": 1736626800530,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ProfilesActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10478,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626800531,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"5518167186975374316566051d774953230712\",\"pii_profile_id\":\"185782515\",\"page\":\"PROFILE_PAGE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"881552751\"}"
+  },
+  {
+    "id": 10479,
+    "name": "edit_profile_viewed",
+    "timestamp": 1736626800540,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10480,
+    "name": "page",
+    "timestamp": 1736626800558,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"EditProfileActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10481,
+    "name": "page",
+    "timestamp": 1736626801057,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"EditProfileActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10482,
+    "name": "page",
+    "timestamp": 1736626801066,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ProfilesActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10483,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626801069,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"155325963758661d1640837516014723517977\",\"pii_profile_id\":\"825557811\",\"page\":\"PROFILE_PAGE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"571858215\"}"
+  },
+  {
+    "id": 10484,
+    "name": "page",
+    "timestamp": 1736626801219,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"ProfilesActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10485,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626801219,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"31354151652117775607367d28574186399506\",\"pii_profile_id\":\"817521558\",\"page\":\"PROFILE_PAGE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":\"172815585\"}"
+  },
+  {
+    "id": 10486,
+    "name": "page",
+    "timestamp": 1736626801226,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"start\"}"
+  },
+  {
+    "id": 10487,
+    "name": "drawer_profile_screen_viewed",
+    "timestamp": 1736626801228,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10488,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626801230,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"370277715509365515171148619d7253664836\",\"pii_profile_id\":\"815158752\",\"page\":\"CASCADE\",\"action\":\"OPEN\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  },
+  {
+    "id": 10489,
+    "name": "drawer_profile_settings_clicked",
+    "timestamp": 1736626802092,
+    "params": "{\"is_background\":false,\"version_code\":132462}"
+  },
+  {
+    "id": 10490,
+    "name": "page",
+    "timestamp": 1736626802114,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"page_name\":\"HomeActivity\",\"type\":\"stop\"}"
+  },
+  {
+    "id": 10491,
+    "name": "active_user_pageflow",
+    "timestamp": 1736626802115,
+    "params": "{\"is_background\":false,\"version_code\":132462,\"session_id\":\"7551384173710276153d137651792066854596\",\"pii_profile_id\":\"815127558\",\"page\":\"CASCADE\",\"action\":\"CLOSE\",\"is_incognito\":false,\"pii_counter_profile_ids\":null}"
+  }
+]

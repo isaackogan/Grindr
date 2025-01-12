@@ -1,8 +1,6 @@
-from typing import Optional, List
-
 from pydantic import BaseModel
 
-from Grindr.client.web.routes.fetch_albums import Album
+from Grindr.client.web.routes.fetch.fetch_albums import Album
 from Grindr.client.web.web_base import ClientRoute, URLTemplate
 from Grindr.client.web.web_settings import GRINDR_V2
 

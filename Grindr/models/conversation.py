@@ -1,13 +1,13 @@
 import asyncio
-from typing import List, Optional, Callable
+from typing import Callable
 
 from pydantic import Field, PrivateAttr
 
-from Grindr.client.web.routes.fetch_messages import FetchMessagesRouteParams, FetchMessagesRouteResponse, Message
-from Grindr.client.web.routes.fetch_profile import FetchProfileRouteParams, FetchProfileRouteResponse
-from Grindr.client.web.routes.set_message_read import SetMessageReadRouteParams
-from Grindr.client.web.routes.set_send_album import SetSendAlbumRouteParams, SetSendAlbumRoute
-from Grindr.client.web.routes.set_send_reaction import SetSendReactionRouteBody
+from Grindr.client.web.routes.fetch.fetch_messages import FetchMessagesRouteParams, FetchMessagesRouteResponse, Message
+from Grindr.client.web.routes.fetch.fetch_profile import FetchProfileRouteParams, FetchProfileRouteResponse
+from Grindr.client.web.routes.set.set_message_read import SetMessageReadRouteParams
+from Grindr.client.web.routes.set.set_send_album import SetSendAlbumRouteParams, SetSendAlbumRoute
+from Grindr.client.web.routes.set.set_send_reaction import SetSendReactionRoutePayload
 from Grindr.client.ws.ws_objects import SendPayloadBody, WSTextPayloadBody, WSImagePayloadBody, WSGifPayloadBody, WSMessage, WSMessagePayload
 from Grindr.events import MessageEvent
 from Grindr.models.context import Context, GrindrModel
@@ -215,5 +215,5 @@ class Conversation(GrindrModel):
     async def send_like(self, message_id: str) -> None:
 
         await self._web.set_send_reaction(
-            body=SetSendReactionRouteBody(messageId=message_id, conversationId=self.id)
+            body=SetSendReactionRoutePayload(messageId=message_id, conversationId=self.id)
         )

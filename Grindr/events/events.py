@@ -5,7 +5,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from Grindr.client.web.routes.fetch_messages import Message
+from Grindr.client.web.routes.fetch.fetch_messages import Message
 from Grindr.models.message import MessageType
 
 
