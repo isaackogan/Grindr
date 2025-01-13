@@ -64,7 +64,7 @@ class WSGifPayloadBody(BaseModel, WSMessagePayloadBody):
         )
 
 
-SendPayloadBody: Type = Union[WSTextPayloadBody, WSImagePayloadBody, WSGifPayloadBody]
+SendPayloadBody = WSTextPayloadBody | WSImagePayloadBody | WSGifPayloadBody
 
 
 class WSMessagePayload(BaseModel):

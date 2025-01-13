@@ -1,8 +1,11 @@
 import abc
 import json
-from typing import Literal, Callable, Type, ClassVar, Union, Any
+import random
+from typing import Literal, Type, ClassVar, Union, Any
 
-from pydantic import BaseModel, PrivateAttr, Field, model_validator, ValidationError, Json
+from pydantic import BaseModel, PrivateAttr, Field, model_validator, ValidationError
+
+from Grindr.client.web.web_settings import LATEST_APP, BUILD_NUMBER
 
 """
 DISCLAIMER:
@@ -58,12 +61,16 @@ type LogFilter = dict[Literal["online_now", "not_recently_chatted"], bool]
 
 
 # noinspection PyPep8Naming
-def LogEvent[T: BaseModel](name: str) -> Callable[[T], object]:
+def LogEvent[T: BaseModel](name: str):
     """Wrap an event payload as an event"""
 
     def decorator(cls: T) -> object:
         cls._event_name = name
-        EventMap[name] = cls
+
+        # This way subclasses don't override the base class
+        if name not in EventMap:
+            EventMap[name] = cls
+
         return cls
 
     return decorator
@@ -83,8 +90,8 @@ class ChatReceivedLogData(BaseLogEventData):
 
 @LogEvent("websocket_event")
 class WebSocketEventLogData(BaseLogEventData):
-    session_id: int
-    event_id: int
+    session_id: int  # Auto-incrementing persistent ID representing the N'th time connecting to the WS (for this device? in total? idk.)
+    event_id: int  # Again, auto-incrementing, but within the current WebSocket connection. Starts at 0.
     event_type: Literal["Error", "Connecting", "Connected", "Closed"] | str
 
     # Only provided when event_type is "Error"
@@ -171,6 +178,11 @@ class ProfileInteractionLogData(BaseLogEventData):
     index: int
     has_unread_throb: bool
     pii_no_interaction_profiles: dict[str, str]
+
+
+@LogEvent("interest_screen_viewed")
+class InterestScreenViewedLogData(BaseLogEventData):
+    time: int = Field(default_factory=lambda: random.randint(20, 40))  # Not unix, e.g. "38" <-- milliseconds since app opened? (definitely this yes)
 
 
 @LogEvent("chat_screen_viewed")
@@ -342,6 +354,68 @@ class ProfileViewedLogData(BaseLogEventData):
 
 @LogEvent("assignment_load_success")
 class AssignmentLoadSuccessLogData(BaseLogEventData):
+    pass
+
+
+@LogEvent("viewed_me_list_viewed")
+class ViewedMeListViewedLogData(BaseLogEventData):
+    source: str = "from_radar"
+
+
+@LogEvent("viewed_me_list_refreshed")
+class ViewedMeListRefreshedLogData(BaseLogEventData):
+    type: str = "auto"
+
+
+@LogEvent("viewed_me_profile_clicked")
+class ViewedMeProfileClickedLogData(BaseLogEventData):
+    type: str = "normal"
+    visible: bool = False
+    boost: bool = False
+
+
+@LogEvent("view_profile_from_viewed_me")
+class ViewedMeProfileViewedMeLogData(BaseLogEventData):
+    pass
+
+
+@LogEvent("multiphoto_profile_viewed")
+class MultiphotoProfileViewedLogData(BaseLogEventData):
+    pass
+
+
+@LogEvent("viewed_me_list_left")
+class ViewedMeListLeftLogData(BaseLogEventData):
+    type: str = "auto"
+    total: int = 100  # No. of profiles
+
+    # Categorization of type of viewer
+    normal: int = 95
+    favorite: int = 5
+    fresh_face: int = 0
+    secret_admirer: int = 0
+
+
+@LogEvent("profile_extended_viewed")
+class ProfileExtendedViewLogData(BaseLogEventData):
+    pass
+
+
+@LogEvent("home_drawer_closed")
+class HomeDrawerClosedLogData(BaseLogEventData):
+    drawer: str = "e"
+    open_by: str = "drag"
+    do_nothing: bool = False
+    version_code: str = LATEST_APP + "." + BUILD_NUMBER
+
+
+@LogEvent("favorites_tab_viewed")
+class FavoritesTabViewedLogData(BaseLogEventData):
+    pass
+
+
+@LogEvent("favorites_screen_viewed")
+class FavoritesScreenViewedLogData(BaseLogEventData):
     pass
 
 

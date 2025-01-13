@@ -1,5 +1,5 @@
 import asyncio
-from typing import Optional, AsyncIterator
+from typing import AsyncIterator
 
 from Grindr.client.logger import GrindrLogHandler
 from Grindr.client.tls_match.tls_match import create_client_kwargs
@@ -25,7 +25,7 @@ class GrindrWSClient:
 
         self._ws_kwargs: dict = ws_kwargs or {}
         self._ws_cancel: asyncio.Event | None = None
-        self._ws: Optional = None
+        self._ws: AsyncGrindrWebSocket | None = None
         self._ws_proxy: str | None = ws_proxy or ws_kwargs.get("proxy")
         self._logger = GrindrLogHandler.get_logger()
 

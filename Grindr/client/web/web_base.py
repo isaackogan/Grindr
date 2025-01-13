@@ -127,7 +127,7 @@ class GrindrHTTPClient:
         """iOS device info generator"""
         return f"{str(uuid.uuid4()).upper()};appStore;2;2107621376;1334x750"
 
-    @classmethod  # Not used anymore
+    @classmethod
     def generate_device_info_android(cls):
         identifier = uuid.uuid4()
         hex_identifier = identifier.hex

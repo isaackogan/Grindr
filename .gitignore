@@ -10,4 +10,4 @@ spotify_token.json
 personal_bio.json
 
 redact_logs.py
-example_logs_raw.json*
+example_logs*
