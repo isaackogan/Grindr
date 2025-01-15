@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -57,12 +57,23 @@ class FetchInboxRouteParams(QueryParams):
     page: int
 
 
+class FetchInboxRoutePayload(QueryParams):
+    unreadOnly: bool
+
+    def model_dump(
+            self,
+            **kwargs
+    ) -> dict[str, Any]:
+        kwargs['exclude_none'] = True
+        return super().model_dump(**kwargs)
+
+
 class FetchInboxRoute(
     ClientRoute[
-        "GET",
+        "POST",
         URLTemplate(GRINDR_V1, "/inbox?page={page}"),
         FetchInboxRouteParams,
-        None,
+        FetchInboxRoutePayload,
         FetchInboxRouteResponse
     ]
 ):

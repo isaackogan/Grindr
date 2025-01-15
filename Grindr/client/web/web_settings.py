@@ -64,6 +64,24 @@ DEVICE_MANUFACTURER_LIST: list[tuple[str, str]] = [
     ("Magic 3", "Honor"),
 ]
 
+DEVICE_SCREEN_DIMENSIONS: list[str] = [
+    "1080x2400",  # Galaxy S21
+    "1644x3840",  # Xperia 1 III
+    "1440x3200",  # Mi 11
+    "1080x2400",  # OnePlus 9
+    "1080x2400",  # Nokia 8.3
+    "1080x2300",  # Moto G Power
+    "1200x2640",  # P40 Pro
+    "1440x3216",  # Find X3
+    "2460x1080",  # V60 ThinQ
+    "1080x2400",  # Redmi Note 10
+    "1080x2400",  # Reno 6
+    "1080x2340",  # Pixel 5
+    "1440x3088",  # Galaxy Note 20
+    "1080x2448",  # ROG Phone 5
+    "1344x2772",  # Magic 3
+]
+
 DESKTOP_USER_AGENTS: list[str] = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0",
@@ -81,6 +99,18 @@ DESKTOP_USER_AGENTS: list[str] = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15"
 ]
+
+ANDROID_VERSION_API_LEVEL_MAP: dict[int, list[int]] = {
+    15: [35],  # Android 15
+    14: [34],  # Android 14
+    13: [33],  # Android 13
+    12: [31, 32],  # Android 12 (API levels 31 and 32)
+    11: [30],  # Android 11
+    10: [29],  # Android 10
+    9: [28],  # Android 9
+    8: [26, 27],  # Android 8 (API levels 26 and 27)
+    7: [25],  # Android 7
+}
 
 
 def get_desktop_user_agent() -> str:

@@ -7,6 +7,7 @@ from Grindr.client.web.web_settings import GRINDR_V2
 
 
 class TapType(int, enum.Enum):
+    NULL = 0
     FIRE = 1
     DEVIL = 2
     HI = 3

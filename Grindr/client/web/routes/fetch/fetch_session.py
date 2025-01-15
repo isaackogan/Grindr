@@ -28,7 +28,7 @@ SessionData = FetchSessionRouteResponse
 class FetchSessionNewRoute(
     ClientRoute[
         "POST",
-        URLTemplate(GRINDR_V3, "/sessions"),
+        URLTemplate(GRINDR_V4, "/sessions"),
         None,
         FetchSessionRoutePayload,
         FetchSessionRouteResponse

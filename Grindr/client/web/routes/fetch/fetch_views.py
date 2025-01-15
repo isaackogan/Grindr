@@ -2,12 +2,10 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from Grindr.client.web.routes.fetch.fetch_profile import Media
-from Grindr.client.web.routes.fetch.fetch_profiles import ProfileData
+from Grindr.client.web.routes.fetch.fetch_profiles import ProfileData, Media
 from Grindr.client.web.routes.set.set_profile_details import SexualPosition
 from Grindr.client.web.web_base import ClientRoute, URLTemplate
 from Grindr.client.web.web_settings import GRINDR_V6
-
 
 
 class ViewedProfilePreview(BaseModel):

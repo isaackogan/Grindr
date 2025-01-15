@@ -26,6 +26,7 @@ from Grindr.client.web.routes.set.set_send_tap import SetSendTapRoute
 from Grindr.client.web.routes.set.set_typing import SetTypingRoute
 from Grindr.client.web.routes.set.set_unblock_user import SetUnblockUserRoute
 from .routes.fetch.fetch_albums_red_dot import FetchAlbumsRedDotRoute
+from .routes.fetch.fetch_assignments import FetchAssignmentsRoute
 from .routes.fetch.fetch_boost_sessions import FetchBoostSessionsRoute
 from .routes.fetch.fetch_genders import FetchGendersRoute
 from .routes.fetch.fetch_google_play_products import FetchGooglePlayProductsRoute
@@ -34,9 +35,13 @@ from .routes.fetch.fetch_my_profile import FetchMyProfileRoute
 from .routes.fetch.fetch_offers_eligible import FetchOffersEligibleRoute
 from .routes.fetch.fetch_opt_out import FetchOptOutRoute
 from .routes.fetch.fetch_prefs import FetchPrefsRoute
+from .routes.fetch.fetch_profile_images import FetchProfileImagesRoute
+from .routes.fetch.fetch_profile_tag_translations import FetchProfileTagTranslationsRoute
 from .routes.fetch.fetch_rewarded_chats import FetchRewardedChatsRoute
+from .routes.fetch.fetch_tags import FetchTagsRoute
 from .routes.fetch.fetch_taps_sent import FetchTapsSentRoute
 from .routes.fetch.fetch_warnings import FetchWarningsRoute
+from .routes.set.set_delete_profile_images import SetDeleteProfileImagesRoute
 from .routes.set.set_gcm_push_tokens import SetGcmPushTokensRoute
 from .routes.set.set_mobile_logs import SetMobileLogsRoute
 from .routes.set.set_notifications_ack import SetNotificationsAckRoute
@@ -81,6 +86,7 @@ class GrindrWebClient(GrindrHTTPClient):
         self.fetch_genders: FetchGendersRoute = FetchGendersRoute(self)
         self.getch_google_play_products: FetchGooglePlayProductsRoute = FetchGooglePlayProductsRoute(self)
         self.fetch_legal_agreements: FetchLegalAgreementsRoute = FetchLegalAgreementsRoute(self)
+        self.fetch_profile_tag_translations: FetchProfileTagTranslationsRoute = FetchProfileTagTranslationsRoute(self)
         self.fetch_my_profile: FetchMyProfileRoute = FetchMyProfileRoute(self)
         self.fetch_offers_eligible: FetchOffersEligibleRoute = FetchOffersEligibleRoute(self)
         self.fetch_opt_out: FetchOptOutRoute = FetchOptOutRoute(self)
@@ -88,7 +94,11 @@ class GrindrWebClient(GrindrHTTPClient):
         self.fetch_rewarded_chats: FetchRewardedChatsRoute = FetchRewardedChatsRoute(self)
         self.fetch_taps_sent: FetchTapsSentRoute = FetchTapsSentRoute(self)
         self.fetch_warnings: FetchWarningsRoute = FetchWarningsRoute(self)
+        self.fetch_profile_images: FetchProfileImagesRoute = FetchProfileImagesRoute(self)
+        self.fetch_assignments: FetchAssignmentsRoute = FetchAssignmentsRoute(self)
+        self.fetch_tags: FetchTagsRoute = FetchTagsRoute(self)
 
+        self.set_delete_profile_images: SetDeleteProfileImagesRoute = SetDeleteProfileImagesRoute(self)
         self.set_block_user: SetBlockUserRoute = SetBlockUserRoute(self)
         self.set_unblock_user: SetUnblockUserRoute = SetUnblockUserRoute(self)
         self.set_location: SetLocationRoute = SetLocationRoute(self)

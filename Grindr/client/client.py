@@ -122,7 +122,8 @@ class GrindrClient(GrindrEmitter):
     async def login(
             self,
             email: str,
-            password: str
+            password: str,
+            token: str | None = None  # Firebase token on Android, timestamp on IOS (leave default for iOS)
     ) -> SessionData:
 
         self._email = email
@@ -130,11 +131,12 @@ class GrindrClient(GrindrEmitter):
         self._session = await self._web.fetch_session_new(
             body=FetchSessionRoutePayload(
                 email=self._email,
-                password=password
+                password=password,
+                **{'token': token} if token else {}
             )
         )
 
-        self._web.set_session(self._session.sessionId)
+        self._web.set_session(self._session.sessionId, self._session.profileId)
         return self._session
 
     async def _refresh_session_loop(self) -> None:
@@ -148,13 +150,13 @@ class GrindrClient(GrindrEmitter):
                 response: SessionData = await self._web.fetch_session_refresh(
                     body=FetchSessionRefreshRoutePayload(
                         email=self._email,
-                        token=self._session.sessionId,
-                        authToken=self._session.authToken
+                        authToken=self._session.authToken,
+                        **{'token': self._web.session_token} if self._web.session_token else {}
                     )
                 )
 
                 self._logger.debug("Refreshed Grindr client session!")
-                self.web.set_session(response.sessionId)
+                self.web.set_session(response.sessionId, response.profileId)
             except Exception as ex:
                 self._logger.error("Failed to refresh session!")
                 raise ex

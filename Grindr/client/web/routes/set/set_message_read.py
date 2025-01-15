@@ -1,9 +1,5 @@
-from typing import Optional
-
-from pydantic import BaseModel
-
 from Grindr.client.web.web_base import ClientRoute, URLTemplate, QueryParams
-from Grindr.client.web.web_settings import GRINDR_V3, GRINDR_V4
+from Grindr.client.web.web_settings import GRINDR_V4
 
 
 class SetMessageReadRouteParams(QueryParams):

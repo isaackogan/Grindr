@@ -3,11 +3,13 @@ import logging
 import os
 import random
 import textwrap
+import time
 import traceback
 import uuid
 from functools import cached_property
 from json import JSONDecodeError
-from typing import Any, Literal, ForwardRef, Type
+from pathlib import Path
+from typing import Any, Literal, ForwardRef, Type, TypedDict
 
 import curl_cffi.requests
 from curl_cffi.requests import AsyncSession, Response
@@ -16,7 +18,12 @@ from pydantic import BaseModel, ValidationError, TypeAdapter
 from Grindr.client.errors import CloudflareWAFResponse, LoginFailedResponse, GrindrRequestError, AccountBannedError
 from Grindr.client.logger import GrindrLogHandler
 from Grindr.client.tls_match.tls_match import create_async_client
-from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS, get_mobile_user_agent, get_desktop_user_agent
+from Grindr.client.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS, ANDROID_VERSION_API_LEVEL_MAP, DEVICE_SCREEN_DIMENSIONS
+
+
+class GrindrHTTPLog(TypedDict):
+    request: dict
+    response: dict
 
 
 class GrindrHTTPClient:
@@ -34,25 +41,33 @@ class GrindrHTTPClient:
 
         """
 
+        # Local time in format DD/MM/YYYY HH:MM:SS
+        self._client_create_time = time.strftime("%d_%m_%Y-%H_%M_%S")
         self._logger = GrindrLogHandler.get_logger()
-        self._session_token: str | None = None
+        self._session_id: str | None = None
+        self._session_token: str = ""
+        self._request_id: int = 0
+        self._session_profile_id: str | None = None
+        self._mobile_user_agent: str | None = None
+        self._web_user_agent: str | None = None
+        self._request_dump_directory: str = web_kwargs.pop('request_dump_directory') if web_kwargs else None
 
-        self._session = self._create_http_client(
+        self._http_session = self._create_http_client(
             web_proxy=web_proxy,
             web_kwargs=web_kwargs
         )
 
     def set_proxy(self, proxy: str | None):
         """Update the current proxy on the client"""
-        self._session.proxies = {"all": proxy}
+        self._http_session.proxies = {"all": proxy}
 
     def clear_cookies(self):
         """Clear the cookies on the client"""
-        self._session.cookies.clear()
+        self._http_session.cookies.clear()
 
     @property
     def http_client(self) -> AsyncSession:
-        return self._session
+        return self._http_session
 
     def _create_http_client(
             self,
@@ -62,7 +77,7 @@ class GrindrHTTPClient:
         web_kwargs = web_kwargs or {}
         self.headers = {**web_kwargs.pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
         self.params: dict[str, Any] = {**web_kwargs.pop("params", {}), **DEFAULT_REQUEST_PARAMS}
-        self.refresh_device_info(refresh_user_agent=False)
+        self.headers['L-Device-Info'] = self.generate_device_info_android()
 
         # Create the async client
         self._logger.debug('Creating HTTP client')
@@ -70,6 +85,35 @@ class GrindrHTTPClient:
             proxy=web_proxy,
             **web_kwargs
         )
+
+    def add_log_to_file(self, log_data: GrindrHTTPLog) -> None:
+
+        if not self._request_dump_directory:
+            return
+
+        # Base request dump directory
+        base_request_dir = Path(self._request_dump_directory)
+        if not base_request_dir.exists():
+            base_request_dir.mkdir()
+
+        # Profile request dump directory
+        profile_request_dir = base_request_dir.joinpath(f'./{self._session_profile_id or 'anonymous'}')
+        if not profile_request_dir.exists():
+            profile_request_dir.mkdir()
+
+        # Request file path
+        request_fp = profile_request_dir.joinpath(f'./{self._client_create_time}.json')
+        if not request_fp.exists():
+            with open(request_fp, "w") as f:
+                f.write("[]")
+
+        # Write the new data
+        with open(request_fp, "r+") as f:
+            file_data = json.load(f)
+            file_data.append(log_data)
+            f.seek(0)
+            f.write(json.dumps(file_data, indent=2))
+            f.truncate()
 
     async def request(
             self,
@@ -87,14 +131,38 @@ class GrindrHTTPClient:
             **(extra_headers or {}),
         }
 
+        url_params: dict = {**(self.params if base_params else {}), **(extra_params or {})}
+
         # Make the request
-        return await (client or self._session).request(
+        self._request_id += 1
+        response: curl_cffi.requests.Response = await (client or self._http_session).request(
             method=method,
             url=url,
-            params={**(self.params if base_params else {}), **(extra_params or {})},
+            params=url_params,
             headers=headers,
             **kwargs
         )
+
+        # Log the request
+        self.add_log_to_file({
+            "request": {
+                "id": self._request_id,
+                "method": method,
+                "url": url,
+                "params": url_params,
+                "headers": dict(headers.items()),
+                "kwargs": {k: v for k, v in kwargs.items() if k != 'content'}  # Exclude binary content
+            },
+            "response": {
+                "status_code": response.status_code,
+                "content": response.content.decode("utf-8", errors="replace"),
+                "headers": dict(response.headers.items()),
+                "cookies": dict(response.cookies.items()),
+                "elapsed": response.elapsed
+            }
+        })
+
+        return response
 
     async def close(self) -> None:
         """
@@ -104,19 +172,33 @@ class GrindrHTTPClient:
 
         """
 
-        await self._session.close()
+        await self._http_session.close()
 
-    def set_session(self, session_token: str) -> None:
+    def set_session(
+            self,
+            session_id: str,
+            session_profile_id: str,
+            *,
+            token: str | None = None
+    ) -> None:
         """
         Set the session for the HTTP client
 
-        :param session_token: The (must be valid) session token
+        :param session_id: The (must be valid) session token
+        :param session_profile_id: The profile ID for the session
+        :param token: Token for requesting session
         :return: None
 
         """
 
-        self._session_token = session_token
-        self.headers['Authorization'] = f'Grindr3 {session_token}'
+        self._session_id = session_id
+        self._session_profile_id = session_profile_id
+        self._session_token = token if token else self._session_token
+        self.headers['Authorization'] = f'Grindr3 {session_id}'
+
+    @property
+    def session_id(self) -> str:
+        return self._session_id
 
     @property
     def session_token(self) -> str:
@@ -128,19 +210,35 @@ class GrindrHTTPClient:
         return f"{str(uuid.uuid4()).upper()};appStore;2;2107621376;1334x750"
 
     @classmethod
-    def generate_device_info_android(cls):
-        identifier = uuid.uuid4()
-        hex_identifier = identifier.hex
-        random_integer = random.randint(1000000000, 9999999999)
-        return f"{hex_identifier};GLOBAL;2;{random_integer};2277x1080;{identifier}"
+    def generate_device_info_android(
+            cls,
+            android_device_id: str | None = None,
+    ):
+        android_advertising_id: str = str(uuid.uuid4())  # Not validated
 
-    def refresh_device_info(self, refresh_user_agent: bool, user_agent_type: Literal["web", "mobile"] = "web"):
-        """Refresh the device info"""
-        self.headers['L-Device-Info'] = self.generate_device_info_android()
+        # How much memory does the phone have, in bytes. Should be some multiple of 1024 (i.e. Some # of megabytes summing to some # of gigabytes)
+        memory_on_phone: int = (
+                random.randint(2800, 3600)  # Mb
+                * 1024  # Kb
+                * 1024  # Bytes
+        )
 
-        # May lead to ja3 mismatch, it just depends on how strictly cloudflare checks
-        if refresh_user_agent:
-            self.headers['User-Agent'] = get_mobile_user_agent() if user_agent_type == "mobile" else get_desktop_user_agent()
+        # The value "2" represents the follow code from the Grindr APK: "x86".equals(Build.CPU_ABI) ? 1 : 2
+        # The value "GLOBAL" is statically set in the APK. No clue what it does.
+        return f"{android_device_id or f'{random.getrandbits(64):016x}'};GLOBAL;2;{memory_on_phone};{random.choice(DEVICE_SCREEN_DIMENSIONS)};{android_advertising_id}"
+
+    @property
+    def android_api_level(self) -> list[int]:
+        app_version, build, free, android_version, device, manufacturer = self._mobile_user_agent.split(";")
+        return ANDROID_VERSION_API_LEVEL_MAP[int(android_version.split(" ")[1])]
+
+    @property
+    def android_device_id(self) -> str:
+        return self.headers['L-Device-Info'].split(";")[0]
+
+    @property
+    def profile_id(self) -> str:
+        return self._session_profile_id
 
 
 class QueryParams(BaseModel):
@@ -191,7 +289,7 @@ class ImageBody(BaseModel):
 
 class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTemplate, Params: Any, Body: Any, Response: Any]:
 
-    def __init__(self, web: GrindrHTTPClient) -> object:
+    def __init__(self, web: GrindrHTTPClient):
         self._logger = GrindrLogHandler.get_logger()
         self._web: GrindrHTTPClient = web
 
@@ -210,6 +308,10 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
     @property
     def method(self) -> Method:
         return self.__get_generic(0)
+
+    @property
+    def web(self):
+        return self._web
 
     @property
     def url(self) -> Url:
@@ -277,7 +379,9 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
         )
 
         if os.environ.get("G_DEBUG_JSON"):
-            self._logger.debug(f"Sent Payload to {response.request.url}: " + json.dumps(kwargs.get('json', {})))
+            self._logger.debug(f"Sent Payload to {response.request.method} {response.request.url} with code {response.status_code}: " + json.dumps(kwargs.get('json', {})))
+        elif os.environ.get("G_DEBUG_BASIC"):
+            self._logger.debug(f'Sent request {response.request.method} to  {response.request.url} and received code {response.status_code}')
 
         if response.status_code == 403:
             try:
@@ -309,9 +413,13 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
             self._logger.debug(f"Request Failed ({response.status_code}): Payload: {payload_preview} - URL: {url} - Response: {(response.content or b'').decode('utf-8')}")
             raise GrindrRequestError(response, f"A request to Grindr at {response.url} failed with status code {response.status_code}!")
 
+        # Return the response if empty
+        if not response.content:
+            return None
+
         # Build the payload reply
         try:
-            data: dict = response.json() if response.content else {}
+            data: dict = response.json()
             if os.environ.get("G_DEBUG_JSON"):
                 self._logger.debug("Received JSON: " + json.dumps(data))
 
@@ -328,4 +436,4 @@ class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTempl
         except ValidationError as ex:
             if os.environ.get('G_DEBUG_JSON'):
                 self._logger.error(f"Failed due to ValidationError: {response.status_code} {response.url}\n" + traceback.format_exc())
-            raise ValidationError(response, ex)
+            raise ex

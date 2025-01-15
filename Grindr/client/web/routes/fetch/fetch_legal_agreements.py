@@ -18,7 +18,7 @@ class FetchLegalAgreementsRoute(
     ClientRoute[
         "GET",
         URLTemplate(GRINDR_V4, "/legal-agreements/{agreement}"),
-        None,
+        FetchLegalAgreementsRouteParams,
         None,
         FetchLegalAgreementsRouteResponse
     ]

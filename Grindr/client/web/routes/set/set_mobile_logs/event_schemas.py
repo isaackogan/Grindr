@@ -43,25 +43,18 @@ class BaseLogEventData(abc.ABC, BaseModel):
     _event_name: ClassVar[str] = PrivateAttr()
 
     is_background: bool = False
-    version_code: int = 132462  # As of Jan 11th, 2024
+    version_code: int = int(BUILD_NUMBER)
 
     @property
     def event_name(self) -> str:
         return self._event_name
-
-    def model_dump(
-            self,
-            **kwargs
-    ) -> dict[str, Any]:
-        kwargs['exclude_none'] = True
-        return super().model_dump(**kwargs)
 
 
 type LogFilter = dict[Literal["online_now", "not_recently_chatted"], bool]
 
 
 # noinspection PyPep8Naming
-def LogEvent[T: BaseModel](name: str):
+def LogEvent[T](name: str):
     """Wrap an event payload as an event"""
 
     def decorator(cls: T) -> object:
@@ -90,8 +83,8 @@ class ChatReceivedLogData(BaseLogEventData):
 
 @LogEvent("websocket_event")
 class WebSocketEventLogData(BaseLogEventData):
-    session_id: int  # Auto-incrementing persistent ID representing the N'th time connecting to the WS (for this device? in total? idk.)
-    event_id: int  # Again, auto-incrementing, but within the current WebSocket connection. Starts at 0.
+    session_id: int = 0  # Auto-incrementing persistent ID representing the N'th time connecting to the WS (for this device? in total? idk.)
+    event_id: int = 0  # Again, auto-incrementing, but within the current WebSocket connection. Starts at 0.
     event_type: Literal["Error", "Connecting", "Connected", "Closed"] | str
 
     # Only provided when event_type is "Error"
@@ -100,6 +93,13 @@ class WebSocketEventLogData(BaseLogEventData):
     # Only provided when event_type is "Closed"
     code: int | None = None
     message: str | None = None
+
+    def model_dump(
+            self,
+            **kwargs
+    ) -> dict[str, Any]:
+        kwargs['exclude_none'] = True
+        return super().model_dump(**kwargs)
 
 
 @LogEvent("page")
@@ -119,7 +119,7 @@ class LocationFirstRequestTimeLogData(BaseLogEventData):
 
 
 @LogEvent("assignment_load_called")
-class AssignmentLoadLogData(BaseLogEventData):
+class AssignmentLoadCalledLogData(BaseLogEventData):
     pass  # No additional fields in the provided data
 
 
@@ -324,6 +324,19 @@ class SessionEndLogData(BaseLogEventData):
     duration: int
 
 
+@LogEvent("rating_banner_shown")
+class RatingBannerShownLogData(BaseLogEventData):
+    type: str = "viewed_me_threshold"
+
+
+@LogEvent("login_successful")
+class LoginSuccessfulLogData(BaseLogEventData):
+    source: str = "email"
+    page: str = "LoginActivity"
+    pii_advertising_id: str = "00000000-0000-0000-0000-000000000000"
+    email: str
+
+
 @LogEvent("inbox_screen_viewed")
 class InboxScreenViewedLogData(BaseLogEventData):
     pass
@@ -445,6 +458,11 @@ class MobileLogEvent[T: EventMap.event_names, Z: EventMap.json_types](BaseModel)
     # noinspection PyMethodParameters
     @model_validator(mode="before")
     def parse_params(cls, values):
+
+        # If not a dict, skip this (e.g. in a union)
+        if not isinstance(values, dict):
+            return values
+
         name = values.get("name")
         params = values.get("params")
 

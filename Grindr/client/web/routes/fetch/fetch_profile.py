@@ -8,16 +8,8 @@ from Grindr.client.web.web_base import ClientRoute, URLTemplate, BodyParams
 from Grindr.client.web.web_settings import GRINDR_V4
 
 
-class Media(BaseModel):
-    mediaHash: str | None = None
-    type: int | None = None
-    state: int | None = None
-    reason: Any | None = None
-
-
 class DetailedProfileData(ProfileData):
     aboutMe: str | None = None
-    age: int | None = None
     showAge: bool | None = None
     ethnicity: int | None = None
     relationshipStatus: int | None = None
@@ -31,19 +23,11 @@ class DetailedProfileData(ProfileData):
     height: float | None = None
     weight: float | None = None
     socialNetworks: SocialNetworks | None = None
-    showDistance: bool | None = None
     approximateDistance: bool | None = None
-    seen: int | None = None
-    medias: list[Media] | None = None
     identity: Any | None = None
-    lastChatTimestamp: int | None = None
-    isNew: bool | None = None
-    lastViewed: int | None = None
     meetAt: list[int] | None = None
-    nsfw: int | None = None
     hashtags: list[str] | None = None
     profileTags: list[str] | None = None
-    lastUpdatedTime: int | None = None
     genders: list[int] | None = None
     pronouns: list[int] | None = None
     tapped: bool | None = None
@@ -52,15 +36,8 @@ class DetailedProfileData(ProfileData):
     arrivalDays: int | None = None
     foundVia: int | None = None
     unreadCount: int | None = None
-    rightNow: str | None = None
-    rightNowText: str | None = None
-    rightNowPosted: int | None = None
-    rightNowDistance: float | None = None
-    verifiedInstagramId: str | None = None
-    isBlockable: bool | None = None
     lastThrobTimestamp: int | None = None
     sexualHealth: list[int] | None = None
-
 
 
 class FetchProfileRouteResponse(BaseModel):
@@ -70,6 +47,7 @@ class FetchProfileRouteResponse(BaseModel):
 if __name__ == '__main__':
     d = print(FetchProfileRouteResponse(profiles=[DetailedProfileData()]).model_dump_json())
     exit()
+
 
 class FetchProfileRouteParams(BodyParams):
     profileId: int
