@@ -58,7 +58,7 @@ class FetchInboxRouteParams(QueryParams):
 
 
 class FetchInboxRoutePayload(QueryParams):
-    unreadOnly: bool
+    unreadOnly: bool | None = None
 
     def model_dump(
             self,

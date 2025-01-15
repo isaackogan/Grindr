@@ -40,6 +40,7 @@ from .routes.fetch.fetch_profile_tag_translations import FetchProfileTagTranslat
 from .routes.fetch.fetch_rewarded_chats import FetchRewardedChatsRoute
 from .routes.fetch.fetch_tags import FetchTagsRoute
 from .routes.fetch.fetch_taps_sent import FetchTapsSentRoute
+from .routes.fetch.fetch_videos_expiring_status import FetchVideosExpiringStatusRoute
 from .routes.fetch.fetch_warnings import FetchWarningsRoute
 from .routes.set.set_delete_profile_images import SetDeleteProfileImagesRoute
 from .routes.set.set_gcm_push_tokens import SetGcmPushTokensRoute
@@ -97,6 +98,7 @@ class GrindrWebClient(GrindrHTTPClient):
         self.fetch_profile_images: FetchProfileImagesRoute = FetchProfileImagesRoute(self)
         self.fetch_assignments: FetchAssignmentsRoute = FetchAssignmentsRoute(self)
         self.fetch_tags: FetchTagsRoute = FetchTagsRoute(self)
+        self.fetch_videos_expiring_status: FetchVideosExpiringStatusRoute = FetchVideosExpiringStatusRoute(self)
 
         self.set_delete_profile_images: SetDeleteProfileImagesRoute = SetDeleteProfileImagesRoute(self)
         self.set_block_user: SetBlockUserRoute = SetBlockUserRoute(self)
