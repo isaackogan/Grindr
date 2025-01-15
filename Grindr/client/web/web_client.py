@@ -28,6 +28,7 @@ from Grindr.client.web.routes.set.set_unblock_user import SetUnblockUserRoute
 from .routes.fetch.fetch_albums_red_dot import FetchAlbumsRedDotRoute
 from .routes.fetch.fetch_assignments import FetchAssignmentsRoute
 from .routes.fetch.fetch_boost_sessions import FetchBoostSessionsRoute
+from .routes.fetch.fetch_chat_media import FetchChatMediaRoute
 from .routes.fetch.fetch_genders import FetchGendersRoute
 from .routes.fetch.fetch_google_play_products import FetchGooglePlayProductsRoute
 from .routes.fetch.fetch_legal_agreements import FetchLegalAgreementsRoute
@@ -99,6 +100,7 @@ class GrindrWebClient(GrindrHTTPClient):
         self.fetch_assignments: FetchAssignmentsRoute = FetchAssignmentsRoute(self)
         self.fetch_tags: FetchTagsRoute = FetchTagsRoute(self)
         self.fetch_videos_expiring_status: FetchVideosExpiringStatusRoute = FetchVideosExpiringStatusRoute(self)
+        self.fetch_chat_media: FetchChatMediaRoute = FetchChatMediaRoute(self)
 
         self.set_delete_profile_images: SetDeleteProfileImagesRoute = SetDeleteProfileImagesRoute(self)
         self.set_block_user: SetBlockUserRoute = SetBlockUserRoute(self)
