@@ -11,12 +11,17 @@ A silly little library to connect to Grindr's mobile services.
 - Send me a message `info@isaackogan.com` for any questions/concerns.
 - If you are hiring, send an e-mail. Let's chat :)!
 
-
 ## Table of Contents
 
 - [Getting Started](#getting-started)
 - [Licensing](#license)
 - [Contributors](#contributors)
+
+## Project Structure
+
+1. `Grindr.web` - A standalone HTTP client for interacting with Grindr's REST services
+2. `Grindr.ws` - A standalone WS client for interacting with Grindr's WebSocket services
+3. `Grindr.client` - A high-level abstraction for interacting with Grindr's services (WS and REST)
 
 ## Getting Started
 
@@ -30,10 +35,11 @@ pip install Grindr
 
 ```python
 from Grindr import GrindrClient
-from Grindr.events import ConnectEvent, MessageEvent
+from Grindr.ws.events.events import ConnectEvent, MessageEvent
 
 # Create the client
 client: GrindrClient = GrindrClient()
+
 
 # Listen to an event with a decorator!
 @client.on(ConnectEvent)
@@ -43,10 +49,9 @@ async def on_connect(_: ConnectEvent):
 
 # Or, add it manually via "client.add_listener()"
 async def on_message(event: MessageEvent) -> None:
-    
     if not event.type == "Text":
         return
-    
+
     print(f"{event.senderId} -> {event.body.text}")
 
 

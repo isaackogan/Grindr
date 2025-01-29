@@ -2,46 +2,43 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import os
 import traceback
 import uuid
 from asyncio import AbstractEventLoop, Task, CancelledError
-from logging import Logger
+from functools import cached_property
+from typing import Any
 
 from pydantic import ValidationError
 
-from Grindr.client.emitter import GrindrEmitter
-from Grindr.client.errors import AuthenticationDetailsMissingError, AlreadyConnectedError
-from Grindr.client.extension import Extension
-from Grindr.client.logger import GrindrLogHandler, LogLevel
-from Grindr.client.web.routes.fetch.fetch_session import SessionData, FetchSessionRoutePayload, FetchSessionRefreshRoutePayload
-from Grindr.client.web.web_client import GrindrWebClient
-from Grindr.client.web.web_settings import GRINDR_WS
-from Grindr.client.ws.ws_client import GrindrWSClient
-from Grindr.client.ws.ws_settings import DEFAULT_WS_HEADERS
-from Grindr.events import Event, DisconnectEvent
-from Grindr.events.mappings import get_event
-from Grindr.models.context import Context
-from Grindr.models.conversation import Conversation
-from Grindr.models.inbox import Inbox
-from Grindr.models.profile import Profile
+from Grindr.client.errors import AlreadyConnectedError
+from Grindr.client.ext.client_emitter import GrindrEventEmitter
+from Grindr.client.ext.client_extension import Extension
+from Grindr.client.ext.client_logger import GrindrLogHandler, LogLevel
+from Grindr.client.schemas.conversation import Conversation
+from Grindr.client.schemas.inbox import Inbox
+from Grindr.client.schemas.profile import Profile
+from Grindr.client.schemas.sessioncontext import SessionContext
+from Grindr.web.routes.fetch.fetch_session import SessionCredentials
+from Grindr.web.web_client import GrindrWebClient
+from Grindr.web.web_settings import GRINDR_WS
+from Grindr.ws.events.events import DisconnectEvent
+from Grindr.ws.ws_client import GrindrWebSocketClient
+from Grindr.ws.ws_settings import DEFAULT_WS_HEADERS
 
 
-class GrindrClient(GrindrEmitter):
+class GrindrClient(GrindrEventEmitter):
     """
-    A client to connect to & read from Grindr
+    An HTTP client to connect to & read from Grindr
 
     """
-
-    REFRESH_SESSION_INTERVAL: int = int(os.environ.get("GRINDR_REFRESH_INTERVAL", "1200"))
 
     def __init__(
             self,
+            credentials: SessionCredentials,
             web_proxy: str | None = None,
             ws_proxy: str | None = None,
-            web_kwargs: dict = None,
-            ws_kwargs: dict = None,
-            extensions: list[Extension] | None = None
+            web_kwargs: dict[str, Any] = None,
+            ws_kwargs: dict[str, Any] = None,
     ):
         """
         Instantiate the GrindrClient object
@@ -50,116 +47,50 @@ class GrindrClient(GrindrEmitter):
         :param ws_proxy: An optional proxy used for the WebSocket connection
         :param web_kwargs: Optional arguments used by the HTTP client
         :param ws_kwargs: Optional arguments used by the WebSocket client
+        :param credentials: The session credentials to use
 
         """
 
         super().__init__()
 
-        self._ws: GrindrWSClient = GrindrWSClient(
-            ws_kwargs=ws_kwargs or dict(),
-            ws_proxy=ws_proxy
-        )
-
         self._web: GrindrWebClient = GrindrWebClient(
             web_kwargs=web_kwargs or dict(),
-            web_proxy=web_proxy
+            web_proxy=web_proxy,
+            credentials=credentials
         )
 
-        self._logger: Logger = GrindrLogHandler.get_logger(
-            level=LogLevel.ERROR
+        self._ws: GrindrWebSocketClient = GrindrWebSocketClient(
+            ws_kwargs=ws_kwargs or dict(),
+            ws_proxy=ws_proxy,
+            auth_session=self._web.auth_session
         )
 
-        # Properties
-        self._email: str | None = None
-        self._session: SessionData | None = None
-        self._context: Context | None = None
+        self._context: SessionContext | None = None
         self._event_loop_task: Task | None = None
-        self._session_loop_task: Task | None = None
         self._extensions: dict[str, Extension] = dict()
-        self.add_extensions(*extensions or [])
 
-    async def start(
-            self,
-            *,
-            email: str,
-            password: str
-    ) -> Task:
+    async def start(self, *, use_auth_token: bool = True) -> Task:
         """
-        Create a non-blocking connection to Grindr & return the task. The username/password OR session token must be passed, not both.
-
-        :param email: The username of the user
-        :param password: The password of the user.
+        Create a non-blocking connection to Grindr & return the task.
         :return: Task containing the heartbeat of the client
 
         """
 
-        if email is None or password is None:
-            raise AuthenticationDetailsMissingError("Authentication details must be sent! Either username/password, or session_token.")
-
-        # Generate the session
-        self._logger.debug("Logging in to Grindr...")
-        await self.login(
-            email=email,
-            password=password
+        self._context = SessionContext(
+            web=self.web,
+            ws=self.ws,
+            emitter=self
         )
 
-        self._context = Context(
-            profile_id=self._session.profileId,
-            _web=self.web,
-            _ws=self.ws,
-            _emitter=self
-        )
-
-        # Prevent dupes
+        # Prevent duplicate connections
         if self._ws.connected:
             raise AlreadyConnectedError("You can only make one connection per client!")
 
         # Start the websocket connection & return it
-        self._logger.debug("Starting the Grindr client event loop...")
+        self.logger.debug("Starting the Grindr client event loop...")
+        await self._web.refresh_session_data(use_auth_token=use_auth_token)
         self._event_loop_task = self._asyncio_loop.create_task(self._ws_loop())
         return self._event_loop_task
-
-    async def login(
-            self,
-            email: str,
-            password: str,
-            token: str | None = None  # Firebase token on Android, timestamp on IOS (leave default for iOS)
-    ) -> SessionData:
-
-        self._email = email
-
-        self._session = await self._web.fetch_session_new(
-            body=FetchSessionRoutePayload(
-                email=self._email,
-                password=password,
-                **{'token': token} if token else {}
-            )
-        )
-
-        self._web.set_session(self._session.sessionId, self._session.profileId)
-        return self._session
-
-    async def _refresh_session_loop(self) -> None:
-
-        while self.connected:
-
-            # Note: Sessions expire after 30 minutes
-            await asyncio.sleep(self.REFRESH_SESSION_INTERVAL)
-
-            try:
-                response: SessionData = await self._web.fetch_session_refresh(
-                    body=FetchSessionRefreshRoutePayload(
-                        email=self._email,
-                        authToken=self._session.authToken,
-                        **{'token': self._web.session_token} if self._web.session_token else {}
-                    )
-                )
-
-                self._logger.debug("Refreshed Grindr client session!")
-                self.web.set_session(response.sessionId, response.profileId)
-            except Exception as ex:
-                self._logger.error("Failed to refresh session!")
-                raise ex
 
     async def connect(self, **kwargs) -> Task:
         """
@@ -175,7 +106,7 @@ class GrindrClient(GrindrEmitter):
         try:
             await task
         except CancelledError:
-            self._logger.debug("The client has been manually stopped with 'client.stop()'.")
+            self.logger.debug("The client has been manually stopped with 'client.stop()'.")
 
         return task
 
@@ -200,59 +131,31 @@ class GrindrClient(GrindrEmitter):
 
         await self._ws.disconnect()
         await self._event_loop_task
-        # self._event_loop_task = None
-
-    async def _ws_loop(self) -> None:
-        """
-        Run the websocket loop to handle incoming WS messages
-
-        :return: None
-
-        """
-
-        # Emit events while connected
-        first_event: bool = True
-
-        async for message in self._ws.connect(
-                url=GRINDR_WS,
-                headers={**self._web.headers, **DEFAULT_WS_HEADERS}
-        ):
-            # Keep session continually updated
-            if first_event:
-                first_event = False
-                await self._on_connect()
-
-            try:
-                ev: Event = get_event(message)
-                self.emit(ev.event_type, ev)
-            except ValidationError:
-                self._logger.error("Failed to parse event due to validation error!\n" + traceback.format_exc())
-
-        # After for loop finishes, disconnected
-        await self._on_disconnect()
-
-    async def _on_connect(self):
-        """Handle the client connect"""
-        await self._load_extensions()
-        self._session_loop_task = self._asyncio_loop.create_task(self._refresh_session_loop())
-
-    async def _on_disconnect(self):
-        """Handle the client disconnect"""
-
-        ev = DisconnectEvent()
-        self.emit(ev.event_type, ev)
-
-        # Close the web
+        self._event_loop_task = None
         await self._web.close()
 
-        # Cancel the session refresh loop
-        self._session_loop_task.cancel()
-        await self._session_loop_task
+    async def _ws_loop(self) -> None:
+        """Listen for events on the Grindr WebSocket"""
 
-        # Unload all extensions
+        loaded_extensions: bool = True
+        async for event in self._ws.connect(url=GRINDR_WS, headers={**self._web.headers, **DEFAULT_WS_HEADERS}):
+
+            # Keep session continually updated
+            if loaded_extensions:
+                loaded_extensions = False
+                await self._load_extensions()
+
+            try:
+                self.emit(event.type, event)
+            except ValidationError:
+                self.logger.error("Failed to parse event due to validation error!\n" + traceback.format_exc())
+
+        # After for loop finishes, disconnected
+        ev = DisconnectEvent()
+        self.emit(ev.event_type, ev)
         await self._unload_extensions()
 
-    @property
+    @cached_property
     def web(self) -> GrindrWebClient:
         """
         The HTTP client that this client uses for requests
@@ -264,7 +167,7 @@ class GrindrClient(GrindrEmitter):
         return self._web
 
     @property
-    def ws(self) -> GrindrWSClient:
+    def ws(self) -> GrindrWebSocketClient:
         """
         The HTTP client that this client uses for requests
 
@@ -290,57 +193,45 @@ class GrindrClient(GrindrEmitter):
 
     @property
     def connected(self) -> bool:
-        """
-        Whether the WebSocket client is currently connected to Grindr
-
-        :return: Connection status
-
-        """
-
+        """Whether the WebSocket client is currently connected to Grindr"""
         return self._ws.connected
 
-    @property
+    @cached_property
     def logger(self) -> logging.Logger:
-        """
-        The internal logger used by Grindr
-
-        :return: An instance of a `logging.Logger`
-
-        """
-
-        return self._logger
-
-    @property
-    def session(self) -> SessionData:
-        return self._session
+        """Logger for the Grindr client"""
+        return GrindrLogHandler.get_logger(level=LogLevel.ERROR)
 
     async def retrieve_profile(self, profile_id: int) -> Profile:
+        """Retrieve a profile by ID"""
         conversation: Conversation = self.get_conversation(profile_id=profile_id)
         profile: Profile = await conversation.retrieve_profile()
         return profile
 
     async def retrieve_conversation(self, profile_id: int) -> Conversation:
+        """Retrieve a conversation by ID"""
         conversation: Conversation = self.get_conversation(profile_id=profile_id)
         return await conversation.retrieve_all()
 
     def get_conversation(self, profile_id: int | None):
+        """Get a conversation by ID"""
         return Conversation.from_defaults(
             target_id=profile_id,
             context=self._context
         )
 
     async def get_inbox(self) -> Inbox:
-        return Inbox.from_defaults(
+        """Get the inbox object"""
+        return Inbox.from_data(
             context=self._context
         )
 
     async def retrieve_inbox(self) -> Inbox:
+        """Retrieve the inbox"""
         inbox: Inbox = await self.get_inbox()
         return await inbox.retrieve_all()
 
     def add_extensions(self, *extensions: Extension) -> list[str]:
         """Add multiple extensions"""
-
         return [self.add_extension(extension) for extension in extensions]
 
     def add_extension(self, extension: Extension) -> str:
@@ -357,7 +248,7 @@ class GrindrClient(GrindrEmitter):
             extension_id = self.add_extension(extension)
 
         await extension.load(client=self, instance_id=extension_id)
-        self._logger.debug(f"Loaded the {extension.__class__.__name__} extension with ID {extension_id}")
+        self.logger.debug(f"Loaded the {extension.__class__.__name__} extension with ID {extension_id}")
         return extension_id
 
     async def unload_extension(self, extension: Extension):
@@ -369,7 +260,7 @@ class GrindrClient(GrindrEmitter):
             return
 
         await instance.unload()
-        self._logger.debug(f"Unloaded the {extension.__class__.__name__} extension with ID {extension.instance_id}")
+        self.logger.debug(f"Unloaded the {extension.__class__.__name__} extension with ID {extension.instance_id}")
         del self._extensions[extension.instance_id]
 
     async def _load_extensions(self) -> None:
@@ -383,7 +274,3 @@ class GrindrClient(GrindrEmitter):
 
         for extension in self._extensions.values():
             await self.unload_extension(extension)
-
-    @property
-    def profile_id(self) -> int:
-        return int(self._session.profileId)

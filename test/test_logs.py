@@ -1,8 +1,8 @@
 import json
 
-from Grindr.client.web.routes.set.set_mobile_logs.event_schemas import MobileLogEvent, WebSocketEventLogData, ScreenshotObsNoPermLogData, AssignmentLoadSuccessLogData
-from Grindr.client.web.routes.set.set_mobile_logs.set_mobile_logs import LogEventFlowPriority
-from Grindr.client.web.web_client import GrindrWebClient
+from Grindr.web.routes.set.set_mobile_logs.event_schemas import MobileLogEvent, WebSocketEventLogData, ScreenshotObsNoPermLogData, AssignmentLoadSuccessLogData
+from Grindr.web.routes.set.set_mobile_logs.set_mobile_logs import LogEventFlowPriority
+from Grindr.web.web_client import GrindrWebClient
 
 
 def test_logs():
