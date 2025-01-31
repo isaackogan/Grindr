@@ -1,34 +1,47 @@
 from __future__ import annotations
 
-from pydantic import BaseModel
+from abc import ABC
+from typing import Any, ClassVar
+
+from pydantic import BaseModel, ValidationError
 
 from Grindr.client.schemas.message import Message
-from Grindr.ws.events.base import WebSocketEvent, BaseEventPayload
+from Grindr.ws.events.base import WebSocketEvent, WSEventMap
+from Grindr.ws.ws_schemas import WebSocketResponse
 
 
-class ViewedEventMostRecent(BaseModel, BaseEventPayload):
+class BaseWebSocketEventPayload(BaseModel, ABC):
+    _event_name: ClassVar[str] = NotImplemented
+
+    @classmethod
+    def event_name(cls) -> str:
+        return cls._event_name
+
+
+class ViewedEventMostRecent(BaseModel):
     profileId: str | None = None
     photoHash: str | None = None
     timestamp: int | None = None
 
 
 @WebSocketEvent("ws.ext.unknown")
-class UnknownEvent(dict, BaseEventPayload):
+class UnknownEvent(BaseWebSocketEventPayload):
     """An Unknown Event"""
+    raw_data: Any
 
 
 @WebSocketEvent("ws.connection.established")
-class ConnectEvent(BaseModel, BaseEventPayload):
+class ConnectEvent(BaseWebSocketEventPayload):
     """WebSocket connect event"""
 
 
 @WebSocketEvent("chat.v1.message_sent")
-class MessageEvent(Message, BaseEventPayload):
+class MessageEvent(Message, BaseWebSocketEventPayload):
     """WebSocket Message Event"""
 
 
 @WebSocketEvent("tap.v1.tap_sent")
-class TapEvent(BaseModel, BaseEventPayload):
+class TapEvent(BaseWebSocketEventPayload):
     """Tap Event"""
 
     timestamp: int | None = None
@@ -41,7 +54,7 @@ class TapEvent(BaseModel, BaseEventPayload):
 
 
 @WebSocketEvent("viewed_me.v1.new_view_received")
-class ViewedEvent(BaseModel, BaseEventPayload):
+class ViewedEvent(BaseWebSocketEventPayload):
     """View Received Event"""
 
     viewedCount: int | None = None
@@ -49,8 +62,28 @@ class ViewedEvent(BaseModel, BaseEventPayload):
 
 
 @WebSocketEvent("ws.ext.disconnect")
-class DisconnectEvent(BaseModel, BaseEventPayload):
+class DisconnectEvent(BaseWebSocketEventPayload):
     """Disconnect Event"""
+
+
+class Event[T: BaseWebSocketEventPayload](WebSocketResponse):
+    """A mobile log event sent to the Grindr API"""
+
+    type: str | None = None
+    payload: T | None = None
+
+    def __init__(self, /, **data: Any):
+        name: str = data.get('type', 'ws.ext.unknown')
+
+        if name not in WSEventMap:
+            name = 'ws.ext.unknown'
+            data['payload'] = {'raw_data': data.get('payload', None)}
+
+        try:
+            super().__init__(**data)
+        except ValidationError as ex:
+            ex.add_note(f"Variant: Event[\"{name}\", {WSEventMap.get(name).__name__}]")
+            raise ex
 
 
 __all__ = [
@@ -59,5 +92,6 @@ __all__ = [
     "TapEvent",
     "ViewedEvent",
     "DisconnectEvent",
-    "UnknownEvent"
+    "UnknownEvent",
+
 ]

@@ -9,8 +9,8 @@ from typing import Literal, Any, ForwardRef, Type
 import curl_cffi.requests
 from pydantic import TypeAdapter, BaseModel, ValidationError
 
-from Grindr.web.web_base import GrindrHTTPClient
-from Grindr.web.web_schemas import URLTemplate, ImageBody, BodyParams, GrindrRequestError, CloudflareWAFResponse, LoginFailedResponse, AccountBannedError
+from Grindr.web.web_base import GrindrHTTPClient, URLTemplate
+from Grindr.web.web_schemas import ImageBody, BodyParams, GrindrRequestError, CloudflareWAFResponse, LoginFailedResponse, AccountBannedError
 
 
 class ClientRoute[Method: Literal["GET", "POST", "PUT", "DELETE"], Url: URLTemplate, Params: BodyParams, Body: BodyParams, Response: Any]:

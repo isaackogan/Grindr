@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-from typing import Type, Union, Literal, Any, ClassVar
-
-from pydantic import ValidationError, Field
+from typing import Type, Union, Literal, ClassVar
 
 from Grindr.ws.ws_schemas import WebSocketResponse
 
@@ -38,39 +36,9 @@ def WebSocketEvent[T](name: str):
         if name not in WSEventMap:
             WSEventMap[name] = cls
 
-        class WebSocketEventResponse(WebSocketResponse):
-            payload: cls
-
-        return WebSocketEventResponse
+        return cls
 
     return decorator
 
 
-class BaseEventPayload:
-    _event_name: ClassVar[str] = NotImplemented
-
-    @classmethod
-    def get_type(cls) -> str:
-        return cls._event_name
-
-
-class Event[T: WSEventMap.event_names, Z: WSEventMap.payload_types](WebSocketResponse):
-    """A mobile log event sent to the Grindr API"""
-
-    type: T = Field(union_mode='left_to_right')
-    payload: Z = Field(union_mode='left_to_right')
-
-    def __init__(self, /, **data: Any):
-        name: str = data.get('type', 'ws.ext.unknown')
-
-        if name not in WSEventMap:
-            name = 'ws.ext.unknown'
-
-        try:
-            super().__init__(**data)
-        except ValidationError as ex:
-            ex.add_note(f"Variant: Event[\"{name}\", {WSEventMap.get(name).__name__}]")
-            raise ex
-
-
-__all__ = ['Event', 'WebSocketEvent', 'WSEventMap', 'BaseEventPayload']
+__all__ = ['WebSocketEvent', 'WSEventMap']

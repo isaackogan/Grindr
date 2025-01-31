@@ -4,9 +4,9 @@ import enum
 import time
 from typing import Generator
 
-from Grindr.web.web_client import GrindrWebClient
+from Grindr.web.web_base import URLTemplate
 from Grindr.web.web_route import ClientRoute
-from Grindr.web.web_schemas import BodyParams, URLTemplate
+from Grindr.web.web_schemas import BodyParams
 from Grindr.web.web_settings import GRINDR_V3
 from .event_schemas import *
 
@@ -91,7 +91,6 @@ class MobileLogEventSession:
             start_log_id: int,
             start_time: int,
             route: SetMobileLogsRoute,
-            web: GrindrWebClient,
             shuffle: bool = False,
     ):
         """

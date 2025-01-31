@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 
 from Grindr.web.routes.fetch.fetch_profiles import Media
-from Grindr.web.web_schemas import QueryParams, URLTemplate
+from Grindr.web.web_schemas import QueryParams
+from Grindr.web.web_base import URLTemplate
 from Grindr.web.web_route import ClientRoute
 from Grindr.web.web_settings import GRINDR_V3_1
 

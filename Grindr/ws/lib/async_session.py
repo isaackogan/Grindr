@@ -2,7 +2,7 @@ import asyncio
 from typing import Union, Literal, Tuple, Dict, List
 
 from curl_cffi import CurlOpt, CurlHttpVersion
-from curl_cffi.requests import AsyncSession, ExtraFingerprints, ExtraFpDict, BrowserTypeLiteral, ProxySpec, HeaderTypes, CookieTypes
+from curl_cffi.requests import AsyncSession, ExtraFingerprints, BrowserTypeLiteral, ProxySpec, HeaderTypes, CookieTypes
 from curl_cffi.requests.utils import set_curl_options, not_set
 
 from Grindr.ws.lib.async_ws import AsyncWebSocket, AsyncGrindrWS
@@ -34,7 +34,7 @@ class AsyncGrindrWSSession(AsyncSession):
             impersonate: BrowserTypeLiteral | None = None,
             ja3: str | None = None,
             akamai: str | None = None,
-            extra_fp: Union[ExtraFingerprints, ExtraFpDict] | None= None,
+            extra_fp: Union[ExtraFingerprints] | None = None,
             default_headers: bool | None = None,
             quote: Union[str, Literal[False]] = "",
             http_version: CurlHttpVersion | None = None,
@@ -80,6 +80,7 @@ class AsyncGrindrWSSession(AsyncSession):
         self._check_session_closed()
 
         curl = await self.pop_curl()
+
         set_curl_options(
             curl=curl,
             method="GET",
@@ -112,6 +113,5 @@ class AsyncGrindrWSSession(AsyncSession):
             event_class=asyncio.Event,
         )
         curl.setopt(CurlOpt.CONNECT_ONLY, 2)  # https://curl.se/docs/websocket.html
-
-        await self.loop.run_in_executor(None, curl.perform)
+        await asyncio.to_thread(curl.perform)
         return AsyncGrindrWS(self, curl, autoclose=autoclose)

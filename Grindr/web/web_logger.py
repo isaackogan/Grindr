@@ -1,11 +1,13 @@
 import json
 import time
+import typing
 from pathlib import Path
 from typing import TypedDict, Any
 
 import curl_cffi.requests
 
-from Grindr.web.web_schemas import GrindrHTTPClientAuthSession
+if typing.TYPE_CHECKING:
+    from Grindr.web.web_client import GrindrWebClientAuthSession
 
 
 class GrindrHTTPLogRequest(TypedDict):
@@ -35,7 +37,7 @@ class GrindrWebFileLogger:
     def __init__(
             self,
             log_dir: Path,
-            web_session: GrindrHTTPClientAuthSession
+            web_session: "GrindrWebClientAuthSession"
     ):
         self._log_dir: Path = log_dir
         self._request_id: int = 0
@@ -72,7 +74,7 @@ class GrindrWebFileLogger:
             }
         }
 
-        profile_request_dir = self._log_dir.joinpath(f'./{self._web_session.profile_id or 'anonymous'}')
+        profile_request_dir = self._log_dir.joinpath(f'./{self._web_session.session_data.profile_id if self._web_session.session_data else 'anonymous'}')
         if not profile_request_dir.exists():
             profile_request_dir.mkdir()
 

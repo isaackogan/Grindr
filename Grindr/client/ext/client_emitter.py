@@ -1,17 +1,17 @@
-from typing import Type, Callable, Any
+from typing import Callable, Any, Type
 
+from pydantic import BaseModel
 from pyee.asyncio import AsyncIOEventEmitter
 
-from Grindr.ws.events import Event
-from Grindr.ws.events.base import BaseEventPayload
+from Grindr.ws.events.events import BaseWebSocketEventPayload
 
-type EventPayload = Type[BaseEventPayload]
-type Handler = Callable[[Event], Any]
+type Handler[T: BaseWebSocketEventPayload] = Callable[[T], Any]
+type EventPayload = Type[BaseWebSocketEventPayload]
 
 
 class GrindrEventEmitter(AsyncIOEventEmitter):
 
-    def on(self, event: EventPayload, f: Handler | None = None) -> Handler | Callable[[Handler], Handler]:
+    def on[T: EventPayload](self, event: T, f: Handler[T] | None = None) -> Handler[T] | Callable[[Handler[T]], Handler[T]]:
         """
         Decorator that can be used to register a Python function as an event listener
 
@@ -21,7 +21,7 @@ class GrindrEventEmitter(AsyncIOEventEmitter):
 
         """
 
-        return super(GrindrEventEmitter, self).on(event.get_type(), f)
+        return super(GrindrEventEmitter, self).on(event.event_name(), f)
 
     def add_listener(self, event: EventPayload, f: Handler) -> Handler:
         """
@@ -36,9 +36,9 @@ class GrindrEventEmitter(AsyncIOEventEmitter):
         if isinstance(event, str):
             return super().add_listener(event=event, f=f)
 
-        return super().add_listener(event=event.get_type(), f=f)
+        return super().add_listener(event=event.event_name(), f=f)
 
-    def has_listener(self, event: Type[Event]) -> bool:
+    def has_listener(self, event: EventPayload) -> bool:
         """
         Check whether the client is listening to a given event
 
@@ -49,7 +49,7 @@ class GrindrEventEmitter(AsyncIOEventEmitter):
 
         return event.__name__ in self._events
 
-    def remove_listener(self, event: Type[Event], f: Handler) -> None:
+    def remove_listener(self, event: EventPayload, f: Handler) -> None:
         """
         Remove a listener from the event emitter
 
@@ -61,9 +61,9 @@ class GrindrEventEmitter(AsyncIOEventEmitter):
         if isinstance(event, str):
             return super().remove_listener(event=event, f=f)
 
-        return super().remove_listener(event=event.type, f=f)
+        return super().remove_listener(event=event.event_name(), f=f)
 
-    def remove_all_listeners(self, event: Type[Event] = None) -> None:
+    def remove_all_listeners(self, event: EventPayload = None) -> None:
         """
         Remove all listeners from the event emitter
 
@@ -74,4 +74,25 @@ class GrindrEventEmitter(AsyncIOEventEmitter):
         if event is None:
             return super().remove_all_listeners()
 
-        return super().remove_all_listeners(event.type)
+        return super().remove_all_listeners(event.event_name())
+
+    def emit(
+            self,
+            event: str | EventPayload,
+            *args: Any,
+            **kwargs: Any,
+    ) -> bool:
+        """
+        Emit an event to all listeners
+
+        :param event: The event to emit
+        :param args: The arguments to pass to the listeners
+        :param kwargs: The arguments to pass to the listeners
+        :return: True if any listeners were called
+
+        """
+
+        if isinstance(event, BaseWebSocketEventPayload):
+            return super().emit(event.event_name(), *[event, *args], **kwargs)
+
+        return super().emit(event, *args, **kwargs)

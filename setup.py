@@ -34,8 +34,8 @@ if __name__ == '__main__':
         install_requires=[
             "pyee==12.1.1",
             "pygeohash==1.2.0",
-            "pydantic",
-            "curl_cffi==0.8.1b8"
+            "pydantic[email]",
+            "curl_cffi==0.8.1b9"
         ],
         classifiers=[
             "Development Status :: 4 - Beta",

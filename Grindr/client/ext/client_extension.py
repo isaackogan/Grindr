@@ -5,7 +5,6 @@ from typing import Awaitable, Type
 from pydantic import BaseModel, PrivateAttr
 
 from Grindr.client.ext.client_emitter import GrindrEventEmitter
-from Grindr.ws.events import Event
 
 if typing.TYPE_CHECKING:
     from Grindr import GrindrClient
@@ -17,7 +16,7 @@ class Extension(BaseModel, ABC):
 
     """
 
-    _listeners: dict[Type[Event], str] = PrivateAttr(default_factory=dict)
+    _listeners: dict[BaseModel, str] = PrivateAttr(default_factory=dict)
     _client: GrindrEventEmitter | None = PrivateAttr(default=None)
     _instance_id: str | None = PrivateAttr(default=None)
 

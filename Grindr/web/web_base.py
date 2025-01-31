@@ -1,17 +1,14 @@
 import logging
+import textwrap
 from functools import cached_property
-from pathlib import Path
 from typing import Any, Literal
 
 import curl_cffi.requests
 from curl_cffi.requests import AsyncSession, Response
 
 from Grindr.client.ext.client_logger import GrindrLogHandler
-from Grindr.web.routes.fetch.fetch_session import FetchSessionRouteResponse, FetchSessionRefreshRoutePayload, FetchSessionNewRoutePayload, SessionCredentials
 from Grindr.web.tls_match.tls_match import create_async_client
 from Grindr.web.web_extras import generate_device_info_android
-from Grindr.web.web_logger import GrindrWebFileLogger
-from Grindr.web.web_schemas import GrindrHTTPClientAuthSession
 from Grindr.web.web_settings import DEFAULT_REQUEST_PARAMS, DEFAULT_REQUEST_HEADERS
 
 
@@ -23,32 +20,25 @@ class GrindrHTTPClient:
 
     def __init__(
             self,
-            web_proxy: str | None = None,
-            web_kwargs: dict | None = None,
-            credentials: SessionCredentials | None = None
+            web_curl_proxy: str | None = None,
+            web_curl_kwargs: dict | None = None,
     ):
         """
         Create an HTTP client for interacting with the various APIs
 
-        :param web_proxy: An optional proxy for the HTTP client
-        :param web_kwargs: Additional kwargs
+        :param web_curl_proxy: An optional proxy for the HTTP client
+        :param web_curl_kwargs: Additional kwargs
 
         """
 
-        # Local time in format DD/MM/YYYY HH:MM:SS
-        self._auth_session: GrindrHTTPClientAuthSession = GrindrHTTPClientAuthSession(credentials=credentials)
-        self._user_agent: str | None = None
-
-        # File Logger
-        log_dir: str | None = web_kwargs.pop('request_dump_directory') if web_kwargs else None
-        self._file_logger: GrindrWebFileLogger | None = GrindrWebFileLogger(Path(log_dir), self._auth_session) if log_dir else None
-
         # HTTP Client Session
-        self.headers = {**(web_kwargs or {}).pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
-        self.params: dict[str, Any] = {**(web_kwargs or {}).pop("params", {}), **DEFAULT_REQUEST_PARAMS}
+        web_curl_kwargs: dict = (web_curl_kwargs or {})
+
+        self.headers = {**web_curl_kwargs.pop("headers", {}), **DEFAULT_REQUEST_HEADERS}
+        self.params: dict[str, Any] = {**(web_curl_kwargs or {}).pop("params", {}), **DEFAULT_REQUEST_PARAMS}
         self.headers['L-Device-Info'] = generate_device_info_android()
         self.logger.debug('Creating HTTP client')
-        self._http_session = create_async_client(proxy=web_proxy, **web_kwargs)
+        self._http_session = create_async_client(proxy=web_curl_proxy, **web_curl_kwargs)
 
     def set_proxy(self, proxy: str | None):
         """Update the current proxy on the client"""
@@ -77,11 +67,6 @@ class GrindrHTTPClient:
         """Extract the uuid4 Device ID from the device info"""
         return self.headers['L-Device-Info'].split(";")[0]
 
-    @property
-    def auth_session(self) -> GrindrHTTPClientAuthSession:
-        """The current auth session"""
-        return self._auth_session
-
     async def request(
             self,
             method: Literal["GET", "POST", "PUT", "DELETE"],
@@ -92,6 +77,7 @@ class GrindrHTTPClient:
             web_client: AsyncSession | None = None,
             base_params: bool = True,
             base_headers: bool = True,
+            file_logger: Any | None = None,
             **kwargs
     ) -> Response:
         """Make a request to the Grindr API"""
@@ -108,8 +94,8 @@ class GrindrHTTPClient:
             **kwargs
         )
 
-        if self._file_logger:
-            self._file_logger.log(
+        if file_logger:
+            file_logger.log(
                 response=response,
                 headers=headers,
                 params=params,
@@ -118,24 +104,32 @@ class GrindrHTTPClient:
 
         return response
 
-    def update_session_credentials(
-            self,
-            *,
-            details: FetchSessionNewRoutePayload | FetchSessionRefreshRoutePayload
-    ) -> GrindrHTTPClientAuthSession:
-        """Update the credentials attached to a session object"""
 
-        self._auth_session.credentials = details
-        return self._auth_session
+class URLTemplate:
+    """A simple URL template to build requests on the fly"""
 
-    def update_session_data(
-            self,
-            *,
-            session_data: FetchSessionRouteResponse,
-    ) -> GrindrHTTPClientAuthSession:
-        """Update the current session data used by the client"""
+    def __init__(self, base_url: str, path: str):
+        """
+        Create the URL template
+        :param base_url: The URL acting as a template
 
-        self._auth_session.session_data = session_data
-        self.headers['Authorization'] = f'Grindr3 {session_data.session_id}'
+        """
 
-        return self._auth_session
+        self._url: str = textwrap.dedent(
+            (base_url.rstrip("/") + "/" + path.lstrip("/"))
+            .replace("\n", " ")
+            .replace(" ", "")
+        )
+
+    def __mod__(self, data: dict) -> str:
+        """
+        Overload modulus operator to allow formatting
+        :param data: The data to format the URL with
+        :return: The filled template
+
+        """
+
+        # Take the params and add them and return a string
+        data = {k: str(v).lower() if isinstance(str, bool) else v for k, v in data.items() if v is not None}
+        d = self._url.format(**data)
+        return d

@@ -1,6 +1,8 @@
+from pathlib import Path
 from typing import Literal
 
 from curl_cffi.requests import AsyncSession, Response
+from pydantic import BaseModel
 
 from Grindr.web.routes.fetch.fetch_album import FetchAlbumRoute
 from Grindr.web.routes.fetch.fetch_albums import FetchAlbumsRoute
@@ -12,7 +14,7 @@ from Grindr.web.routes.fetch.fetch_inbox import FetchInboxRoute
 from Grindr.web.routes.fetch.fetch_messages import FetchMessagesRoute
 from Grindr.web.routes.fetch.fetch_profile import FetchProfileRoute
 from Grindr.web.routes.fetch.fetch_profiles import FetchProfilesRoute
-from Grindr.web.routes.fetch.fetch_session import FetchSessionRoute, FetchSessionRefreshRoutePayload, FetchSessionNewRoutePayload
+from Grindr.web.routes.fetch.fetch_session import FetchSessionRoute, FetchSessionRefreshRoutePayload, FetchSessionNewRoutePayload, FetchSessionRouteResponse, SessionCredentials
 from Grindr.web.routes.fetch.fetch_shared_albums import FetchSharedAlbumsRoute
 from Grindr.web.routes.fetch.fetch_taps import FetchTapsRoute
 from Grindr.web.routes.fetch.fetch_views import FetchViewsRoute
@@ -52,7 +54,39 @@ from .routes.set.set_gcm_push_tokens import SetGcmPushTokensRoute
 from .routes.set.set_mobile_logs import SetMobileLogsRoute
 from .routes.set.set_notifications_ack import SetNotificationsAckRoute
 from .web_base import GrindrHTTPClient
-from .web_schemas import GrindrHTTPClientAuthSession, GrindrRequestError, CredentialsMissingError
+from .web_logger import GrindrWebFileLogger
+from .web_schemas import GrindrRequestError, CredentialsMissingError
+
+
+class GrindrWebClientAuthSession(BaseModel):
+    """Auth Context Object"""
+
+    # The current credentials
+    credentials: SessionCredentials | None = None
+
+    # Current session data
+    session_data: FetchSessionRouteResponse | None = None
+
+    @property
+    def auth_token(self) -> str | None:
+        """The current auth token"""
+
+        if self.session_data is not None and self.session_data.auth_token is not None:
+            return self.session_data.auth_token
+
+        if isinstance(self.credentials, FetchSessionRefreshRoutePayload) and self.credentials.authToken:
+            return self.credentials.authToken
+
+        return None
+
+    @property
+    def profile_id(self) -> int | None:
+        """The current profile ID"""
+
+        if self.session_data is not None and self.session_data.profile_id is not None:
+            return self.session_data.profile_id
+
+        return None
 
 
 class GrindrWebClient(GrindrHTTPClient):
@@ -63,19 +97,29 @@ class GrindrWebClient(GrindrHTTPClient):
 
     def __init__(
             self,
-            max_auth_retries: int = 2,
-            **kwargs
+            web_credentials: GrindrWebClientAuthSession,
+            web_max_auth_retries: int = 2,
+            web_request_dump_directory: str | None = None,
+            web_curl_proxy: str | None = None,
+            web_curl_kwargs: dict | None = None
     ):
         """
         Create a web client with registered Grindr routes
 
-        :param max_auth_retries: The maximum number of times to retry authentication
-        :param kwargs: Arguments to pass to the base HTTP client
+        :param web_max_auth_retries: The maximum number of times to retry authentication
+        :param web_curl_kwargs: Arguments to pass to the base HTTP client
 
         """
 
-        super().__init__(**kwargs)
-        self._max_auth_retries: int = max_auth_retries
+        super().__init__(
+            web_curl_proxy=web_curl_proxy,
+            web_curl_kwargs=web_curl_kwargs
+        )
+
+        self._max_auth_retries: int = web_max_auth_retries
+        self._auth_session: GrindrWebClientAuthSession = GrindrWebClientAuthSession(credentials=web_credentials)
+        self._file_logger: GrindrWebFileLogger | None = GrindrWebFileLogger(Path(web_request_dump_directory), self._auth_session) if web_request_dump_directory else None
+        self._user_agent: str | None = None
 
         self.fetch_session: FetchSessionRoute = FetchSessionRoute(self)
         self.fetch_inbox: FetchInboxRoute = FetchInboxRoute(self)
@@ -129,7 +173,7 @@ class GrindrWebClient(GrindrHTTPClient):
         self.set_gcm_push_tokens: SetGcmPushTokensRoute = SetGcmPushTokensRoute(self)
         self.set_mobile_logs: SetMobileLogsRoute = SetMobileLogsRoute(self)
 
-    async def refresh_session_data(self, use_auth_token: bool = True) -> GrindrHTTPClientAuthSession:
+    async def refresh_session_data(self, use_auth_token: bool = True) -> GrindrWebClientAuthSession:
         """
         Authenticate with Grindr using the current session credentials
 
@@ -199,6 +243,7 @@ class GrindrWebClient(GrindrHTTPClient):
                 web_client=web_client,
                 base_params=base_params,
                 base_headers=base_headers,
+                file_logger=self._file_logger,
                 **kwargs
             )
 
@@ -219,3 +264,30 @@ class GrindrWebClient(GrindrHTTPClient):
                 )
 
             raise ex
+
+    def update_session_credentials(
+            self,
+            *,
+            details: FetchSessionNewRoutePayload | FetchSessionRefreshRoutePayload
+    ) -> GrindrWebClientAuthSession:
+        """Update the credentials attached to a session object"""
+
+        self._auth_session.credentials = details
+        return self._auth_session
+
+    def update_session_data(
+            self,
+            *,
+            session_data: FetchSessionRouteResponse,
+    ) -> GrindrWebClientAuthSession:
+        """Update the current session data used by the client"""
+
+        self._auth_session.session_data = session_data
+        self.headers['Authorization'] = f'Grindr3 {session_data.session_id}'
+
+        return self._auth_session
+
+    @property
+    def auth_session(self) -> GrindrWebClientAuthSession:
+        """The current auth session"""
+        return self._auth_session

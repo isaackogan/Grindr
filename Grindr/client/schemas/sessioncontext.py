@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from pydantic import BaseModel
+from pydantic import BaseModel, PrivateAttr
 
 from Grindr.client.ext.client_emitter import GrindrEventEmitter
 from Grindr.web.web_client import GrindrWebClient
@@ -30,7 +30,15 @@ class SessionContext:
 
 
 class GrindrModel(BaseModel, ABC):
-    context: SessionContext
+    _context: SessionContext = PrivateAttr()
+
+    def __init__(self, context: SessionContext, **data):
+        super().__init__(**data)
+        self._context = context
+
+    @property
+    def context(self) -> SessionContext:
+        return self._context
 
     @abstractmethod
     async def retrieve_all(self) -> "GrindrModel":

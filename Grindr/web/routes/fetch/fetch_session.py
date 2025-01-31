@@ -1,7 +1,8 @@
 from pydantic import BaseModel, EmailStr
 
 from Grindr.web.web_route import ClientRoute
-from Grindr.web.web_schemas import BodyParams, URLTemplate
+from Grindr.web.web_schemas import BodyParams
+from Grindr.web.web_base import URLTemplate
 from Grindr.web.web_settings import GRINDR_V4
 
 
@@ -21,8 +22,9 @@ class FetchSessionRefreshRoutePayload(FetchSessionRouteBasePayload):
     authToken: str
 
 
-# The payload for the FetchSessionRoute
-type SessionCredentials = FetchSessionNewRoutePayload | FetchSessionRefreshRoutePayload
+EmailPasswordCredentials = FetchSessionNewRoutePayload
+AuthTokenCredentials = FetchSessionRefreshRoutePayload
+type SessionCredentials = EmailPasswordCredentials | AuthTokenCredentials
 
 
 class FetchSessionRouteResponse(BaseModel):

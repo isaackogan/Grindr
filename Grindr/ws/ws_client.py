@@ -1,9 +1,9 @@
 from typing import AsyncIterator
 
-from .events import Event
+from .events.events import Event
 from .ws_base import BaseGrindrWebSocketClient
 from .ws_schemas import MessagePayloadBodyType
-from ..web.web_schemas import GrindrHTTPClientAuthSession
+from ..web.web_client import GrindrWebClientAuthSession
 
 
 class GrindrWebSocketClient(BaseGrindrWebSocketClient):
@@ -11,7 +11,7 @@ class GrindrWebSocketClient(BaseGrindrWebSocketClient):
 
     def __init__(
             self,
-            auth_session: GrindrHTTPClientAuthSession,
+            auth_session: GrindrWebClientAuthSession,
             **kwargs
     ):
         """
@@ -22,7 +22,7 @@ class GrindrWebSocketClient(BaseGrindrWebSocketClient):
 
         """
 
-        self._auth_session: GrindrHTTPClientAuthSession = auth_session
+        self._auth_session: GrindrWebClientAuthSession = auth_session
         super().__init__(**kwargs)
 
     async def connect(

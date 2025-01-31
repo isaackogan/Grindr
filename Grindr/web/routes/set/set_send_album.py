@@ -2,7 +2,8 @@ import uuid
 
 from pydantic import BaseModel, Field
 
-from Grindr.web.web_schemas import QueryParams, BodyParams, URLTemplate
+from Grindr.web.web_schemas import QueryParams, BodyParams
+from Grindr.web.web_base import URLTemplate
 from Grindr.web.web_route import ClientRoute
 from Grindr.web.web_settings import GRINDR_V1
 

@@ -28,6 +28,9 @@ class WebSocketResponse(BaseModel):
     # If the event is associated with the response to an outgoing event, the status of the sent event
     status: int | None = None
 
+    # Connect event has a timestamp
+    timestamp: int | None = None
+
     @classmethod
     def from_bytes(cls, data: bytes) -> WebSocketResponse:
         """Decode a WebSocket response from bytes"""
@@ -154,5 +157,3 @@ class GifPayloadBody(MessagePayloadBody):
             width=width,
             height=height
         )
-
-

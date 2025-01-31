@@ -4,7 +4,8 @@ from pydantic import BaseModel
 
 from Grindr.web.routes.fetch.fetch_profiles import ProfileData
 from Grindr.web.routes.set.set_profile_details import SexualPosition, SocialNetworks
-from Grindr.web.web_schemas import BodyParams, URLTemplate
+from Grindr.web.web_schemas import BodyParams
+from Grindr.web.web_base import URLTemplate
 from Grindr.web.web_route import ClientRoute
 from Grindr.web.web_settings import GRINDR_V4
 

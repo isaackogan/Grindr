@@ -34,29 +34,34 @@ class GrindrClient(GrindrEventEmitter):
 
     def __init__(
             self,
-            credentials: SessionCredentials,
-            web_proxy: str | None = None,
+            web_credentials: SessionCredentials,
+            web_curl_proxy: str | None = None,
+            web_curl_kwargs: dict[str, Any] = None,
+            web_request_dump_directory: str | None = None,
+            web_max_auth_retries: int = 2,
             ws_proxy: str | None = None,
-            web_kwargs: dict[str, Any] = None,
             ws_kwargs: dict[str, Any] = None,
+
     ):
         """
         Instantiate the GrindrClient object
 
-        :param web_proxy: An optional proxy used for HTTP requests
+        :param web_curl_proxy: An optional proxy used for HTTP requests
         :param ws_proxy: An optional proxy used for the WebSocket connection
-        :param web_kwargs: Optional arguments used by the HTTP client
+        :param web_curl_kwargs: Optional arguments used by the HTTP client
         :param ws_kwargs: Optional arguments used by the WebSocket client
-        :param credentials: The session credentials to use
+        :param web_credentials: The session credentials to use
 
         """
 
         super().__init__()
 
         self._web: GrindrWebClient = GrindrWebClient(
-            web_kwargs=web_kwargs or dict(),
-            web_proxy=web_proxy,
-            credentials=credentials
+            web_curl_kwargs=web_curl_kwargs,
+            web_curl_proxy=web_curl_proxy,
+            web_credentials=web_credentials,
+            web_request_dump_directory=web_request_dump_directory,
+            web_max_auth_retries=web_max_auth_retries
         )
 
         self._ws: GrindrWebSocketClient = GrindrWebSocketClient(
@@ -76,6 +81,8 @@ class GrindrClient(GrindrEventEmitter):
 
         """
 
+        await self._web.refresh_session_data(use_auth_token=use_auth_token)
+
         self._context = SessionContext(
             web=self.web,
             ws=self.ws,
@@ -88,7 +95,6 @@ class GrindrClient(GrindrEventEmitter):
 
         # Start the websocket connection & return it
         self.logger.debug("Starting the Grindr client event loop...")
-        await self._web.refresh_session_data(use_auth_token=use_auth_token)
         self._event_loop_task = self._asyncio_loop.create_task(self._ws_loop())
         return self._event_loop_task
 
@@ -101,14 +107,15 @@ class GrindrClient(GrindrEventEmitter):
 
         """
 
-        task: Task = await self.start(**kwargs)
-
         try:
-            await task
+            task: Task = await self.start(**kwargs)
+            return await task
         except CancelledError:
             self.logger.debug("The client has been manually stopped with 'client.stop()'.")
-
-        return task
+        except Exception:
+            await self.web.close()
+            self.logger.error("An error occurred while running the client!\n" + traceback.format_exc())
+            raise
 
     def run(self, **kwargs) -> Task:
         """
@@ -132,17 +139,16 @@ class GrindrClient(GrindrEventEmitter):
         await self._ws.disconnect()
         await self._event_loop_task
         self._event_loop_task = None
-        await self._web.close()
 
     async def _ws_loop(self) -> None:
         """Listen for events on the Grindr WebSocket"""
 
-        loaded_extensions: bool = True
+        first_event: bool = True
         async for event in self._ws.connect(url=GRINDR_WS, headers={**self._web.headers, **DEFAULT_WS_HEADERS}):
 
             # Keep session continually updated
-            if loaded_extensions:
-                loaded_extensions = False
+            if first_event:
+                first_event = False
                 await self._load_extensions()
 
             try:
@@ -151,9 +157,9 @@ class GrindrClient(GrindrEventEmitter):
                 self.logger.error("Failed to parse event due to validation error!\n" + traceback.format_exc())
 
         # After for loop finishes, disconnected
-        ev = DisconnectEvent()
-        self.emit(ev.event_type, ev)
+        self.emit(DisconnectEvent())
         await self._unload_extensions()
+        await self._web.close()
 
     @cached_property
     def web(self) -> GrindrWebClient:
