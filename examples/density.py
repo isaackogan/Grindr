@@ -1,6 +1,7 @@
 import asyncio
 import math
 import os
+import argparse
 from typing import Tuple, List
 
 from Grindr import GrindrClient
@@ -74,16 +75,27 @@ async def get_density(
     return calculate_density(distances), max(distances), len(distances)
 
 
-async def run_client():
-    # Target to check
-    lat, lon = 43.702736, -79.444672
-
+async def run_client(lat: float, lon: float, kms: int):
     # Log into Grindr
-    await client.login(email=os.environ['G_EMAIL'], password=os.environ['G_PASSWORD'])
+    try:
+        email = os.environ['G_EMAIL']
+        password = os.environ['G_PASSWORD']
+    except KeyError as e:
+        print(f"Missing environment variable: {e}")
+        return
 
-    density, measure_distance, measured_profiles = await get_density(lat, lon, kms=50)
+    await client.login(email=email, password=password)
+
+    density, measure_distance, measured_profiles = await get_density(lat, lon, kms=kms)
     print(f"Measured a user density of {density:.2f} users per square kilometer over {measure_distance:.2f} km with a total of {measured_profiles} users.")
 
 
 if __name__ == '__main__':
-    asyncio.run(run_client())
+    parser = argparse.ArgumentParser(description="Calculate Grindr user density at a given location.")
+    parser.add_argument("latitude", type=float, help="Latitude of the location")
+    parser.add_argument("longitude", type=float, help="Longitude of the location")
+    parser.add_argument("distance", type=int, help="Distance in kilometers to measure")
+
+    args = parser.parse_args()
+
+    asyncio.run(run_client(args.latitude, args.longitude, args.distance))
