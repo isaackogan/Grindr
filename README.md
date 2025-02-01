@@ -18,6 +18,8 @@ A silly little library to connect to Grindr's mobile services.
 - [Getting Started](#getting-started)
 - [Licensing](#license)
 - [Contributors](#contributors)
+- [Usage Guide](#usage-guide)
+- [Examples](#examples)
 
 ## Project Structure
 
@@ -73,6 +75,102 @@ if __name__ == '__main__':
 - Access all web-scraping methods with `client.web`
 - Send messages with `await client.send(...)`
 - Use proxies. Cloudflare WAF likes to ban IPs.
+
+## Usage Guide
+
+This section provides a comprehensive guide on how to use the code.
+
+### Initializing GrindrClient with User Credentials
+
+To initialize the `GrindrClient` with user credentials, you can use the following code:
+
+```python
+from Grindr import GrindrClient
+
+client = GrindrClient()
+client.login(email="your_email@example.com", password="your_password")
+```
+
+### Fetching Data
+
+To fetch data using the `GrindrWebClient`, you can use the following code:
+
+```python
+from Grindr.web.web_client import GrindrWebClient
+
+web_client = GrindrWebClient()
+data = web_client.fetch_data(route="your_route", params={"param1": "value1"})
+print(data)
+```
+
+### Setting Data
+
+To set data using the `GrindrWebClient`, you can use the following code:
+
+```python
+from Grindr.web.web_client import GrindrWebClient
+
+web_client = GrindrWebClient()
+response = web_client.set_data(route="your_route", body={"key": "value"})
+print(response)
+```
+
+## Examples
+
+This section provides examples for common use cases.
+
+### Example 1: Calculating User Density
+
+The `examples/density.py` script calculates the density of Grindr users at a given location. It includes proper documentation, error handling, and a command-line interface to accept latitude, longitude, and distance.
+
+```python
+import asyncio
+import os
+import argparse
+from Grindr import GrindrClient
+
+client = GrindrClient()
+
+async def run_client(lat, lon, kms):
+    try:
+        email = os.environ['G_EMAIL']
+        password = os.environ['G_PASSWORD']
+    except KeyError as e:
+        print(f"Missing environment variable: {e}")
+        return
+
+    await client.login(email=email, password=password)
+    density, measure_distance, measured_profiles = await get_density(lat, lon, kms=kms)
+    print(f"Measured a user density of {density:.2f} users per square kilometer over {measure_distance:.2f} km with a total of {measured_profiles} users.")
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Calculate Grindr user density at a given location.")
+    parser.add_argument("latitude", type=float, help="Latitude of the location")
+    parser.add_argument("longitude", type=float, help="Longitude of the location")
+    parser.add_argument("distance", type=int, help="Distance in kilometers to measure")
+
+    args = parser.parse_args()
+    asyncio.run(run_client(args.latitude, args.longitude, args.distance))
+```
+
+### Example 2: Fetching User Profiles
+
+To fetch user profiles, you can use the following code:
+
+```python
+from Grindr import GrindrClient
+
+client = GrindrClient()
+
+async def fetch_profiles():
+    await client.login(email="your_email@example.com", password="your_password")
+    profiles = await client.web.fetch_profiles()
+    for profile in profiles:
+        print(profile)
+
+if __name__ == '__main__':
+    asyncio.run(fetch_profiles())
+```
 
 ## Contributors
 

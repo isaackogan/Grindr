@@ -1,8 +1,13 @@
 import json
+import os
+import asyncio
+import pytest
 
 from Grindr.web.routes.set.set_mobile_logs.event_schemas import MobileLogEvent, WebSocketEventLogData, ScreenshotObsNoPermLogData, AssignmentLoadSuccessLogData
 from Grindr.web.routes.set.set_mobile_logs.set_mobile_logs import LogEventFlowPriority
 from Grindr.web.web_client import GrindrWebClient
+from examples.density import get_density
+from Grindr.client.client import GrindrClient
 
 
 def test_logs():
@@ -58,5 +63,42 @@ def test_log_flow():
         print(list(session.unpack()))
 
 
+@pytest.mark.asyncio
+async def test_grindr_client_initialization():
+    client = GrindrClient()
+    email = os.environ.get('G_EMAIL')
+    password = os.environ.get('G_PASSWORD')
+
+    if not email or not password:
+        pytest.skip("Environment variables G_EMAIL and G_PASSWORD must be set for this test.")
+
+    await client.login(email=email, password=password)
+    assert client._web.auth_session.credentials.email == email
+    assert client._web.auth_session.credentials.password == password
+
+
+@pytest.mark.asyncio
+async def test_get_density():
+    lat = 40.7128
+    lon = -74.0060
+    kms = 30
+
+    email = os.environ.get('G_EMAIL')
+    password = os.environ.get('G_PASSWORD')
+
+    if not email or not password:
+        pytest.skip("Environment variables G_EMAIL and G_PASSWORD must be set for this test.")
+
+    client = GrindrClient()
+    await client.login(email=email, password=password)
+
+    density, measure_distance, measured_profiles = await get_density(lat, lon, kms=kms)
+    assert isinstance(density, float)
+    assert isinstance(measure_distance, float)
+    assert isinstance(measured_profiles, int)
+
+
 if __name__ == '__main__':
     test_log_flow()
+    asyncio.run(test_grindr_client_initialization())
+    asyncio.run(test_get_density())

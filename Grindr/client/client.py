@@ -280,3 +280,18 @@ class GrindrClient(GrindrEventEmitter):
 
         for extension in self._extensions.values():
             await self.unload_extension(extension)
+
+    async def login(self, email: str, password: str) -> None:
+        """
+        Login to Grindr using user credentials
+
+        :param email: User email
+        :param password: User password
+        :return: None
+
+        """
+        try:
+            await self._web.auth_session.login(email=email, password=password)
+        except Exception as e:
+            self.logger.error(f"Failed to login: {e}")
+            raise e

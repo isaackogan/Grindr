@@ -291,3 +291,39 @@ class GrindrWebClient(GrindrHTTPClient):
     def auth_session(self) -> GrindrWebClientAuthSession:
         """The current auth session"""
         return self._auth_session
+
+    async def fetch_data(self, route, params=None, body=None, url_override=None, header_override=None, **kwargs):
+        """
+        Fetch data from a specified route with error handling.
+
+        :param route: The route to fetch data from.
+        :param params: Optional parameters for the route.
+        :param body: Optional body for the route.
+        :param url_override: Optional URL override for the route.
+        :param header_override: Optional header override for the route.
+        :param kwargs: Additional arguments for the route.
+        :return: The response data.
+        """
+        try:
+            return await route(params=params, body=body, url_override=url_override, header_override=header_override, **kwargs)
+        except GrindrRequestError as ex:
+            self.logger.error(f"Failed to fetch data from {route}: {ex}")
+            raise
+
+    async def set_data(self, route, params=None, body=None, url_override=None, header_override=None, **kwargs):
+        """
+        Set data to a specified route with error handling.
+
+        :param route: The route to set data to.
+        :param params: Optional parameters for the route.
+        :param body: Optional body for the route.
+        :param url_override: Optional URL override for the route.
+        :param header_override: Optional header override for the route.
+        :param kwargs: Additional arguments for the route.
+        :return: The response data.
+        """
+        try:
+            return await route(params=params, body=body, url_override=url_override, header_override=header_override, **kwargs)
+        except GrindrRequestError as ex:
+            self.logger.error(f"Failed to set data to {route}: {ex}")
+            raise
