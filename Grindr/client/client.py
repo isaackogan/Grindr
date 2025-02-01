@@ -34,7 +34,7 @@ class GrindrClient(GrindrEventEmitter):
 
     def __init__(
             self,
-            web_credentials: SessionCredentials,
+            web_credentials: SessionCredentials = None,
             web_curl_proxy: str | None = None,
             web_curl_kwargs: dict[str, Any] = None,
             web_request_dump_directory: str | None = None,
