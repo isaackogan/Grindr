@@ -92,6 +92,7 @@ class MobileLogEventSession:
             start_time: int,
             route: SetMobileLogsRoute,
             shuffle: bool = False,
+            web: GrindrWebClient
     ):
         """
         A session of mobile log events
@@ -173,6 +174,9 @@ class MobileLogEventSession:
 
     def __enter__(self):
         return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
 
     def clear(self):
         self._flow.sequence.clear()

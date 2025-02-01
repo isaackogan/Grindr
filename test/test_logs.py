@@ -25,7 +25,7 @@ def test_logs():
 
 
 def test_log_flow():
-    client = GrindrWebClient()
+    client = GrindrWebClient(web_credentials=None)
 
     with client.set_mobile_logs.session(start_id=1) as session:
         ws_session_id = 1
